@@ -1,10 +1,6 @@
-// src/components/Hero.jsx
-import { motion } from "framer-motion";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useEffect, useRef } from "react";
+import { motion, useAnimate, useScroll, useTransform } from "framer-motion";
+import { useEffect, useState } from "react";
 
-// Définition des animations
 const animations = {
   fadeUp: {
     initial: { y: "100%" },
@@ -31,39 +27,40 @@ const animations = {
 };
 
 const Hero = () => {
-  const textAnimation = useRef(null);
-  const isClient = typeof window !== "undefined";
+  const [scope, animate] = useAnimate();
+  const { scrollY } = useScroll();
+  const [windowHeight, setWindowHeight] = useState(0);
 
   useEffect(() => {
-    if (!isClient) return;
+    // Set window height after component mount
+    setWindowHeight(window.innerHeight);
+  }, []);
 
-    let xPercent = 0;
-    let direction = 5;
+  const rotateValue = useTransform(scrollY, [0, windowHeight], [0, 360]);
 
-    gsap.registerPlugin(ScrollTrigger);
+  useEffect(() => {
+    if (windowHeight === 0) return; // Skip animation until window height is available
 
-    const scrollTrigger = ScrollTrigger.create({
-      trigger: document.documentElement,
-      start: 0,
-      end: window.innerHeight,
-      onUpdate: (e) => (direction = e.direction * -5),
-      scrub: 0.25,
-    });
-
-    const animate = () => {
-      if (textAnimation.current) {
-        gsap.set(textAnimation.current, { rotate: xPercent });
-        xPercent += 0.1 * direction;
-      }
-      requestAnimationFrame(animate);
+    const animateRotation = () => {
+      animate(
+        scope.current,
+        {
+          rotate: rotateValue.get(),
+        },
+        {
+          duration: 0,
+          ease: "linear",
+        }
+      );
+      requestAnimationFrame(animateRotation);
     };
 
-    animate();
+    animateRotation();
 
     return () => {
-      scrollTrigger.kill();
+      // Cleanup animation frame on unmount if needed
     };
-  }, [isClient]);
+  }, [animate, rotateValue, windowHeight]);
 
   return (
     <section className="flex items-center bg-grey min-h-screen w-full">
@@ -74,7 +71,7 @@ const Hero = () => {
             alt="arrow"
             className="w-[30px] h-[30px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10"
           />
-          <div ref={textAnimation} className="absolute inset-0">
+          <motion.div ref={scope} className="absolute inset-0">
             <svg viewBox="0 0 140 140" className="w-full h-full">
               <path
                 id="circlePath"
@@ -88,16 +85,15 @@ const Hero = () => {
                   startOffset="0%"
                   className="fill-current"
                 >
-                  - digital specialist - digital specialist -
+                  • digital • digital • digital • digital • digital • digital•
+                  digital
                 </textPath>
               </text>
             </svg>
-          </div>
+          </motion.div>
         </div>
 
-        {/* Nous gardons la structure en grille, mais avec des ajustements responsifs */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-10 w-full ">
-          {/* La section titre occupe toujours 2 colonnes en desktop */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-10 w-full">
           <h1 className="col-span-1 md:col-span-2 w-full">
             {["Digital", "worker"].map((word, index) => (
               <span
@@ -120,11 +116,10 @@ const Hero = () => {
             ))}
           </h1>
 
-          {/* Le paragraphe reste dans la dernière colonne en desktop */}
           <div className="col-span-1 self-end">
             <motion.p
               className="text-base sm:text-lg text-black pb-5 lg:pb-10
-                       max-w-[42ch] md:max-w-none" // Limite la largeur en mobile
+                       max-w-[42ch] md:max-w-none"
               variants={animations.fadeIn}
               initial="initial"
               whileInView="enter"

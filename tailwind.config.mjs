@@ -21,6 +21,10 @@ export default {
     },
 
     extend: {
+      fontFamily: {
+        archivo: ["Archivo", "sans-serif"],
+        clash: ["Clash", "sans-serif"],
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
@@ -70,5 +74,5 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 };

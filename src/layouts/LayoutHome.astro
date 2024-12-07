@@ -2,6 +2,10 @@
 import Footer from '@/components/Footer.astro';
 import Header from '@/components/Header.astro';
 import Hero from '@/components/Hero';
+import MaskText from '@/components/MaskText';
+import Skill from '@/components/Skill';
+import Slider from '@/components/Slider';
+import Testimonials from '@/components/Testimonials';
 import '@/styles/global.css';
 import ViewTransitions from "astro/components/ViewTransitions.astro";
 
@@ -18,6 +22,12 @@ import ViewTransitions from "astro/components/ViewTransitions.astro";
     <Header />
     <main class="">
     <Hero client:load />
+    <div>
+      <MaskText client:load />
+      <Slider client:load />
+      <Skill client:load />
+      <Testimonials client:load />
+    </div>
         <slot />
     </main>
     <ViewTransitions />

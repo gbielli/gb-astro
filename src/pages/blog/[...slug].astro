@@ -31,11 +31,10 @@ const mainCategory = post.data.categories[0];
 
 <Layout title={post.data.title} description={post.data.description} image={post.data.image}>
   <main class="max-w-4xl mx-auto px-4">
-    {/* Navigation avec lien de retour vers la catégorie */}
     <div class="flex gap-4">
       <a 
         href={`/blog/${slugify(mainCategory)}`}
-        class="inline-flex items-center gap-2 px-4 py-2 mt-10 text-gray-600 rounded-lg hover:bg-gray-100 transition-colors group focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500"
+        class="inline-flex items-center gap-2 px-4 py-2 text-gray-600 rounded-lg hover:bg-gray-100 transition-colors group focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500"
         aria-label="Retourner à la catégorie"
       >
         <Icon 
@@ -55,7 +54,7 @@ const mainCategory = post.data.categories[0];
             {post.data.categories.map((cat) => (
               <a
                 href={`/blog/${slugify(cat)}`}
-                class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200 transition-colors"
+                class="px-3 py-1 text-sm bg-gray-200 text-gray-700 rounded-full hover:bg-gray-200 transition-colors"
               >
                 {cat}
               </a>
@@ -63,12 +62,11 @@ const mainCategory = post.data.categories[0];
           </div>
         )}
 
-        {/* Le reste du code reste identique... */}
         <h1 class="text-4xl md:text-5xl font-bold leading-tight">
           {post.data.title}
         </h1>
 
-        <p class="text-2xl text-gray-600 leading-relaxed">
+        <p class="text-[22px] text-gray-600 leading-relaxed mb-4">
           {post.data.description}
         </p>
 
@@ -130,7 +128,7 @@ const mainCategory = post.data.categories[0];
   )}
 
       {/* Contenu */}
-      <article class="prose prose-lg max-w-none">
+      <article class="prose prose-lg  max-w-none">
         <Content />
       </article>
     </div>
