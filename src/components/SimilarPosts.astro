@@ -1,0 +1,48 @@
+---
+import { getCollection } from 'astro:content';
+
+interface Props {
+  categories: string[];
+  currentSlug: string;
+}
+
+const { categories, currentSlug } = Astro.props;
+
+const allPosts = await getCollection('articles');
+
+const similarPosts = allPosts
+  .filter(post => 
+    post.slug !== currentSlug && 
+    post.data.categories.some(cat => categories.includes(cat))
+  )
+  .slice(0, 3);
+---
+
+
+{similarPosts.length > 0 && (
+  <div class="mx-auto border-2 px-4 md:px-10 rounded-md py-10 my-20">
+    <h3 class="font-clash text-2xl md:text-3xl mb-4 mt-0">
+      Les articles similaires
+    </h3>
+    <div class="flex flex-col gap-2 justify-left">
+      {similarPosts.map(post => (
+        <div class="max-w-3xl">
+          <a 
+            href={`/blog/${post.slug}`}
+            class="text-lg md:text-xl flex gap-3 items-center no-underline hover:underline decoration-black" 
+          >
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              class="w-6 h-6 flex-shrink-0" 
+              viewBox="0 0 24 24" 
+              fill="currentColor"
+            >
+              <path d="M10 6V8H5V19H16V14H18V20C18 20.5523 17.5523 21 17 21H4C3.44772 21 3 20.5523 3 20V7C3 6.44772 3.44772 6 4 6H10ZM21 3V11H19L18.9999 6.413L11.2071 14.2071L9.79289 12.7929L17.5858 5H13V3H21Z"/>
+            </svg>
+            <p class="my-2 text-black">{post.data.title}</p>
+          </a>
+        </div>
+      ))}
+    </div>
+  </div>
+)}

@@ -5,6 +5,7 @@ import { Icon } from 'astro-icon/components';
 import { Image } from 'astro:assets';
 import { getCollection, type CollectionEntry } from 'astro:content';
 
+
 interface Props {
   post: CollectionEntry<'articles'>;
 }
@@ -27,10 +28,17 @@ const headings = await post.render().then(({ headings }) => headings);
 
 // Gardons une référence à la catégorie principale pour la navigation
 const mainCategory = post.data.categories[0];
+
+import MdxImage from '@/components/MarkDocImage.astro';
+import SimilarPosts from '@/components/SimilarPosts.astro';
+
+const components = {
+  img: MdxImage,
+};
 ---
 
 <Layout title={post.data.title} description={post.data.description} image={post.data.image}>
-  <main class="max-w-4xl mx-auto px-4">
+  <main class=" mx-auto">
     <div class="flex gap-4">
       <a 
         href={`/blog/${slugify(mainCategory)}`}
@@ -62,11 +70,11 @@ const mainCategory = post.data.categories[0];
           </div>
         )}
 
-        <h1 class="text-4xl md:text-5xl font-bold leading-tight">
+        <h1 class="text-3xl md:text-5xl font-bold leading-tight">
           {post.data.title}
         </h1>
 
-        <p class="text-[22px] text-gray-600 leading-relaxed mb-4">
+        <p class="text-[20px] md:text-[22px] text-gray-600 leading-relaxed mb-4">
           {post.data.description}
         </p>
 
@@ -78,7 +86,7 @@ const mainCategory = post.data.categories[0];
       
         <div class="flex gap-2">
           <div class="w-12 h-12">
-            <Image src="/image/logo-gb-article.png" alt="Icone de visionneur" width="50" height="50" />
+            <Image src="/image/logo-gb-article.png" loading={"eager"} alt="Icone de visionneur" width="50" height="50" />
           </div>
           <div class="flex flex-col text-[16px] gap-1">
             {post.data.author && <span> {post.data.author}</span>}
@@ -93,12 +101,15 @@ const mainCategory = post.data.categories[0];
         </div>
       </div>
 
-      {/* Image principale */}
+     
       {post.data.image && (
         <div class="relative aspect-video w-full overflow-hidden rounded-xl">
-          <img
+          <Image
             src={post.data.image}
             alt={post.data.title}
+            width={1280}
+            height={720}
+            loading={"eager"}
             class="object-cover w-full h-full"
           />
         </div>
@@ -117,7 +128,7 @@ const mainCategory = post.data.categories[0];
             />
             <a 
               href={`#${heading.slug}`}
-              class="hover:text-gray-800 hover:underline text-base underline-offset-2"
+              class="hover:text-gray-800 hover:underline text-lg underline-offset-2"
             >
               {heading.text}
             </a>
@@ -127,10 +138,14 @@ const mainCategory = post.data.categories[0];
     </nav>
   )}
 
-      {/* Contenu */}
-      <article class="prose prose-lg  max-w-none">
-        <Content />
-      </article>
+      
+      <div class="prose prose-lg  max-w-none">
+        <Content components={components} />
+        <SimilarPosts 
+        categories={post.data.categories}
+        currentSlug={post.slug}
+      />
+      </div>
     </div>
   </main>
 </Layout>

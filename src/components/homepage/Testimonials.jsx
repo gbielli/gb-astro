@@ -75,7 +75,7 @@ const testimonial = [
 
 const Testimonials = () => {
   return (
-    <div className="px-5 md:px-10 mb-40 h-full">
+    <div className=" md:px-10 mb-40 h-full">
       <motion.h2
         className="font-clash text-4xl mb-20"
         variants={contentAnimation}
@@ -100,7 +100,7 @@ const Testimonials = () => {
             key={index}
           >
             <motion.div
-              className="name flex items-center gap-3 px-5 py-6 mb-5"
+              className="name flex items-center gap-3 py-6 mb-5 px-2 md:px-6"
               variants={contentAnimation}
             >
               <img
@@ -108,14 +108,14 @@ const Testimonials = () => {
                 alt={`Photo de ${avis.prenom}`}
                 className="w-[70px] h-[70px] object-cover rounded-full"
               />
-              <div>
+              <div className="">
                 <p className="font-bold">{avis.prenom}</p>
                 <p className="text-[#808080]">{avis.poste}</p>
               </div>
             </motion.div>
 
             <motion.div
-              className="testimonial px-5 mb-10"
+              className="testimonial  mb-10 px-2 md:px-6"
               variants={contentAnimation}
             >
               <p>{avis.avis}</p>
@@ -124,7 +124,7 @@ const Testimonials = () => {
             <div className="flex flex-col h-full justify-end">
               <div className="bg-[#d4d4d4] h-[1px] mx-5"></div>
               <motion.div
-                className="px-5 py-6 flex justify-between items-center"
+                className=" py-6 px-2 flex justify-between items-center"
                 variants={contentAnimation}
               >
                 <div className="flex flex-wrap self-end gap-3">
@@ -133,12 +133,13 @@ const Testimonials = () => {
                       key={index}
                       className="border-black border px-6 py-2 rounded-full"
                     >
+                      {" "}
                       {tag}
                     </span>
                   ))}
                 </div>
-                <div>
-                  <p className="text-[#808080]">{avis.date}</p>
+                <div className="">
+                  <p className="text-[#808080] mb-0">{avis.date}</p>
                 </div>
               </motion.div>
             </div>

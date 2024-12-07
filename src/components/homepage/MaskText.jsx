@@ -15,11 +15,11 @@ const animation = {
 
 const MaskText = () => {
   const phrase =
-    " Un développeur manque souvent de sensibilité marketing, et un marketeur manque souvent de connaissance en développement web. J'ai décidé de faire les deux.";
+    "Un développeur manque souvent de sensibilité marketing, et un marketeur manque souvent de connaissance en développement web. J'ai décidé de faire les deux.";
 
   return (
-    <section className="bg-grey block mt-10 min-h-[200px]">
-      <div className="xl:w-2/4 md:w-3/5 w-full px-8 leading-10">
+    <section className="bg-grey block mt-10 min-h-[200px] md:px-6">
+      <div className="xl:w-2/4 md:w-3/5 leading-10">
         <h4 className="relative">
           {phrase.split(" ").map((word, index) => (
             <span

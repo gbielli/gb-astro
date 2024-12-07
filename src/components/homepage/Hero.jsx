@@ -64,7 +64,7 @@ const Hero = () => {
 
   return (
     <section className="flex items-center bg-grey min-h-screen w-full">
-      <div className="px-6 mt-6 w-full flex flex-col items-center gap-20">
+      <div className="md:px-6 mt-6 w-full flex flex-col items-center gap-20">
         <div className="self-start relative w-[140px] h-[140px]">
           <img
             src="/image/arrow.svg"
