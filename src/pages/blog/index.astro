@@ -1,0 +1,43 @@
+---
+import ArticleCard from '@/components/ArticleCard.astro';
+import SearchBar from '@/components/SearchBar';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Navigation from '../../components/Navigation.astro';
+import Layout from '../../layouts/Layout.astro';
+
+
+const posts = await getCollection('articles');
+
+const sortedPosts = posts.sort((a, b) => 
+    new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+);
+---
+
+<Layout title="Blog">
+    <main>
+        <div class="px-4 py-8 mx-auto max-w-5xl">
+            <h1 class="text-[4xl] font-bold mb-8 text-center">Mes articles et tutoriels</h1>
+            <div class="mb-20 justify-center flex"> 
+                <SearchBar client:load articles={posts} />
+            </div>
+
+
+            <div class="mb-8">
+                <Navigation pathname={Astro.url.pathname} />
+            </div>
+
+            <div class="grid gap-10">
+                {sortedPosts.map((post: CollectionEntry<'articles'>) => (
+                    <ArticleCard
+                        title={post.data.title}
+                        date={post.data.date}
+                        description={post.data.description}
+                        slug={post.slug} 
+                        chapter1={post.data.categories[0]} 
+                        mediaUrl={post.data.image}
+                    />
+                ))}
+            </div>
+        </div>
+    </main>
+</Layout>

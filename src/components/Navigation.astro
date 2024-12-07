@@ -1,0 +1,53 @@
+---
+import { slugify } from '@/lib/utils';
+import { getCollection } from 'astro:content';
+
+interface Props {
+  pathname: string;
+}
+
+const { pathname } = Astro.props;
+
+const posts = await getCollection('articles');
+const categories = [...new Set(posts.flatMap(post => post.data.categories))].map(category => ({
+  name: category,
+  path: `/blog/${slugify(category)}`
+}));
+
+const allCategories = [
+  { name: "Tous", path: "/blog" },
+  ...categories
+];
+
+// Fonction améliorée pour vérifier si une route est active
+const isActiveRoute = (categoryPath: string) => {
+  if (categoryPath === "/blog" && pathname === "/blog") {
+    return true;
+  }
+  if (categoryPath !== "/blog") {
+    return pathname === categoryPath;
+  }
+  return false;
+};
+---
+
+<nav class="mx-auto ">
+  <ul class="flex gap-4 flex-wrap justify-center">
+    {allCategories.map((category) => {
+      const isActive = isActiveRoute(category.path);
+      return (
+        <li class="border rounded-md bg-white">
+          <a
+            href={category.path}
+            class:list={[
+              "inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium transition-colors",
+              isActive ? "bg-black text-white" : "text-black"
+            ]}
+          >
+            {category.name}
+          </a>
+        </li>
+      );
+    })}
+  </ul>
+</nav>

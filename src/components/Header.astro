@@ -1,0 +1,53 @@
+---
+// Header.astro
+// En Astro, nous commençons par la section frontmatter délimitée par les tirets
+// C'est ici que nous mettons notre logique JavaScript si nécessaire
+
+// Nous pouvons définir des props si besoin
+interface Props {
+  // Par exemple, si plus tard vous voulez rendre les liens configurables
+  customClass?: string;
+}
+
+// Destructuration des props avec des valeurs par défaut
+const { customClass = '' } = Astro.props;
+
+// En Astro, nous pouvons définir nos données directement ici
+const navigationLinks = [
+  { href: '/blog', text: 'Blog' },
+
+];
+---
+
+<header class:list={['w-full py-6 px-6', customClass]}>
+  <nav class="flex justify-between items-center">
+    <!-- Logo avec effet de transition -->
+    <a 
+      href="/" 
+      class="text-lg transition-colors duration-300 hover:text-gray-600"
+    >
+      © Guillaume Bielli
+    </a>
+    
+    <!-- Navigation avec effet de soulignement -->
+    <div class="flex gap-10">
+      {
+        navigationLinks.map(({ href, text }) => (
+          <a
+            href={href}
+            class="relative group"
+          >
+            <span class="relative">
+              {text}
+              <span 
+                class="absolute -bottom-1 left-0 w-full h-px bg-current transform scale-x-0 
+                       group-hover:scale-x-100 transition-transform duration-300 ease-out"
+              />
+            </span>
+          </a>
+        ))
+      }
+    </div>
+  </nav>
+</header>
+

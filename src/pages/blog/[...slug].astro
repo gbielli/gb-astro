@@ -1,0 +1,138 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { slugify } from '@/lib/utils';
+import { Icon } from 'astro-icon/components';
+import { Image } from 'astro:assets';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+interface Props {
+  post: CollectionEntry<'articles'>;
+}
+
+export async function getStaticPaths() {
+  const posts = await getCollection('articles');
+  
+ 
+  return posts.map((post: CollectionEntry<'articles'>) => ({
+    params: { 
+      slug: post.slug
+    },
+    props: { post }
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+const headings = await post.render().then(({ headings }) => headings);
+
+// Gardons une référence à la catégorie principale pour la navigation
+const mainCategory = post.data.categories[0];
+---
+
+<Layout title={post.data.title} description={post.data.description} image={post.data.image}>
+  <main class="max-w-4xl mx-auto px-4">
+    {/* Navigation avec lien de retour vers la catégorie */}
+    <div class="flex gap-4">
+      <a 
+        href={`/blog/${slugify(mainCategory)}`}
+        class="inline-flex items-center gap-2 px-4 py-2 mt-10 text-gray-600 rounded-lg hover:bg-gray-100 transition-colors group focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500"
+        aria-label="Retourner à la catégorie"
+      >
+        <Icon 
+          name="mdi-light:arrow-left" 
+          class="w-5 h-5 transition-transform duration-200 group-hover:-translate-x-1" 
+        />
+        <span class="font-medium">
+          Retour à {mainCategory}
+        </span>
+      </a>
+    </div>
+
+    <div class="mt-10 space-y-8">
+        {/* Catégories cliquables */}
+        {post.data.categories && (
+          <div class="flex flex-wrap gap-2">
+            {post.data.categories.map((cat) => (
+              <a
+                href={`/blog/${slugify(cat)}`}
+                class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200 transition-colors"
+              >
+                {cat}
+              </a>
+            ))}
+          </div>
+        )}
+
+        {/* Le reste du code reste identique... */}
+        <h1 class="text-4xl md:text-5xl font-bold leading-tight">
+          {post.data.title}
+        </h1>
+
+        <p class="text-2xl text-gray-600 leading-relaxed">
+          {post.data.description}
+        </p>
+
+     
+      
+
+      {/* Metadata */}
+      <div class="flex items-center gap-2 text-sm ">
+      
+        <div class="flex gap-2">
+          <div class="w-12 h-12">
+            <Image src="/image/logo-gb-article.png" alt="Icone de visionneur" width="50" height="50" />
+          </div>
+          <div class="flex flex-col text-[16px] gap-1">
+            {post.data.author && <span> {post.data.author}</span>}
+            <time class="text-gray-500" datetime={post.data.date}>
+              {new Date(post.data.date).toLocaleDateString('fr-FR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              })}
+            </time>
+          </div>
+        </div>
+      </div>
+
+      {/* Image principale */}
+      {post.data.image && (
+        <div class="relative aspect-video w-full overflow-hidden rounded-xl">
+          <img
+            src={post.data.image}
+            alt={post.data.title}
+            class="object-cover w-full h-full"
+          />
+        </div>
+      )}
+
+   <!-- Sommaire -->
+   {headings.length > 0 && (
+    <nav class="my-8 p-4  border border-gray-200 rounded-lg">
+      <h2 class="text-xl font-bold mb-4">Sommaire</h2>
+      <ul class="space-y-2">
+        {headings.map((heading) => (
+          <li class="group flex items-center">
+            <Icon 
+              name="mdi-light:chevron-right"
+              class="w-4 h-4 mr-2 text-gray-400 transition-transform duration-200 group-hover:text-gray-800 group-hover:translate-x-0.5"
+            />
+            <a 
+              href={`#${heading.slug}`}
+              class="hover:text-gray-800 hover:underline text-base underline-offset-2"
+            >
+              {heading.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )}
+
+      {/* Contenu */}
+      <article class="prose prose-lg max-w-none">
+        <Content />
+      </article>
+    </div>
+  </main>
+</Layout>
