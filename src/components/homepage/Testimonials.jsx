@@ -109,8 +109,8 @@ const Testimonials = () => {
                 className="w-[70px] h-[70px] object-cover rounded-full"
               />
               <div className="">
-                <p className="font-bold">{avis.prenom}</p>
-                <p className="text-[#808080]">{avis.poste}</p>
+                <p className="font-bold m-0">{avis.prenom}</p>
+                <p className="text-[#808080] m-0">{avis.poste}</p>
               </div>
             </motion.div>
 

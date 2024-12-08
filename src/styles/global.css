@@ -252,13 +252,16 @@ img {
 }
 @layer components {
   .prose h2 {
-    @apply relative hover:no-underline;
+    @apply text-[26px] md:text-[30px] relative hover:no-underline;
+  }
+
+  .prose p {
+    @apply text-[20px] md:text-[21px];
   }
 
   /* Hashtag avant le titre */
   .prose h2::before {
-    @apply absolute -left-8;
-    content: "#";
+    content: "# ";
     color: #4299e1;
   }
 }

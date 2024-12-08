@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
+import AnimatedButton from "../AnimatedButton";
 
 const skillItem = [
   {
@@ -24,25 +25,6 @@ const skillItem = [
   },
 ];
 
-// Animation améliorée pour le bouton
-const buttonSlide = {
-  initial: {
-    y: "66px",
-    transition: {
-      duration: 0.8,
-      ease: [0.25, 1, 0.5, 1], // Courbe plus douce
-    },
-  },
-  enter: {
-    y: "0",
-    transition: {
-      duration: 0.8,
-      ease: [0.25, 1, 0.5, 1],
-    },
-  },
-};
-
-// Animation améliorée pour les éléments de compétence
 const animation = {
   initial: {
     y: "100%",
@@ -133,8 +115,7 @@ const Skill = () => {
             );
           })}
         </div>
-
-        {/* Le reste du code reste identique */}
+        <AnimatedButton href="/contact" client:load />
       </div>
     </section>
   );

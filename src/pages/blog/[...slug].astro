@@ -38,7 +38,7 @@ const components = {
 ---
 
 <Layout title={post.data.title} description={post.data.description} image={post.data.image}>
-  <main class=" mx-auto">
+  <main class="md:max-w-4xl mx-auto">
     <div class="flex gap-4">
       <a 
         href={`/blog/${slugify(mainCategory)}`}

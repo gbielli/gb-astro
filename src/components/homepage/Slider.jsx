@@ -31,7 +31,7 @@ const slider2 = [
   },
   {
     color: "#d7d4cf",
-    src: "mypangee-ux.jpg",
+    src: "mypangee-ux-vf.jpg",
   },
   {
     color: "#e1dad6",
