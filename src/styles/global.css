@@ -61,7 +61,8 @@
 
 @font-face {
   font-family: "Archivo";
-  src: url("/fonts/Archivo-Regular.woff2") format("woff2");
+  src: url("/fonts/Archivo-Regular.woff2") format("woff2"),
+    url("/fonts/Archivo-Regular.woff") format("woff");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -69,23 +70,43 @@
 
 @font-face {
   font-family: "Archivo";
-  src: url("/fonts/Archivo-Semibold.woff2") format("woff2");
+  src: url("/fonts/Archivo-Medium.woff2") format("woff2"),
+    url("/fonts/Archivo-Medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@font-face {
+  font-family: "Archivo";
+  src: url("/fonts/Archivo-Semibold.woff2") format("woff2"),
+    url("/fonts/Archivo-Semibold.woff") format("woff");
   font-weight: 600;
   font-style: normal;
   font-display: swap;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 @font-face {
   font-family: "Clash";
-  src: url("/fonts/ClashDisplay-Semibold.woff2") format("woff2");
+  src: url("/fonts/ClashDisplay-Semibold.woff2") format("woff2"),
+    url("/fonts/ClashDisplay-Semibold.woff") format("woff");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
   font-family: "Archivo", sans-serif;
   font-weight: 400; /* Ajoutez une fallback */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
   background-color: #f8f8f8;
   color: black;
 }
@@ -256,7 +277,7 @@ img {
   }
 
   .prose p {
-    @apply text-[20px] md:text-[21px];
+    @apply text-[18px] md:text-[21px];
   }
 
   /* Hashtag avant le titre */

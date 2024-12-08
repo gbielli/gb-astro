@@ -7,7 +7,7 @@ interface Props {
   date: string;
   description: string;
   slug: string; 
-  chapter1: string;
+  chapter1: string[];
   mediaUrl?: string | null;
 }
 
@@ -46,10 +46,13 @@ const formattedDate = new Date(date).toLocaleDateString('fr-FR', {
         <p class="text-md text-gray-500 overflow-hidden text-ellipsis line-clamp-3">{description}</p>
       </div>
       
-      <div class="pt-2">
-        <Badge className="px-3 py-1 text-sm bg-gray-200 text-gray-700 font-normal rounded-full hover:bg-inerit shadow-none hover:shadow-none">
-          {chapter1}
-        </Badge>
+      <div class="pt-2 flex gap-2">
+        
+          {chapter1.map((chapter) =>  <Badge className="px-3 py-1 text-sm bg-gray-200 text-gray-700 font-normal rounded-full hover:bg-inerit shadow-none hover:shadow-none">
+            {chapter}
+          </Badge>)}
+    
+       
       </div>
     </div>
   </a>

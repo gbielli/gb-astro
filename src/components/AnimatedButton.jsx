@@ -29,7 +29,7 @@ const AnimatedButton = ({ href }) => {
           onMouseEnter={() => setIsHover(true)}
           onMouseLeave={() => setIsHover(false)}
         >
-          <span className="text-black">En savoir plus</span>
+          <span className="text-black">Voir les articles</span>
           <div className="overflow-hidden flex justify-center items-center">
             <motion.span
               variants={buttonSlide}

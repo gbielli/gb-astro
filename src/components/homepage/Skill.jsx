@@ -4,9 +4,9 @@ import AnimatedButton from "../AnimatedButton";
 
 const skillItem = [
   {
-    title: "Acquisition client",
+    title: "Web Analytics",
     description:
-      "Je développe votre stratégie SEO et SEA avec une logique data-driven.",
+      "Je mets en place un suivi utilisateurs first party avec des outils RGPD compliant comme Matomo ou Piwik Pro.",
   },
   {
     title: "User experience",
@@ -14,10 +14,11 @@ const skillItem = [
       "Je vous accompagne sur le plan créatif et technique pour développer une expérience utilisateur mémorable.",
   },
   {
-    title: "Web Analytics",
+    title: "Acquisition client",
     description:
-      "Je mets en place un suivi utilisateurs first party avec des outils RGPD compliant comme Matomo ou Piwik Pro.",
+      "Je développe votre stratégie SEO et SEA avec une logique data-driven.",
   },
+
   {
     title: "Automation",
     description:
@@ -61,7 +62,7 @@ const Skill = () => {
   const [isActive, setIsActive] = useState(false);
 
   return (
-    <section className="py-40 px-2 md:px-20 z-1 relative">
+    <section className="py-40 px-2 md:px-10 z-1 relative">
       <div className="">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -115,7 +116,7 @@ const Skill = () => {
             );
           })}
         </div>
-        <AnimatedButton href="/contact" client:load />
+        <AnimatedButton href="/blog" client:load />
       </div>
     </section>
   );

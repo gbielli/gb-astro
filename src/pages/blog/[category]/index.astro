@@ -51,7 +51,7 @@ const { category, posts } = Astro.props;
             date={post.data.date}
             description={post.data.description}
             slug={post.slug}
-            chapter1={post.data.categories[0]}
+            chapter1={post.data.categories}
             mediaUrl={post.data.image}
           />
         ))}

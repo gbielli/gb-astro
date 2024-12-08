@@ -1,5 +1,4 @@
 ---
-// src/components/MdxImage.astro
 
 interface Props {
   src: string;
@@ -10,7 +9,6 @@ interface Props {
 
 const { src, alt, title, loading = "lazy" } = Astro.props;
 
-// Modifier le chemin pour ajouter le / au début si nécessaire
 const imagePath = src.startsWith('/') ? src : `/${src}`;
 const isRemoteImage = src.startsWith('http');
 ---

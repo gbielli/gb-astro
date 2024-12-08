@@ -71,6 +71,14 @@ const testimonial = [
     tag: ["Automation", "UX/UI"],
     date: "2022",
   },
+  {
+    prenom: "Alexandra",
+    poste: "Dinno Santé",
+    img: "dinno-logo.jpeg",
+    avis: "Très bon contact avec Guillaume. Il a rapidement su cerner notre besoin et nous conseiller. Je recommande vivement",
+    tag: ["Analytics", "Matomo"],
+    date: "2024",
+  },
 ];
 
 const Testimonials = () => {
@@ -124,7 +132,7 @@ const Testimonials = () => {
             <div className="flex flex-col h-full justify-end">
               <div className="bg-[#d4d4d4] h-[1px] mx-5"></div>
               <motion.div
-                className=" py-6 px-2 flex justify-between items-center"
+                className=" py-6 px-2 md:px-6 flex justify-between items-center"
                 variants={contentAnimation}
               >
                 <div className="flex flex-wrap self-end gap-3">

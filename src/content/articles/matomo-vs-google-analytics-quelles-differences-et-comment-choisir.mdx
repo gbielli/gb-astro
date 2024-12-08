@@ -1,0 +1,98 @@
+---
+title: "Matomo vs Google Analytics : quelles différences et comment choisir ?"
+description: "Depuis la mise en demeure de Google analytics par la CNIL, des alternatives fleurissent dans le monde du web analytics, comme par exemple Matomo, l'outil RGPD compliant par excellence."
+author: "Guillaume BIELLI"
+date: "2023-02-22"
+image: "/image/test-mtm.jpg"
+categories: ["Google analytics 4", "Matomo"]
+---
+
+La CNIL est claire sur le sujet, depuis le 16 juillet 2020, **elle a décidé d'invalider le Privacy Shield**, autrement dit, le dispositif qui encadrait le transfert de données personnelles vers les Etats-Unis. Et malgré [des accords de principe courant 2022](https://noyb.eu/fr/6-mois-daccord-de-principe-laccord-entre-lue-et-les-etats-unis-na-toujours-pas-ete-conclu), la situation juridique n'a pas vraiment évolué depuis.
+
+Mais comme le dicton le dit si bien « Le malheur des uns fait le bonheur des autres ». C'est le cas de Matomo, qui se voit propulser parmi les outsiders du web analytics. Prenons le temps de comparer les avantages et les inconvénients de Matomo et Google Analytics.
+
+## Les avantages de Matomo
+
+### Transparence et traitement des données RGPD
+
+Vous l'aurez compris, s'il existe un secteur où Matomo Analytics performe, c'est bien celui de la conformité à la réglementation européenne en matière de protection des données (RGPD). Dans un communiqué, la CNIL mentionnait l'outil comme alternative à Google Analytics. En ce qui concerne la gestion des données sur Matomo, Il existe deux possibilités.
+
+En tant qu’outil open-source, vous avez la possibilité de **télécharger et installer gratuitement Matomo** sur vos serveurs et **héberger les données par vos propres moyens**. Vous serez donc propriétaire des données sans que Matomo n'ait le moindre accès à celles-ci. C'est la solution On-Premise ou auto-hébergé.
+
+La deuxième possibilité proposée par Innocraft, la société qui a édité Matomo, est la version cloud. Dans ce cas, c’est **Matomo qui hébergera vos données**, mais l’entreprise s'engage à n’obtenir aucun droit sur celles-ci et à conserver leurs confidentialités.
+
+### Tracker l'ensemble des utilisateurs sans consentement
+
+La magie de Matomo dans sa configuration initiale, c’est qu’il vous permettra de **tracker (quasiment) 100% des utilisateurs, sans avoir besoin de récolter le consentement**, sympa non ?
+
+Attention tout de même, cela ne veut pas pour autant dire que toutes les fonctionnalités de Matomo Analytics sont dénuées de consentement. En activant le suivi e-commerce ou la carte des chaleurs par exemple, il vous faudra récolter le consentement de vos utilisateurs.
+
+### Des performances au rendez-vous
+
+Disons le maintenant, quitte à enfoncer une porte ouverte, le niveau de performance n’égale tout de même pas Google Analytics. Néanmoins, Matomo n’a clairement pas à rougir de ses performances. Vous pourrez créer des événements, suivre des objectifs, créer des entonnoirs de conversion, suivre vos ventes e-commerce, créer des rapports personnalisés, What else ?
+
+Vous pourrez en plus **profiter de fonctionnalités que Google Analytics ne propose pas**, comme la carte de chaleur, qui, même si moins complète que des outils spécialisés comme Hotjar, peut s'avérer très utile et amplement suffisante pour le commun des mortels.
+
+## Les inconvénients de Matomo
+
+### Un coût d'abonnement en fonction de l'installation
+
+L'installation gratuite « On-Premise » nécessite quelques compétences techniques pour la mettre en place sur votre site, d'autant que vous devez disposer ou mettre en place une base de données. Dans le cadre où vous souhaitez **une intégration plus accessible, il faudra se tourner vers la version « Cloud », **qui vous coûtera 19 euros par mois pour 50 000 hits, à plus de 100 euros par mois pour 600 000 hits et certaines fonctionnalités seront limitées.
+
+### Une communauté encore timide
+
+Bien que la solution existe depuis 2007, d’abord sous le nom de Piwik puis Matomo, la communauté n’est pas encore assez développée. Lorsque l’on rencontre un problème un peu complexe, **il est parfois difficile de trouver sa réponse sur le web**. Ce défaut a tendance à se résorber avec le temps puisque de plus en plus d'utilisateurs décident de sauter le pas.
+
+### Délai de traitement sur les segments et les rapports personnalisés
+
+C'est le point que je considère comme le plus gênant. **Lorsque vous créez un segment ou rapport personnalisé, **comme vous le feriez sur Google analytics, **il vous faudra attendre au moins deux heures** pour pouvoir vous en servir, en fonction de l'activité de votre site Web. Lorsque vous souhaitez analyser une donnée particulière en fonction d'un segment, vous en avez souvent besoin immédiatement, et ces quelques heures ralentissent considérablement le processus d'analyse.
+
+Ces délais sont dus au fait que Matomo soit construit sur un système de gestion de base de données MySQL (SGBD), qui est un système orienté ligne. Lorsque vous créez un segment par exemple, Matomo doit donc traiter un nombre considérable de lignes pour réaliser l'opération demandée, et cela prend du temps, contrairement au modèle orienté colonne.
+
+### Une compatibilité avec d'autres outils limitée
+
+C’est peut-être un point qui va lui aussi s’améliorer avec le temps, mais les intégrations Matomo ne sont pas nombreuses et parfois payantes en fonction des outils que vous avez l'habitude d'utiliser.
+
+Vous aurez tout de même la possibilité d’intégrer Matomo à Looker studio par exemple (ex Google Data Studio) grâce au plugin Viu.one moyennant un abonnement à partir de 24€/mois. Il vous faudra donc débloquer du budget pour ce type d’intégration.
+
+Pas de panique côté implémentation avec Google Tag Manager, il est tout à fait possible de **l'utiliser pour mettre en place et développer le tracking sur Matomo**.
+
+Il est aussi possible de connecter gratuitement la [Google search console via Google API](/connecter-la-google-search-console-a-matomo) pour récupérer et analyser les mots-clés sur Matomo. In fine, vous arriverez à vos fins mais sachez que les solutions peuvent être payantes ou un peu plus complexes à mettre en place qu’avec Google Analytics.
+
+## Les avantages de Google analytics
+
+### La puissance de l’outil et du machine learning
+
+Google Analytics était et reste encore la solution la plus avancée et la plus complète sur le marché du web analytics. Malgré son interdiction, beaucoup d’entreprises continuent de l’utiliser (et sans proxy).
+
+La firme de Mountain View **a d’ailleurs trouvé une parade au refus de consentement** grâce au machine learning en créant le **consent mode avancé**, cette fonctionnalité qui permet à Google Analytics de prédire le comportement des utilisateurs qui refusent les cookies.
+
+### Une interaction parfaite avec le web
+
+Les intégrations de Google analytics avec d’autres outils sont extrêmement nombreuses, et les intégrations se font souvent en un clic. Vous pourrez connecter à peu près tous vos outils avec Google analytics, c’est un point non négligeable dans une stratégie marketing globale. L'implémentation avec Google Tag Manager s'est d'ailleurs facilitée puisque depuis Google analytics 4, vous profitez d'un ensemble d'évènements de base avec une seule balise GTM.
+
+### Une communauté hyperactive
+
+À tout problème, il existe sa solution. Google analytics a tellement été éprouvé que si le centre d'aide de Google ne peut pas répondre à vos questions ou si la réponse ne vous semble pas suffisante, vous pourrez compter sur une communauté très solidaire pour résoudre votre problématique.
+
+## Les inconvénients de Google analytics
+
+### Google Analytics 4 : un nouvel outil à prendre en main
+
+Si vous avez l’habitude d’utiliser Universal Analytics, il va vous falloir un temps d’adaptation sur Google Analytics 4 qui n’a plus rien à voir avec son petit frère. Du fait que Google Analytics passe d’une optique « session base » à une logique « event base », l’interface et les fonctionnalités ont été complètement repensées. Et le temps presse, puisque l’arrêt d'Universal Analytics a été annoncé pour le 1er Juillet 2023 pour les comptes gratuits.
+
+### Une proxyfication nécessaire et complexe
+
+Comme nous l'avons précisé auparavant, l'outil ne répond pas aux exigences de la CNIL sur l'anonymisation et le traitement des données récoltées.
+
+Mais, rassurez-vous, il existe tout de même une solution pour utiliser Google Analytics légalement : la mise en place d'un conteneur serveur side, qui permettra de faire tampon entre le terminal de l'utilisateur et les serveurs de Google Analytics. Sachez tout de même que cette solution peut s'avérer complexe à mettre en place.
+
+### L'incertitude légale : l'épée de Damoclès
+
+Globalement, l'incertitude et l'éternisation des échanges entre l'Europe et les Etats-Unis entraînent les entreprises dans une situation délicate, entre la volonté de se mettre aux normes, et l'espoir qu'un accord puisse enfin se concrétiser. Il n'en reste pas moins que, sans proxy aujourd'hui, l'utilisation d'Universal Analytics ou Google Analytics 4 est illégale. D'ailleurs, les sanctions et les mises en demeure de la part de la CNIL semblent s'intensifier. Reste à savoir si l'on préfère prendre le risque de se faire sanctionner ou si l'on souhaite se mettre en conformité soit par un proxy, soit en s'essayant avec un nouvel outil prometteur tel que Matomo.
+
+## Alors, comment choisir entre Matomo et Google Analytics ?
+
+Le choix vous appartient, et j'espère qu'à travers cet article j'ai pu vous permettre d'y voir un peu plus clair sur les enjeux, les avantages et les inconvénients de Google Analytics et de Matomo. Le choix entre Matomo et Google Analytics dépendra en grande partie de vos besoins spécifiques. Si vous recherchez un outil open-source conforme au RGPD et êtes intéressé par le tracking sans consentement, alors Matomo est une excellente option. Si au contraire, vous souhaitez un outil puissant et que Google Analytics 4 et la proxyfication ne sont pas des sujets qui vous font peur, alors Google Analytics est probablement un choix judicieux.
+
+Si vous n'êtes pas certain de votre migration sur Matomo, sachez que **la version cloud dispose d'une période d'essai gratuite de 30 jours.** Le temps de tester et de voir si l'outil peut répondre à votre besoin.

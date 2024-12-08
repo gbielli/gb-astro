@@ -79,14 +79,13 @@ const Hero = () => {
                 fill="none"
                 className="invisible"
               />
-              <text className="text-[16px]">
+              <text className="text-[18px]">
                 <textPath
                   href="#circlePath"
                   startOffset="0%"
                   className="fill-current"
                 >
-                  • digital • digital • digital • digital • digital • digital•
-                  digital
+                  • digital • digital • digital • digital • digital • digital
                 </textPath>
               </text>
             </svg>
