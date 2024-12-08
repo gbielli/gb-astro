@@ -42,7 +42,7 @@ const components = {
     <div class="flex gap-4">
       <a 
         href={`/blog/${slugify(mainCategory)}`}
-        class="inline-flex items-center gap-2 px-4 py-2 text-gray-600 rounded-lg hover:bg-gray-100 transition-colors group focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500"
+        class="inline-flex items-center gap-2 px-4 py-2 text-gray-600 rounded-lg hover:bg-white transition-colors group focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500"
         aria-label="Retourner à la catégorie"
       >
         <Icon 
@@ -117,7 +117,7 @@ const components = {
 
    <!-- Sommaire -->
    {headings.length > 0 && (
-    <nav class="my-8 p-4  border border-gray-200 rounded-lg">
+    <div class="my-8 p-4  border border-gray-200 rounded-lg bg-white">
       <h2 class="text-xl font-bold mb-4">Sommaire</h2>
       <ul class="space-y-2">
         {headings.map((heading) => (
@@ -135,7 +135,7 @@ const components = {
           </li>
         ))}
       </ul>
-    </nav>
+    </div>
   )}
 
       

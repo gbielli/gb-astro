@@ -259,6 +259,6 @@ img {
   .prose h2::before {
     @apply absolute -left-8;
     content: "#";
-    color: #bebfc1;
+    color: #4299e1;
   }
 }
