@@ -222,7 +222,7 @@ img {
 }
 
 .prose a {
-  @apply relative font-medium text-blue-500;
+  @apply relative font-medium text-blue-500 no-underline;
 }
 
 .prose a:hover {
@@ -250,21 +250,15 @@ img {
     @apply bg-background text-foreground;
   }
 }
-
 @layer components {
-  /* Style de base pour tous les titres */
   .prose h2 {
     @apply relative hover:no-underline;
   }
 
   /* Hashtag avant le titre */
   .prose h2::before {
-    @apply absolute -left-8 opacity-0 transition-opacity duration-200;
+    @apply absolute -left-8;
     content: "#";
-  }
-
-  /* Afficher le hashtag au hover */
-  .prose h2:hover::before {
-    @apply opacity-40;
+    color: #bebfc1;
   }
 }

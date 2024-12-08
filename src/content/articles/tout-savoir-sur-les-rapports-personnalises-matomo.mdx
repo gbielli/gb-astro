@@ -1,10 +1,10 @@
 ---
-title: "Comment paramétrer Matomo pour tracker sans consentement"
-description: "Découvrez comment paramétrer Matomo Analytics pour respecter le RGPD et vous permettre de suivre vos utilisateurs sur votre site web en étant exempté du recueil de consentement."
+title: "Tout savoir sur les rapports personnalisés Matomo"
+description: "Découvrez comment fonctionnent les rapports personnalisés Matomo. Je vous explique étape par étape la configuration pour créer un rapport personnalisé sur votre interface Matomo."
 author: "Guillaume BIELLI"
 date: "2023-05-01"
 image: "/image/articles/matomo-rapports-personnalises.png"
-categories: ["Développement", "Google analytics 4"]
+categories: ["Matomo"]
 ---
 
 les rapports natifs de Matomo ne suffisent pas toujours pour suivre correctement les performances de votre activité, que ce soit au niveau du suivi des objectifs ou plus spécifiquement du e-commerce. Et s’il existe bien une fonctionnalité à ne pas rater sur Matomo à mon sens, c’est bien les rapports personnalisés.
@@ -15,7 +15,7 @@ C’est pour cette raison que je vous recommande grandement d’utiliser les rap
 
 Si vous avez installé Matomo On-premise, il vous faudra acquérir le plugin sur la marketplace Matomo, moyennant à peu près 150 euros.
 Si vous êtes sur la version cloud en business, vous bénéficiez gratuitement du plugin rapport personnalisé.
-Installer Matomo et installer le code de suivi Matomo
+Installer Matomo et [installer le code de suivi Matomo](/comment-mettre-en-place-le-suivi-matomo-avec-google-tag-manager)
 
 ## Comment fonctionnent les rapports personnalisés Matomo ?
 
@@ -23,14 +23,12 @@ Rendez-vous dans la rubrique rapport personnalisé de votre Dashboard Matomo.
 
 ![Page rapport sur Matomo](/image/articles/creer-un-nouveau-rapport.png)
 
-Créer un nouveau rapport personnalisé sur Matomo
 L’interface que propose Matomo est assez simple. Commençons par renseigner le nom de rapport, faites en sorte que le nom soit assez clair, sinon il sera difficile de s’y retrouver par la suite.
 
 Ensuite, ajoutez la description, je vous conseille de prendre le temps de préciser l'enjeu du rapport, d’autant plus si vous partagez ce rapport avec des membres de votre équipe.
 
 Jusque-là, je ne devrais pas avoir perdu grand monde.
 
-la fonctionnalité qui cibler les sites web sur Matomo dans les rapports personnalisés
 La partie “Appliquer à” ne vous concerne que si vous gérez plusieurs sites web. Si c’est votre cas, vous aurez la possibilité d’assigner ce rapport à un site web en particulier, ou à l’ensemble des sites web que vous disposez sur Matomo.
 
 Matomo nous propose ensuite de choisir le type de rapport personnalisé. Il en existe deux types :
@@ -46,7 +44,7 @@ Pour rappel, les dimensions concernent les données qualitatives, comme une coul
 Les filtres sur le rapport personnalisé Matomo
 Matomo vous propose ensuite des filtres. Ces filtres fonctionnent comme les segments sur Matomo, ce qui vous permettra d’inclure ou d’exclure un certain nombre de données de votre rapport.
 
-Ceci dit, dans la mesure du possible, je vous conseille plutôt d’utiliser les segments de Matomo et d’éviter les filtres. Pourquoi ? Parce que la modification d’un filtre ou la modification d’un élément d’un rapport personnalisé régénère les données du mois dernier et efface les données plus anciennes déjà présentes sur celui-ci. Autrement dit, un rapport personnalisé n’est pas fait pour être changé tous les 4 matins. A bon entendeur.
+Ceci dit, dans la mesure du possible, je vous conseille plutôt d’utiliser les segments de Matomo et d’éviter les filtres. Pourquoi ? Parce que la modification d’un filtre ou **la modification d’un élément d’un rapport personnalisé régénère les données du mois dernier et efface les données plus anciennes** déjà présentes sur celui-ci. Autrement dit, un rapport personnalisé n’est pas fait pour être changé tous les 4 matins. A bon entendeur.
 
 Que ce soit pour les dimensions ou pour les métriques, vous trouverez les catégories de données suivantes :
 
@@ -68,12 +66,10 @@ Enfin, dans « page du rapport », et « catégorie du rapport », Matomo vous p
 
 ## Exemple de création d’un rapport personnalisé Matomo
 
-Prenons un cas concret, imaginons que nous souhaitons pour chaque catégorie de produit, faire ressortir le nombre de ventes par canal.
+Prenons un cas concret, imaginons que nous souhaitons pour chaque catégorie de produit, faire ressortir le nombre de ventes par canal.Dans ce cas, j’imbrique deux dimensions :
 
-Dans ce cas, j’imbrique deux dimensions :
-
-« catégorie de produit consultée 1 »
-« Type de canal ».
+- « catégorie de produit consultée 1 »
+- « Type de canal ».
 
 ![Exemple de création d’un rapport personnalisé Matomo](/image/articles/Dimension-personnalise.jpg)
 
@@ -81,10 +77,10 @@ Je dois maintenant indiquer les métriques, en l’occurrence, ce qui peut m’i
 
 J’ajoute donc les métriques suivantes :
 
-"Visites"
-"Total quantité produit"
-"Total valeur de la commande"
-"Moy. valeur de la commande par référence de la commande"
+- "Visites"
+- "Total quantité produit"
+- "Total valeur de la commande"
+- "Moy. valeur de la commande par référence de la commande"
 
 L’ensemble des métriques n’est pas toujours très clair sur l’interface, certaines métriques peuvent s’appeler différemment entre les rapports classiques et les rapports personnalisés. Il faudra s’assurer que les données correspondent.
 
@@ -92,12 +88,12 @@ Les données issues du rapport personnalisé ne sont pas non plus rétroactives,
 
 ## Ce que j'aime avec les rapports personnalisés Matomo
 
-Le fait de pouvoir utiliser les rapports personnalisés dans n’importe quel rapport existant ou dans un Dashboard dédié.
-Le mode de prévisualisation qui est bien pratique pour s’assurer que nous avons les bonnes données.
-La possibilité d’utiliser facilement les données des rapports personnalisés dans Looker studio (ex Google Data Studio)
+- Le fait de pouvoir utiliser les rapports personnalisés dans n’importe quel rapport existant ou dans un Dashboard dédié.
+- Le mode de prévisualisation qui est bien pratique pour s’assurer que nous avons les bonnes données.
+- La possibilité d’utiliser facilement les données des rapports personnalisés dans Looker studio (ex Google Data Studio)
 
 ## Ce que j’aime moins avec les rapports personnalisés Matomo
 
-Une fois le custom report créé, vous ne récupérerez les données qu’à partir du mois dernier.
-A chaque fois que vous modifiez un rapport personnalisé, les données se remettent à jour sur le mois dernier et vous perdez les données antérieures.
-L’impossibilité d‘intervertir les dimensions et les métriques dans l’interface au moment de la création.
+- Une fois le custom report créé, vous ne récupérerez les données qu’à partir du mois dernier.
+- A chaque fois que vous modifiez un rapport personnalisé, les données se remettent à jour sur le mois dernier et vous perdez les données antérieures.
+- L’impossibilité d‘intervertir les dimensions et les métriques dans l’interface au moment de la création.
