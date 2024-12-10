@@ -1,0 +1,61 @@
+---
+// Callout.astro
+import { AlertCircle, AlertTriangle, Info, Lightbulb } from 'lucide-react';
+
+const { type = 'info' } = Astro.props;
+
+const styles = {
+  info: {
+    containerClass: 'bg-blue-50 border-blue-300',
+    textClass: 'text-blue-700',
+    iconClass: 'text-blue-500',
+    Icon: Info
+  },
+  warning: {
+    containerClass: 'bg-yellow-50 border-yellow-300',
+    textClass: 'text-yellow-700',
+    iconClass: 'text-yellow-500',
+    Icon: AlertTriangle
+  },
+  error: {
+    containerClass: 'bg-red-50 border-red-300',
+    textClass: 'text-red-700',
+    iconClass: 'text-red-500',
+    Icon: AlertCircle
+  },
+  tip: {
+    containerClass: 'bg-green-50 border-green-300',
+    textClass: 'text-green-700',
+    iconClass: 'text-green-500',
+    Icon: Lightbulb
+  }
+};
+
+const { containerClass, textClass, iconClass, Icon } = styles[type];
+---
+<div class={`p-6 my-6 shadow-sm rounded-lg bg-gray-200 text-black ${containerClass} ${textClass}`}>
+  <div class="flex gap-4">
+    <div class={`icon-wrapper flex-shrink-0 ${iconClass}`}>
+      <Icon size={21} strokeWidth={2} />
+    </div>
+    <div class="callout-content">
+      <slot />
+    </div>
+  </div>
+</div>
+
+<style>
+  .callout-content :global(p) {
+    @apply m-0 text-lg;
+  }
+  
+  .icon-wrapper {
+    position: relative;
+  }
+  
+  .icon-wrapper::before {
+    content: '';
+    display: block;
+    height: 4px; /* Ajustez cette valeur pour l'alignement parfait */
+  }
+</style>

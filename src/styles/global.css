@@ -277,7 +277,28 @@ img {
   }
 
   .prose p {
-    @apply text-[18px] md:text-[21px];
+    @apply text-[18px] md:text-[21px] text-gray-700;
+  }
+
+  .prose
+    :where(p code, li code, h1 code, h2 code, h3 code, h4 code):not(
+      :where([class~="not-prose"], [class~="not-prose"] *)
+    ) {
+    @apply bg-blue-100 text-blue-500 px-2 py-1 rounded font-mono text-sm inline-flex items-center;
+  }
+
+  .prose
+    :where(p code, li code, h1 code, h2 code, h3 code, h4 code):not(
+      :where([class~="not-prose"] *)
+    )::before {
+    content: "" !important;
+  }
+
+  .prose
+    :where(p code, li code, h1 code, h2 code, h3 code, h4 code):not(
+      :where([class~="not-prose"] *)
+    )::after {
+    content: "" !important;
   }
 
   /* Hashtag avant le titre */

@@ -1,0 +1,103 @@
+---
+title: "Comment paramétrer Matomo pour tracker sans consentement ?
+"
+description: "Découvrez comment paramétrer Matomo Analytics pour respecter le RGPD et vous permettre de suivre vos utilisateurs sur votre site web en étant exempté du recueil de consentement.
+"
+author: "Guillaume BIELLI"
+date: "2023-03-09"
+image: "/image/articles/suivi-sans-consentement-matomo.jpg"
+categories: ["Matomo"]
+---
+
+import Callout from "@/components/Callout.astro";
+
+Le temps de l'hésitation entre [Google Analytics vs Matomo](/matomo-vs-google-analytics-quelles-differences-et-comment-choisir) est bien passé, et il est temps de revenir sur le sujet. La CNIL a décidé de mettre en place un nouveau suivi de base pour les sites web, et c'est le cas de Matomo.
+
+## Désactiver les rapports de données
+
+Dans Système > Paramètres généraux, Dans la section "Live", assurez-vous que « journal des visites et profil du visiteur » est désactivé.
+
+![anonymisation des données](/image/articles/anonymisation-donnee-matomo.png)
+
+<Callout type="info">
+  Les IP version 4 – IPV4 : 127.0.0.1 et leur version 6 – IPV6 :
+  0:0:0:0:0:ffff:7f00:1. Les IP version 4 – IPV4 : 127.0.0.1 et leur version 6 –
+  IPV6 : 0:0:0:0:0:ffff:7f00:1.
+</Callout>
+
+## Permettre à vos utilisateurs de refuser le suivi
+
+Pour respecter la réglementation de la CNIL, **Le suivi sans consentement de Matomo doit permettre à l'utilisateur de désactiver son suivi s'il le souhaite**.
+
+Pas besoin de bannière bien entendu, vous pouvez par exemple ajouter l’opt-out sur une page comme votre politique de confidentialité. Matomo met à votre disposition un bloc HTML et un script que vous trouverez dans :
+
+Paramètre > Vie privée > Désinscription des utilisateurs
+
+```html
+// ne copiez pas ce code
+<div id="matomo-opt-out"></div>
+<script src="<https://exemple.matomo.cloud/index.php?module=CoreAdminHome&action=optOutJS&divId=matomo-opt-out&language=auto&showIntro=1>"></script>
+```
+
+## Anonymiser les IP
+
+Par défaut, Matomo enlève les deux derniers octets des IP. Lorsque vous installez Matomo, vous serez donc aux normes sur ce point. Ce paramétrage est modifiable, donc si vous souhaitez rester en mode exempté, assurez-vous de ne rien modifier.
+
+Pour vérifier, rendez-vous dans :
+⁠Paramètre > Vie privée > Anonymiser les données
+
+Dans la partie « Anonymiser les données de suivi », assurez-vous que « rendre anonymes les adresses IP des visiteurs » est coché.
+
+![Anonymiser les IP](/image/articles/anonymisation-donnee-matomo.png)
+
+## Cookie tiers et cross domain tracking désactivé
+
+Les cookies tiers, et le cross domain tracking, c’est-à-dire la possibilité de suivre un utilisateur sur plusieurs domaines, ne doivent pas être activés.
+
+Pour les cookies tiers (par défaut non activés), qui permettent de mettre en place le User ID, il faudra vérifier le fichier config/config.ini.php
+, il ne doit pas faire mention de la ligne suivante :
+
+```php
+[Tracker] use_third_party_id_cookie = 1
+```
+
+⁠Pour le cross domain tracking, par défaut, cette option n'est pas activée. Pour s'en assurer, c'est assez simple, vérifiez que le code de suivi ne contient pas les lignes suivantes :
+
+```javascript
+_paq.push(["setDomains", ["*.domain1.com", "*.domain2.com"]]);
+_paq.push(["enableCrossDomainLinking"]);
+```
+
+## Suivi e-commerce désactivé
+
+Malheureusement, **le suivi e-commerce de Matomo est aussi une fonctionnalité qui doit nécessiter le consentement de l’utilisateur**. Si vous souhaitez rester en mode exemption de consentement, vous devrez vous assurer de ne pas activer la fonctionnalité.
+
+Pour le vérifier, c’est assez simple. dans le menu principal, l’onglet e-commerce ne doit pas apparaître.
+
+Si c’est le cas, rendez-vous dans **Paramètre > Elements mesurables > Gérer**
+
+Cliquez sur l'icône modifier à droite de votre site web. Dans l'input « Ecommerce » changez pour « N’est pas un site e-commerce ».
+
+## Cartes de chaleur et enregistrements de sessions désactivés
+
+La carte de chaleur et l'enregistrement de session doivent être désactivés dans le cadre de la mesure sans consentement, Matomo conseille d’ajouter la ligne de code suivante dans le code de suivi de base de Matomo :
+
+```javascript
+_paq.push(["HeatmapSessionRecording::disable"]);
+```
+
+## Ne pas utiliser le User ID
+
+Le User ID, particulièrement pratique pour tracker les utilisateurs sur du multi-device, ne doit pas être activé, même s'il est anonymisé par la suite. Par défaut, le User ID est désactivé.
+
+Pour s'en assurer, le code de suivi ne devrait pas faire mention de cette ligne :
+
+```javascript
+_paq.push(["setUserId", "USER_ID"]);
+```
+
+## Pas de donnée personnelle dans les dimensions et événements personnalisés
+
+Enfin, si vous créez des dimensions ou des événements personnalisés, pensez à vérifier qu’ils ne contiennent pas de donnée personnelle. Par exemple, si vous mettez en place un événement qui contient un numéro de commande, ou un email ou toutes autres informations personnelles qui permettraient d'identifier une personne de façon directe ou indirecte, alors il ne sera pas possible d'utiliser Matomo sans consentement.
+
+Et voilà, si vous respectez à la lettre ce [paramétrage sur Matomo](https://fr.matomo.org/blog/2021/10/matomo-exempt-from-tracking-consent-in-france/#more-46769), vous serez officiellement **exempté du recueil du consentement des utilisateurs et RGPD compliant**. Rien ne vous empêche pour autant de profiter de ces nouvelles fonctionnalités, mais dans ce cas, vous devrez mettre en place un outil de recueil de consentement.
