@@ -9,6 +9,9 @@ import icon from "astro-icon";
 
 // https://astro.build/config
 export default defineConfig({
+  site: "https://guillaumebielli.fr",
+  base: "/",
+  trailingSlash: "never",
   markdown: {
     shikiConfig: {
       theme: "tokyo-night",
