@@ -1,0 +1,94 @@
+---
+title: "Connecter la Google Search Console à Matomo"
+description: "Découvrez comment intégrer la Google Search Console à Matomo Analytics et accéder au rapport de performance de la search console sur votre interface Matomo."
+author: "Guillaume BIELLI"
+date: "2023-04-30"
+image: "/image/articles/matomo-search-console.jpg"
+categories: ["Matomo"]
+---
+
+## Prérequis
+
+- Vous devez avoir accès au plugin Matomo Search Keyword Performance. Si vous êtes sur une version on-premise (auto-hébergement), il faudra [l’acheter sur la marketplace matomo](https://plugins.matomo.org/SearchEngineKeywordsPerformance) (à date, il est à 169 euros/an). Si vous êtes sur la version cloud, vous aurez accès au plugin sans frais supplémentaire.
+- Avoir un compte Google Cloud Plateform
+- Avoir un accès propriétaire à la Google Search Console
+
+## Créer un nouveau projet sur Google API
+
+Commençons par créer un projet sur la [console Google Cloud](https://console.cloud.google.com/). Cliquez sur la liste des projets en haut à gauche. Une modale devrait apparaître, cliquez sur « Nouveau projet ».
+
+- **Nom du projet** : Matomo (choisissez le nom que vous voulez)
+
+Maintenant que nous avons créé notre projet, il est temps d’y associer notre application.Cliquez sur nouveau projet, choisissez un nom à votre projet, par exemple Matomo search console. Cliquez sur créer.
+
+![création d'un projet GCP](/image/articles/search-matomo/new-project-gcp-1.png)
+
+## Créer un écran de consentement Oauth
+
+C’est le moment d’associer notre application à ce nouveau projet. Rendez-vous dans la barre de menu à gauche, dans la partie « API et services », cliquez sur « Écran de consentement Oauth ».
+
+Choisissez le type d’utilisateur Externe.
+
+![ecran de consentement oauth](/image/articles/search-matomo/ecran-consentement-2.png)
+
+![ecran consentement externe](/image/articles/search-matomo/ecran-consent-externe-3.jpg)
+
+Nous devons maintenant renseigner les informations de notre application :
+
+- **Nom de l’application** : Matomo
+- **Adresse email** : votre email
+- **Page d’accueil de l’application** : `https://votre-app.domaine.cloud` sur la version cloud, ou l’url de votre instance matomo (par exemple `https://matomo.mon-domaine.fr`)
+- **Domaine autorisé** : matomo.cloud (version cloud) ou mon-domaine.fr par exemple (version On-Premise)
+- **Coordonnées du développeur** : votre email
+
+  ![application google cloud platform](/image/articles/search-matomo/application-gcp-4.png)
+
+  ![domaine autorisé google coud platform](/image/articles/search-matomo/domaine-gcp-5.png)
+
+  ![identifiant google cloud platform](/image/articles/search-matomo/identifiants-gcp-6.png)
+
+## Créer un identifiant Oauth
+
+Nous avons terminé la configuration de l’application. Nous devons maintenant créer un identifiant pour nous permettre de transmettre les données à Matomo.
+
+Rendez-vous dans Identifants > Créer des identifiants > ID client OAuth
+
+- **Type d’application** : Application web
+
+- **Nom** : Matomo at `https://mon-app.matomo.cloud` par exemple
+
+- **Origines JavaScript autorisées** : l’URL qui mène à Matomo (par exemple `https://votre-app.matomo.cloud`)
+
+- **URI de redirection autorisés** : Votre URL et /index.php?module=SearchEngineKeywordsPerformance&action=processAuthCode
+
+**À ce stade, aucune vérification de la part de Google ne devrait être faite** (n’ajoutez pas de logo, celui-ci pourrait nécessiter une vérification). Google nous indique alors que le client OAuth a bien été créé.
+
+Il nous faut maintenant **télécharger le fichier JSON**. C’est ce fichier que Matomo va nous demander d’uploader pour **établir la connexion avec la Search Console.**
+
+![télécharger le json](/image/articles/search-matomo/download-json-7.png)
+
+## Configurer la connexion Google Search Console sur Matomo
+
+Comme je l'ai indiqué en début d'article, vous devez avoir accès au plugin Search Keyword Performance, gratuit en version cloud, payant en version On-Premise.
+
+Rendez-vous dans Paramètre > Système > Performance de la recherche
+
+Cliquez sur "configuration de l'installation" puis uploadez le fichier JSON que vous avez téléchargé sur Google API.
+
+Une fois enregistré, cliquez sur Démarrer le processus d’authentification OAUTH".
+
+connectez-vous avec l’adresse email propriétaire de la search console.
+
+Google vous indiquera potentiellement qu’il n’a pas vérifié l’application, si tel est le cas, cliquez sur continuer à gauche. Pensez à cliquer sur “Afficher les données de la Search Console” avant de continuer.
+
+![accès google](/image/articles/search-matomo/acces-google-8.png)
+
+Cliquez sur “Continuer”. Vous n’avez plus qu’à ajouter la configuration :
+
+<u>Élément mesurable :</u> votre site
+
+<u>Keywordtype :</u> web
+
+<u>URL du compte :</u> `https://votresite.fr`
+
+Félicitations, **la connexion entre Matomo et la Google Search Console devrait maintenant être active**. Sachez que les premières données peuvent prendre environ 48h avant d'apparaître sur votre interface Matomo.

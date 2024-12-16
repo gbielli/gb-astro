@@ -81,8 +81,8 @@
 
 @font-face {
   font-family: "Archivo";
-  src: url("/fonts/Archivo-Semibold.woff2") format("woff2"),
-    url("/fonts/Archivo-Semibold.woff") format("woff");
+  src: url("/fonts/Archivo-SemiBold.woff2") format("woff2"),
+    url("/fonts/Archivo-SemiBold.woff") format("woff");
   font-weight: 600;
   font-style: normal;
   font-display: swap;
@@ -97,16 +97,12 @@
   font-weight: 400;
   font-style: normal;
   font-display: swap;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
   font-family: "Archivo", sans-serif;
   font-weight: 400; /* Ajoutez une fallback */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
+
   background-color: #f8f8f8;
   color: black;
 }
@@ -176,13 +172,6 @@ img {
   height: 1px;
   width: 1px;
   overflow: hidden;
-  /* IE6, IE7 - a 0 height clip, off to the bottom right of the visible 1px box */
-  clip: rect(1px 1px 1px 1px);
-  /* maybe deprecated but we need to support legacy browsers */
-  clip: rect(1px, 1px, 1px, 1px);
-  /* modern browsers, clip-path works inwards from each corner */
-  clip-path: inset(50%);
-  /* added line to stop words getting smushed together (as they go onto separate lines and some screen readers do not understand line feeds as a space */
   white-space: nowrap;
 }
 
@@ -252,7 +241,7 @@ img {
 
 /* Styles pour les liens externes */
 .prose a[href^="http"] {
-  @apply inline-flex items-center;
+  @apply items-center;
 }
 
 .prose a[href^="http"]::after {
@@ -276,15 +265,19 @@ img {
     @apply text-[26px] md:text-[30px] relative hover:no-underline;
   }
 
+  .prose li {
+    @apply text-[18px] md:text-[21px] text-gray-700 mb-2;
+  }
+
   .prose p {
     @apply text-[18px] md:text-[21px] text-gray-700;
   }
 
   .prose
     :where(p code, li code, h1 code, h2 code, h3 code, h4 code):not(
-      :where([class~="not-prose"], [class~="not-prose"] *)
+      :where([class~="not-prose"] *)
     ) {
-    @apply bg-blue-100 text-blue-500 px-2 py-1 rounded font-mono text-sm inline-flex items-center;
+    @apply bg-blue-100 text-blue-500 px-2 rounded inline-block font-archivo text-[16px] md:text-[18px];
   }
 
   .prose
@@ -301,9 +294,8 @@ img {
     content: "" !important;
   }
 
-  /* Hashtag avant le titre */
   .prose h2::before {
+    @apply text-blue-600;
     content: "# ";
-    color: #4299e1;
   }
 }
