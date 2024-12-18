@@ -31,7 +31,7 @@ export default defineConfig({
     sitemap({
       customPages: [
         "https://guillaumebielli.fr/blog/google-analytics-4",
-        "https://guillaumebielli.fr/blog//matomo",
+        "https://guillaumebielli.fr/blog/matomo",
       ],
     }),
     icon({
