@@ -28,7 +28,12 @@ export default defineConfig({
       applyBaseStyles: false,
     }),
     react(),
-    sitemap(),
+    sitemap({
+      customPages: [
+        "https://guillaumebielli.fr/blog/google-analytics-4",
+        "https://guillaumebielli.fr/blog//matomo",
+      ],
+    }),
     icon({
       include: {
         "mdi-light": ["*"],
