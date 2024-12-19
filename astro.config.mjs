@@ -12,11 +12,6 @@ export default defineConfig({
   site: "https://guillaumebielli.fr",
   base: "/",
   trailingSlash: "never",
-  image: {
-    service: {
-      entrypoint: "astro/assets/services/sharp",
-    },
-  },
   markdown: {
     shikiConfig: {
       theme: "tokyo-night",
