@@ -112,7 +112,7 @@ const Testimonials = () => {
               variants={contentAnimation}
             >
               <img
-                src={`/image/${avis.img}`}
+                src={`/src/assets/${avis.img}`}
                 alt={`Photo de ${avis.prenom}`}
                 className="w-[70px] h-[70px] object-cover rounded-full"
               />

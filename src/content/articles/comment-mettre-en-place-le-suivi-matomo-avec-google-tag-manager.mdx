@@ -3,7 +3,7 @@ title: "Comment mettre en place le suivi Matomo avec Google Tag Manager ?"
 description: "Vous avez installé Matomo et vous souhaitez installer le code de suivi Matomo sur votre site grâce à Google Tag Manager, découvrez toutes les étapes."
 author: "Guillaume BIELLI"
 date: "2023-03-21"
-image: "/image/articles/matomo-rapports-personnalises.png"
+image: "@/assets/articles/matomo-rapports-personnalises.png"
 categories: ["Matomo"]
 ---
 
@@ -15,7 +15,7 @@ Avant de rentrer dans le vif du sujet, et si ce n’est pas déjà fait, créez 
 
 Si vous venez de créer votre compte Matomo, l’outil vous propose directement différentes possibilités pour mettre en place le tracking sur votre site web. **Cliquez sur code de suivi et copiez le code.**
 
-![Copier le code de suivi Matomo](/image/articles/code-suivi-matomo.png)
+![Copier le code de suivi Matomo](/src/assets/articles/code-suivi-matomo.png)
 
 Sinon, cliquez sur administration en haut à droite de votre interface (la roue crantée), dans l’onglet éléments de suivi, cliquez sur « code de suivi ». Voici à quoi ressemble le code :
 
@@ -46,7 +46,7 @@ Sinon, cliquez sur administration en haut à droite de votre interface (la roue 
 
 Concentrons-nous maintenant sur la création de la balise sur Google Tag Manager. Sur votre interface, cliquez sur Balise et ajouter une nouvelle Balise. Choisissez le type de balise « HTML personnalisé » puis collez le code de suivi que vous avez récupéré depuis Matomo.
 
-![Balise Google Tag Manager](/image/articles/tag-html-matomo.png)
+![Balise Google Tag Manager](/src/assets/articles/tag-html-matomo.png)
 
 **update 2023 :** si vous utilisez la version cloud, il est maintenant possible d'utiliser une balise développée par Matomo pour mettre en place votre suivi :
 
@@ -57,15 +57,15 @@ Concentrons-nous maintenant sur la création de la balise sur Google Tag Manager
 
 Grâce à cette balise, vous aurez la possibilité de personnaliser facilement le code de suivi de base pour votre site.
 
-![Balise Template Matomo Dans Google Tag Manager](/image/articles/balise-template-matomo.png)
+![Balise Template Matomo Dans Google Tag Manager](/src/assets/articles/balise-template-matomo.png)
 
-![Configuration Matomo dans Google Tag Manager](/image/articles/configuration-balise-matomo.png)
+![Configuration Matomo dans Google Tag Manager](/src/assets/articles/configuration-balise-matomo.png)
 
 ## Créer un déclencheur sur Google Tag Manager
 
 À ce stade, nous n’avons pas encore configuré de déclencheur, **c’est-à-dire la condition d’activation de la balise de suivi Matomo.**
 
-![Déclencheur Google Tag Manager](/image/articles/declencheur-matomo.jpg)
+![Déclencheur Google Tag Manager](/src/assets/articles/declencheur-matomo.jpg)
 
 En dessous de la configuration de la balise, cliquez sur le bloc déclencheur et **choisissez le déclencheur “All Pages”.**
 
@@ -77,7 +77,7 @@ On est y presque. Nous devons maintenant tester l’intégration du suivi de bas
 
 En cliquant sur chacun des événements, dans la partie “Tags” à votre droite, vous devriez voir votre balise se déclencher et indiquer : “Succeeded”.
 
-![Prévisualisation Google Tag Manager](/image/articles/matomo-succeded.jpg)
+![Prévisualisation Google Tag Manager](/src/assets/articles/matomo-succeded.jpg)
 
 <u>Nota Bene :</u> si vous n’arrivez pas à utiliser la prévisualisation, il se peut
 que ce soit à cause d’une extension de bloqueur de pub comme Ad Block ou uBlock Origin.
@@ -89,7 +89,7 @@ Si ce n’est pas le cas, reprenez les étapes ci-dessus, vous avez certainement
 
 Une fois votre balise et votre déclencheur paramétrés correctement, il faut réaliser une étape simple mais importante, qui est très souvent oublié quand on débute sur Google Tag Manager : **la publication de votre conteneur.**
 
-![Publication de votre conteneur](/image/articles/publication-conteneur-gtm.png)
+![Publication de votre conteneur](/src/assets/articles/publication-conteneur-gtm.png)
 
 **Pensez à donner un nom de version et une description dans l’idéal.** En effet, Google Tag Manager est un outil qui permet de faire du versionning. Autrement dit, l’outil vous permettra de revenir sur une version antérieure, ce qui extrêmement pratique lorsque l’on fait une erreur au moment de la publication. Donc, pensez à détailler chaque version publiée, c’est un gain de temps non négligeable et croyez-moi, vous vous remercierez plus tard !
 
@@ -97,7 +97,7 @@ Une fois votre balise et votre déclencheur paramétrés correctement, il faut r
 
 Pour vous assurer que le tracking fonctionne correctement. Rendez-vous dans la partie “temps réel” qui vous permettra de consulter les visites. Naviguez sur votre site, **vous devriez voir votre session et les différentes pages consultées** dans les petites icônes dossiers.
 
-![Visites en temps réel sur Matomo](/image/articles/visite-en-temps-reel.png)
+![Visites en temps réel sur Matomo](/src/assets/articles/visite-en-temps-reel.png)
 
 Attention, cette fonctionnalité n’est pas compatible si vous souhaitez [mettre en place le suivi sans consentement avec Matomo](/blog/tout-savoir-sur-les-rapports-personnalises-matomo).
 

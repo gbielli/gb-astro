@@ -66,7 +66,7 @@ const Slider = () => {
           >
             <div className="relative w-3/4 h-3/4">
               <img
-                src={`/image/${project.src}`}
+                src={`/src/assets/${project.src}`}
                 alt={`Project ${index + 1}`}
                 className="object-cover w-full h-full"
               />
@@ -87,7 +87,7 @@ const Slider = () => {
           >
             <div className="relative w-3/4 h-[80%]">
               <img
-                src={`/image/${project.src}`}
+                src={`/src/assets/${project.src}`}
                 alt={`Project ${index + 5}`}
                 className="object-cover w-full h-full"
               />
