@@ -1,41 +1,49 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 
+import weatherProject from "@/assets/app-weather-projet.jpg";
+import googleProject from "@/assets/google.jpg";
+import landingProject from "@/assets/landing-page-projet.jpg";
+import pangeeProject from "@/assets/mypangee-ux-vf.jpg";
+import newsletterProject from "@/assets/newsletter-projet.jpg";
+import runningProject from "@/assets/running-projet.jpg";
+import digitalProject from "@/assets/site-projet-digital.jpg";
+import wixProject from "@/assets/wix.jpg";
 const slider1 = [
   {
     color: "#e3e5e7",
-    src: "app-weather-projet.jpg",
+    image: weatherProject.src,
   },
   {
     color: "#d6d7dc",
-    src: "running-projet.jpg",
+    image: runningProject.src,
   },
   {
     color: "#e3e3e3",
-    src: "landing-page-projet.jpg",
+    image: landingProject.src,
   },
   {
     color: "#21242b",
-    src: "google.jpg",
+    image: googleProject.src,
   },
 ];
 
 const slider2 = [
   {
     color: "#d4e3ec",
-    src: "newsletter-projet.jpg",
+    image: newsletterProject.src,
   },
   {
     color: "#e5e0e1",
-    src: "site-projet-digital.jpg",
+    image: digitalProject.src,
   },
   {
     color: "#d7d4cf",
-    src: "mypangee-ux-vf.jpg",
+    image: pangeeProject.src,
   },
   {
     color: "#e1dad6",
-    src: "wix.jpg",
+    image: wixProject.src,
   },
 ];
 
@@ -66,8 +74,10 @@ const Slider = () => {
           >
             <div className="relative w-3/4 h-3/4">
               <img
-                src={`/src/assets/${project.src}`}
+                src={project.image}
                 alt={`Project ${index + 1}`}
+                width={400}
+                height={200}
                 className="object-cover w-full h-full"
               />
             </div>
@@ -87,8 +97,8 @@ const Slider = () => {
           >
             <div className="relative w-3/4 h-[80%]">
               <img
-                src={`/src/assets/${project.src}`}
-                alt={`Project ${index + 5}`}
+                src={project.image}
+                alt={`Project ${index + 1}`}
                 className="object-cover w-full h-full"
               />
             </div>
