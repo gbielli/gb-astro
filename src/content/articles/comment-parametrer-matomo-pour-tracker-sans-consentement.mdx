@@ -9,7 +9,12 @@ image: "@/assets/articles/suivi-sans-consentement-matomo.jpg"
 categories: ["Matomo"]
 ---
 
+import {
+  default as anonymisation,
+  default as anonymiserIp,
+} from "@/assets/articles/anonymisation-donnee-matomo.png";
 import Callout from "@/components/Callout.astro";
+import { Image } from "astro:assets";
 
 Le temps de l'hésitation entre [Google Analytics vs Matomo](/blog/matomo-vs-google-analytics-quelles-differences-et-comment-choisir) est bien passé, et il est temps de revenir sur le sujet. La CNIL a décidé de mettre en place un nouveau suivi de base pour les sites web, et c'est le cas de Matomo.
 
@@ -17,7 +22,7 @@ Le temps de l'hésitation entre [Google Analytics vs Matomo](/blog/matomo-vs-goo
 
 Dans Système > Paramètres généraux, Dans la section "Live", assurez-vous que « journal des visites et profil du visiteur » est désactivé.
 
-![anonymisation des données](/src/assets/articles/anonymisation-donnee-matomo.png)
+<Image src={anonymisation} alt="anonymisation des données" />
 
 <Callout type="info">
   Les IP version 4 – IPV4 : 127.0.0.1 et leur version 6 – IPV6 :
@@ -48,7 +53,7 @@ Pour vérifier, rendez-vous dans :
 
 Dans la partie « Anonymiser les données de suivi », assurez-vous que « rendre anonymes les adresses IP des visiteurs » est coché.
 
-![Anonymiser les IP](/src/assets/articles/anonymisation-donnee-matomo.png)
+<Image src={anonymiserIp} alt="Anonymiser les IP" />
 
 ## Cookie tiers et cross domain tracking désactivé
 

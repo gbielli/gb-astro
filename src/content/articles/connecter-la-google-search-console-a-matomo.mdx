@@ -7,6 +7,16 @@ image: "@/assets/articles/matomo-search-console.jpg"
 categories: ["Matomo"]
 ---
 
+import accessGoogle from "@/assets/articles/search-matomo/acces-google-8.png";
+import applicationGcp from "@/assets/articles/search-matomo/application-gcp-4.png";
+import domaineGcp from "@/assets/articles/search-matomo/domaine-gcp-5.png";
+import downloadJson from "@/assets/articles/search-matomo/download-json-7.png";
+import ecranConsentExterne from "@/assets/articles/search-matomo/ecran-consent-externe-3.jpg";
+import ecranConsent from "@/assets/articles/search-matomo/ecran-consentement-2.png";
+import identifiantsGcp from "@/assets/articles/search-matomo/identifiants-gcp-6.png";
+import projectGcp from "@/assets/articles/search-matomo/new-project-gcp-1.png";
+import { Image } from "astro:assets";
+
 ## Prérequis
 
 - Vous devez avoir accès au plugin Matomo Search Keyword Performance. Si vous êtes sur une version on-premise (auto-hébergement), il faudra [l’acheter sur la marketplace matomo](https://plugins.matomo.org/SearchEngineKeywordsPerformance) (à date, il est à 169 euros/an). Si vous êtes sur la version cloud, vous aurez accès au plugin sans frais supplémentaire.
@@ -21,7 +31,7 @@ Commençons par créer un projet sur la [console Google Cloud](https://console.c
 
 Maintenant que nous avons créé notre projet, il est temps d’y associer notre application.Cliquez sur nouveau projet, choisissez un nom à votre projet, par exemple Matomo search console. Cliquez sur créer.
 
-![création d'un projet GCP](/src/assets/articles/search-matomo/new-project-gcp-1.png)
+<Image src={projectGcp} alt="création d'un projet GCP" />
 
 ## Créer un écran de consentement Oauth
 
@@ -29,9 +39,9 @@ C’est le moment d’associer notre application à ce nouveau projet. Rendez-vo
 
 Choisissez le type d’utilisateur Externe.
 
-![ecran de consentement oauth](/src/assets/articles/search-matomo/ecran-consentement-2.png)
+<Image src={ecranConsent} alt="ecran de consentement oauth" />
 
-![ecran consentement externe](/src/assets/articles/search-matomo/ecran-consent-externe-3.jpg)
+<Image src={ecranConsentExterne} alt="ecran consentement externe" />
 
 Nous devons maintenant renseigner les informations de notre application :
 
@@ -41,11 +51,11 @@ Nous devons maintenant renseigner les informations de notre application :
 - **Domaine autorisé** : matomo.cloud (version cloud) ou mon-domaine.fr par exemple (version On-Premise)
 - **Coordonnées du développeur** : votre email
 
-  ![application google cloud platform](/src/assets/articles/search-matomo/application-gcp-4.png)
+<Image src={applicationGcp} alt="application google cloud platform" />
 
-  ![domaine autorisé google coud platform](/src/assets/articles/search-matomo/domaine-gcp-5.png)
+<Image src={domaineGcp} alt="domaine autorisé google coud platform" />
 
-  ![identifiant google cloud platform](/src/assets/articles/search-matomo/identifiants-gcp-6.png)
+<Image src={identifiantsGcp} alt="identifiant google cloud platform" />
 
 ## Créer un identifiant Oauth
 
@@ -65,7 +75,7 @@ Rendez-vous dans Identifants > Créer des identifiants > ID client OAuth
 
 Il nous faut maintenant **télécharger le fichier JSON**. C’est ce fichier que Matomo va nous demander d’uploader pour **établir la connexion avec la Search Console.**
 
-![télécharger le json](/src/assets/articles/search-matomo/download-json-7.png)
+<Image src={downloadJson} alt="télécharger le json" />
 
 ## Configurer la connexion Google Search Console sur Matomo
 
@@ -81,7 +91,7 @@ connectez-vous avec l’adresse email propriétaire de la search console.
 
 Google vous indiquera potentiellement qu’il n’a pas vérifié l’application, si tel est le cas, cliquez sur continuer à gauche. Pensez à cliquer sur “Afficher les données de la Search Console” avant de continuer.
 
-![accès google](/src/assets/articles/search-matomo/acces-google-8.png)
+<Image src={accessGoogle} alt="accès google" />
 
 Cliquez sur “Continuer”. Vous n’avez plus qu’à ajouter la configuration :
 

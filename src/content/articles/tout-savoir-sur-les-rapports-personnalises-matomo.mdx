@@ -7,6 +7,10 @@ image: "@/assets/articles/matomo-rapports-personnalises.png"
 categories: ["Matomo"]
 ---
 
+import creerRapport from "@/assets/articles/creer-un-nouveau-rapport.png";
+import dimensionPerso from "@/assets/articles/Dimension-personnalise.jpg";
+import pageRapport from "@/assets/articles/page-rapport-matomo.png";
+import typeRapport from "@/assets/articles/type-de-rapport-matomo.png";
 import { Image } from "astro:assets";
 
 les rapports natifs de Matomo ne suffisent pas toujours pour suivre correctement les performances de votre activité, que ce soit au niveau du suivi des objectifs ou plus spécifiquement du e-commerce. Et s’il existe bien une fonctionnalité à ne pas rater sur Matomo à mon sens, c’est bien les rapports personnalisés.
@@ -23,7 +27,7 @@ Installer Matomo et [installer le code de suivi Matomo](/blog/comment-mettre-en-
 
 Rendez-vous dans la rubrique rapport personnalisé de votre Dashboard Matomo.
 
-![Page rapport sur Matomo](/src/assets/articles/creer-un-nouveau-rapport.png)
+<Image src={creerRapport} alt="Page rapport sur Matomo" />
 
 L’interface que propose Matomo est assez simple. Commençons par renseigner le nom de rapport, faites en sorte que le nom soit assez clair, sinon il sera difficile de s’y retrouver par la suite.
 
@@ -39,7 +43,7 @@ Matomo nous propose ensuite de choisir le type de rapport personnalisé. Il en e
 
 - **Le rapport Evolution**. Ce type de rapport vous permettra de mesurer uniquement des métriques. Ces rapports génèrent des graphiques en courbe, et peuvent être pertinents pour mesurer par exemple l’évolution du nombre de commandes e-commerce, du taux de conversion ou de plusieurs objectifs.
 
-![Les différents types de rapport sur matomo](/src/assets/articles/type-de-rapport-matomo.png)
+<Image src={typeRapport} alt="Les différents types de rapport sur matomo" />
 
 Pour rappel, les dimensions concernent les données qualitatives, comme une couleur, une taille, une URL de page ou une date par exemple, elles décrivent les données. À l’inverse, les métriques représentent les données quantifiables, ce sont des valeurs numériques comme le nombre de secondes passées sur le site web ou le nombre de visites ou de commandes.
 
@@ -64,7 +68,7 @@ Fonctionnalité très utile : Une fois que vous avez créé votre rapport et ava
 
 Enfin, dans « page du rapport », et « catégorie du rapport », Matomo vous propose de choisir l’onglet et le sous-onglet dans lequel il va apparaître. Vous avez la possibilité de choisir un onglet existant, ou bien de l’ajouter dans un Dashboard personnalisé.
 
-![Page rapport sur Matomo](/src/assets/articles/page-rapport-matomo.png)
+<Image src={pageRapport} alt="Page rapport sur Matomo" />
 
 ## Exemple de création d’un rapport personnalisé Matomo
 
@@ -73,7 +77,10 @@ Prenons un cas concret, imaginons que nous souhaitons pour chaque catégorie de 
 - « catégorie de produit consultée 1 »
 - « Type de canal ».
 
-![Exemple de création d’un rapport personnalisé Matomo](/src/assets/articles/Dimension-personnalise.jpg)
+<Image
+  src={dimensionPerso}
+  alt="Exemple de création d'un rapport personnalisé Matomo"
+/>
 
 Je dois maintenant indiquer les métriques, en l’occurrence, ce qui peut m’intéresser, c’est de connaître : les visites, la quantité de produit, le montant total commandé et la valeur moyenne de commande.
 
