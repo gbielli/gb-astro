@@ -1,3 +1,7 @@
+import cindyAvatar from "@/assets/cindy-avatar.png";
+import dinnoLogo from "@/assets/dinno-logo.jpeg";
+import maevaAvatar from "@/assets/maeva-avtr.png";
+import sebAvatar from "@/assets/seb-avatar.png";
 import { motion } from "framer-motion";
 
 // Animation améliorée pour le conteneur
@@ -50,32 +54,32 @@ const testimonial = [
   {
     prenom: "Sebastien Bonnefis",
     poste: "CEO @Yose",
-    img: "seb-avatar.png",
-    avis: "J'ai eu le plaisir de travailler avec Guillaume sur plusieurs missions. Son investissement, sa rigueur et sa qualité de travail ont été des atouts majeurs dans la réussite de ces divers projets. Son enthousiasme au quotidien permet de travailler sérieusement dans une atmosphère très agréable.",
+    img: sebAvatar.src,
+    avis: "J'ai eu le plaisir de travailler avec Guillaume...",
     tag: ["UX/UI", "Analytics"],
     date: "2023",
   },
   {
     prenom: "Cindy Tardres",
     poste: "Freelance",
-    img: "cindy-avatar.png",
-    avis: "J'ai eu la chance de travailler avec Guillaume pendant plus d'un an. Ses qualités de formateur, sa rigueur et sa curiosité font de lui un excellent expert dans son domaine de prédilection, la data analyse et le tracking de données. Collaborer avec lui est une véritable chance de voir ses projets se concrétiser efficacement et dans la bonne humeur.",
+    img: cindyAvatar.src,
+    avis: "J'ai eu la chance de travailler avec Guillaume...",
     tag: ["UX/UI", "Acquisition"],
     date: "2023",
   },
   {
     prenom: "Maeva ",
     poste: "Mypangee",
-    img: "maeva-avtr.png",
-    avis: "Ayant travaillé avec Guillaume quelques années je ne peux que recommander sa force d'esprit au sein d'une entreprise. Guillaume est talentueux dans son domaine, il a un réel esprit d'équipe, c'est une personne investit et dynamique. Il a été une réelle clé de voûte au sein de notre entreprise et je le remercie pour nos nombreuses collaborations.",
+    img: maevaAvatar.src,
+    avis: "Ayant travaillé avec Guillaume quelques années...",
     tag: ["Automation", "UX/UI"],
     date: "2022",
   },
   {
     prenom: "Alexandra",
     poste: "Dinno Santé",
-    img: "dinno-logo.jpeg",
-    avis: "Très bon contact avec Guillaume. Il a rapidement su cerner notre besoin et nous conseiller. Je recommande vivement",
+    img: dinnoLogo.src,
+    avis: "Très bon contact avec Guillaume...",
     tag: ["Analytics", "Matomo"],
     date: "2024",
   },
@@ -112,7 +116,7 @@ const Testimonials = () => {
               variants={contentAnimation}
             >
               <img
-                src={`/src/assets/${avis.img}`}
+                src={avis.img}
                 alt={`Photo de ${avis.prenom}`}
                 className="w-[70px] h-[70px] object-cover rounded-full"
               />

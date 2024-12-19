@@ -1,3 +1,4 @@
+import arrowIcon from "@/assets/arrow.svg";
 import { motion, useAnimate, useScroll, useTransform } from "framer-motion";
 import { useEffect, useState } from "react";
 
@@ -67,7 +68,7 @@ const Hero = () => {
       <div className="md:px-6 mt-6 w-full flex flex-col items-center gap-20">
         <div className="self-start relative w-[140px] h-[140px]">
           <img
-            src="/src/assets/arrow.svg"
+            src={arrowIcon.src}
             alt="arrow"
             className="w-[30px] h-[30px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10"
           />
