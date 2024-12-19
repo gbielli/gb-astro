@@ -1,44 +1,23 @@
 <script>
-  window._pac = window._pac || {};
-  window._pac.cookieDomain = ".localhost";
-  window.pdl = window.pdl || {};
-  window.pdl.requireConsent = "v2";
-  window.pdl.consent.products = ["PA"];
-
-  window.pdl.consent = {
-    defaultPreset: {
-      PA: "essential",
-    },
-  };
-  window.pdl.consent_items = {
-  PA: {
-    properties: {
-      event_collection_platform: "essential",
-      consent: "essential"
-    },
-  events: {
-    "page.display": "essential",
-  },
+window.pdl = window.pdl || {};
+window.pdl.requireConsent = "v2";
+window.pdl.consent = {
+defaultPreset: {
+PA: "essential",
 },
 };
-
-
 
 </script>
 
 <script src="https://tag.aticdn.net/piano-analytics.js" type="text/javascript" crossorigin="anonymous"></script>
 
 <script>
-  window.addEventListener('load', function() {
-    pa.setConfigurations({
+  pa.setConfigurations({
       site: 641819,
       collectDomain: "gqjbcfz.pa-cd.com",
     });
-    
-    pa.consent.setAllPurposes("essential");
-    pa.privacy.setMode("exempt")
-)
-    
+
+  window.addEventListener('load', function() {
     pa.sendEvent("page.display", {});
   });
 </script>
