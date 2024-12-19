@@ -7,6 +7,16 @@ image: "@/assets/articles/suivi-sans-consentement-matomo.jpg"
 categories: ["Matomo"]
 ---
 
+import bddMatomo from "@/assets/articles/serveur-matomo/bdd-5.png";
+import databaseSetup from "@/assets/articles/serveur-matomo/database-setup-7.png";
+import configMamp from "@/assets/articles/serveur-matomo/mamp-4.png";
+import installMatomo from "@/assets/articles/serveur-matomo/matomo-6.png";
+import matomoLatest from "@/assets/articles/serveur-matomo/matomo-latest-1.png";
+import ovhImage from "@/assets/articles/serveur-matomo/ovh-2.png";
+import portsMamp from "@/assets/articles/serveur-matomo/ports-3.png";
+import superUser from "@/assets/articles/serveur-matomo/super-user-9.png";
+import { Image } from "astro:assets";
+
 J'en profite pour vous rappeler qu'il existe deux types d'installation possibles avec Matomo :
 
 - La version **Matomo On-Premise**, qui est gratuite et qui vous permet d'installer Matomo sur vos serveurs et d'héberger les données, c'est ce que nous allons voir maintenant.
@@ -14,63 +24,66 @@ J'en profite pour vous rappeler qu'il existe deux types d'installation possibles
 
 ## Les prérequis pour installer Matomo
 
-Pour mettre en place Matomo et sa dernière version 4.x, il faudra d’abord s’assurer que vous avez les éléments suivants :
+Pour mettre en place Matomo et sa dernière version 4.x, il faudra d'abord s'assurer que vous avez les éléments suivants :
 
-- Un serveur comme Apache ou Nginx
+- un serveur comme Apache ou Nginx
 - Une version PHP 7.2.5 ou supérieure (la version PHP 8.x est supportée par Matomo)
 - Une base de données mySQL version 5.5 ou supérieure ou MariaDB
 
-Pour vous accompagner, je réaliserai la manipulation en local par le biais de l’outil MAMP disponible sur MAC qui me permettra de faire tourner un serveur Apache, une base de données mySQL avec PhpMyAdmin. Si vous êtes sur PC et que vous souhaitez aussi faire un test en local, utilisez son cousin XAMP.
+Pour vous accompagner, je réaliserai la manipulation en local par le biais de l'outil MAMP disponible sur MAC qui me permettra de faire tourner un serveur Apache, une base de données mySQL avec PhpMyAdmin. Si vous êtes sur PC et que vous souhaitez aussi faire un test en local, utilisez son cousin XAMP.
 
 ## Téléchargez gratuitement Matomo sur le site officiel
 
 Rendez-vous sur le site officiel de Matomo et plus précisément sur la page de téléchargement de la [dernière version de Matomo](https://matomo.org/faq/on-premise/installing-matomo/). Une fois téléchargé, dézippez le fichier. Vous devriez vous retrouver avec ce dossier.
 
-![téléchargement de la dernière version de matomo](../../../articles/serveur-matomo/matomo-latest-1.png)
+<Image
+  src={matomoLatest}
+  alt="téléchargement de la dernière version de matomo"
+/>
 
-Copiez le sous-dossier “matomo”. Ensuite, il vous faudra coller ce sous-dossier au niveau de la racine de votre site.
+Copiez le sous-dossier "matomo". Ensuite, il vous faudra coller ce sous-dossier au niveau de la racine de votre site.
 
 ## Ajoutez Matomo sur votre serveur
 
 **Si vous avez acheté un hébergement**, vous aurez accès à la racine de votre site via FTP et à votre base de données en utilisant les identifiants fournis par votre hébergeur. Par exemple, sur OVH, vous retrouverez les informations ici :
 
-![informations sur ovh](../../../articles/serveur-matomo/ovh-2.png)
+<Image src={ovhImage} alt="informations sur ovh" />
 
-**Si vous utilisez MAMP** et que vous souhaitez installer Matomo en local, cliquez sur "préférences" et vérifiez que le port est sur 80. De cette façon, vous pourrez accéder à votre serveur depuis le navigateur à l’adresse : `http://localhost`.
+**Si vous utilisez MAMP** et que vous souhaitez installer Matomo en local, cliquez sur "préférences" et vérifiez que le port est sur 80. De cette façon, vous pourrez accéder à votre serveur depuis le navigateur à l'adresse : `http://localhost`.
 
-![ports mamp](../../../articles/serveur-matomo/ports-3.png)
+<Image src={portsMamp} alt="ports mamp" />
 
-la racine de mon site se trouve dans Applications > Presta. Je n’ai donc plus qu’à coller mon dossier Matomo dans mon dossier "presta" et le tour est joué.
+la racine de mon site se trouve dans Applications > Presta. Je n'ai donc plus qu'à coller mon dossier Matomo dans mon dossier "presta" et le tour est joué.
 
-![configuration mamp](../../../articles/serveur-matomo/mamp-4.png)
+<Image src={configMamp} alt="configuration mamp" />
 
-Il est de bonne pratique **d’installer Matomo sur un sous-domaine**. Préférez donc installer Matomo sur `sousdomaine.monsite.fr` plutôt que sur `monsite.fr`.
+Il est de bonne pratique **d'installer Matomo sur un sous-domaine**. Préférez donc installer Matomo sur `sousdomaine.monsite.fr` plutôt que sur `monsite.fr`.
 
 ## Créez une base de données pour Matomo
 
-Avant de commencer l’installation de Matomo, **il faut d’abord créer une base de données**. Dans mon cas, j’accède à ma base de données via MAMP grâce à l’url suivante : `http://localhost/phpMyAdmin5/`.
+Avant de commencer l'installation de Matomo, **il faut d'abord créer une base de données**. Dans mon cas, j'accède à ma base de données via MAMP grâce à l'url suivante : `http://localhost/phpMyAdmin5/`.
 
-Je clique ensuite sur "nouvelle base de données". J'indique un nom à celle-ci : "matomo". Peu importe le nom, il faudra juste bien renseigner cette information puisque **Matomo nous la demandera au moment de l’installation.**
+Je clique ensuite sur "nouvelle base de données". J'indique un nom à celle-ci : "matomo". Peu importe le nom, il faudra juste bien renseigner cette information puisque **Matomo nous la demandera au moment de l'installation.**
 
-![création de la base de données matomo](../../../articles/serveur-matomo/bdd-5.png)
+<Image src={bddMatomo} alt="création de la base de données matomo" />
 
-## Commencez l’installation de Matomo Analytics
+## Commencez l'installation de Matomo Analytics
 
 Nous sommes enfin **prêts à installer Matomo**. Rendez-vous à la racine de votre site et sur monsite.fr/matomo, pour moi ce sera `http://localhost/matomo`. Vous devriez voir afficher la page de bienvenue de Matomo.
 
-![début de l'installation de matomo](../../../articles/serveur-matomo/matomo-6.png)
+<Image src={installMatomo} alt="début de l'installation de matomo" />
 
 ## Vérification du système
 
-⁠Téléchargez et gardez précieusement ces informations qui pourraient aider le support à vous venir en aide en cas de problème de configuration de l’outil. Une fois le document téléchargé, cliquez sur suivant en bas de page.
+⁠Téléchargez et gardez précieusement ces informations qui pourraient aider le support à vous venir en aide en cas de problème de configuration de l'outil. Une fois le document téléchargé, cliquez sur suivant en bas de page.
 
 ## Installation de la base de données
 
-⁠Rappelez-vous, c’est le moment **d’ajouter les informations de notre base données** que nous venons de créer à l’étape précédente.
+⁠Rappelez-vous, c'est le moment **d'ajouter les informations de notre base données** que nous venons de créer à l'étape précédente.
 
-![ajouter la base de données matomo](../../../articles/serveur-matomo/database-setup-7.png)
+<Image src={databaseSetup} alt="ajouter la base de données matomo" />
 
-<u>Database Server :</u> Renseignez l’adresse du serveur, sur PhpMyAdmin, elle se
+<u>Database Server :</u> Renseignez l'adresse du serveur, sur PhpMyAdmin, elle se
 trouve en haut de page. Ici, je renseigne 127.0.0.1:8889 (qui pointe sur localhost
 et sur le port 8889).
 
@@ -79,7 +92,7 @@ Si besoin, créez un utilisateur avec un login et mot de passe, avec tous les dr
 puis renseignez les informations sur la configuration Matomo (Dans PhpMyAdmin, Les
 comptes utilisateurs sont accessibles dans le menu)
 
-<u>Database Name :</u> `matomo` , c’est le nom que l’on vient de donner à notre base
+<u>Database Name :</u> `matomo`, c'est le nom que l'on vient de donner à notre base
 de données.
 
 <u>Table_prefix :</u> `matomo_`
@@ -88,13 +101,13 @@ de données.
 
 ## Création des tables
 
-Ici, Matomo s’occupe de créer les tables sur votre base de données, vous n’avez rien besoin de faire. Cliquez sur "continuer".
+Ici, Matomo s'occupe de créer les tables sur votre base de données, vous n'avez rien besoin de faire. Cliquez sur "continuer".
 
 ## Super Utilisateur
 
 Renseignez un login, un mot de passe et un email. **Ces identifiants vous permettront de vous connecter à votre dashboard Matomo** une fois le paramétrage terminé.
 
-![super utilisateur matomo](../../../articles/serveur-matomo/super-user-9.png)
+<Image src={superUser} alt="super utilisateur matomo" />
 
 ## Paramétrer un site web
 
