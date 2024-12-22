@@ -7,7 +7,7 @@ description:
 author: "Guillaume BIELLI"
 date: "2024-12-20"
 image: "@/assets/articles/piwik-pro/piwik-pro-gtm.jpg"
-categories: ["Piwik Pro"]
+categories: ["Piwik Pro", "Google Tag Manager"]
 ---
 
 import dimension from "@/assets/articles/piwik-pro/custom-dimension-2.png";
@@ -56,7 +56,7 @@ Au niveau du trigger, la documentation de Piwik Pro conseille d'utiliser le **"A
 
 <Trigger triggerName="All pages" type="pageview" />
 
-Cette configuration suffit pour envoyer de la donnée à Piwik Pro, l'outil a la particularité de pousser nativement à travers le script de base une page vue (stg.PageView), donc nul besoin de faire quoi que ce soit à ce niveau là.
+**Cette configuration suffit pour envoyer de la donnée à Piwik Pro**, l'outil a la particularité de pousser nativement à travers le script de base une page vue (stg.PageView), donc nul besoin de faire quoi que ce soit à ce niveau là.
 
 <Callout type="info">
   Si votre site web est une SPA, vous pouvez cocher la case dédiée dans les
@@ -91,7 +91,7 @@ Dans notre exemple, `page_category` est relatif à une page vue (scope évèneme
 <Image src={dimension} alt="création des dimensions personnalisées" />
 
 Dans Google Tag Manager, nous allons créer une balise "HTML personnalisé" que nous appellerons "Piwik Pro - setCustomDimensionValue" pour configurer les dimensions personnalisées.
-Nous utiliserons la méthode `setCustomDimensionValue` de Piwik Pro. En amont je m'assure de créer deux variables de couche de données sur GTM pour pouvoir alimenter les deux dimensions (page_category et user_status).
+Nous utiliserons la méthode `setCustomDimensionValue` de Piwik Pro. **En amont je m'assure de créer deux variables de couche de données sur GTM pour pouvoir alimenter les deux dimensions** (page_category et user_status).
 
 Je déclenche la balise sur l'évènement "preload_data" que nous venons de pousser dans le dataLayer.
 
@@ -105,7 +105,7 @@ Je déclenche la balise sur l'évènement "preload_data" que nous venons de pous
 
 <Trigger triggerName="Custom - preload_data" />
 
-Les deux dimensions se propageront maintenant à toutes les pages vues Piwik Pro.
+Les deux dimensions **se propageront maintenant à toutes les pages vues Piwik Pro**.
 
 <Callout type="info">
 On peut déclencher la balise sur la page vue GTM, mais dans ce cas il faut s'assurer que la page vue se déclenche toujours après le preload_data, pour que les dimensions personnalisées puissent être alimentées.
@@ -121,7 +121,7 @@ D'abord, il faut comprendre la structure d'un évènement personnalisé Piwik Pr
 | -------- | ----------------- | ------------------ | ----- |
 | Form     | Submit Newsletter | Les secrets du web | 20    |
 
-Nous allons donc ajouter une nouvelle balise HTML personnalisé que nous nommerons "Piwik Pro - trackEvent - Submit_Newsletter" pour envoyer un évènement personnalisé à Piwik Pro. Voici un exemple de code :
+Nous allons donc ajouter une nouvelle balise HTML personnalisé que nous nommerons "Piwik Pro - trackEvent - Submit_Newsletter" pour **envoyer un évènement personnalisé à Piwik Pro**. Voici un exemple de code :
 
 ```html
 // Évènement sans dimension personnalisée
@@ -176,7 +176,7 @@ Voici un exemple de code pour envoyer l'objectif avec la methode trackGoal depui
 </script>
 ```
 
-Pour récupérer un ID d'objectif, vous devez d'abord créer un objectif sur Piwik Pro. Rendez-vous dans la partie "Objectifs" puis "Ajouter un objectif". Saississez un nom à votre objectif et sélectionnez "Suivre l'évènement manuellement".
+**Pour récupérer un ID d'objectif, vous devez d'abord créer un objectif sur Piwik Pro**. Rendez-vous dans la partie "Objectifs" puis "Ajouter un objectif". Saississez un nom à votre objectif et sélectionnez "Suivre l'évènement manuellement".
 
 <Image src={goal} alt="Création d'un objectif" />
 
@@ -213,10 +213,10 @@ L'utilisation de la méthode 'resetUserId' est uniquement nécessaire si il n'y 
 
 ## Recetter les évènements et les dimensions personnalisées sur Piwik Pro
 
-Pour s'assurer que tous les évènements et dimensions personnalisées sont correctement envoyés, il est possible de déboguer les données envoyées à Piwik Pro de deux façons :
+**Pour s'assurer que tous les évènements et dimensions personnalisées sont correctement envoyés**, il est possible de déboguer les données envoyées à Piwik Pro de deux façons :
 
-- Depuis l'onglet network de votre navigateur
-- Depuis le débogueur dans l'interface Piwik Pro
+- Depuis **l'onglet network de votre navigateur**
+- Depuis le **débogueur de Piwik Pro**
 
 ### Depuis le network de votre navigateur
 
@@ -246,4 +246,4 @@ Pour cela, rendez-vous dans Paramètres > Débogueur de suivi.
 
 ## Conclusion
 
-Et voilà ! Vous êtes maintenant prêt à utiliser Piwik Pro à son plein potentiel avec cette implémentation client side sur Google Tag Manager. Sachez que Piwik Pro vous permet d’être exempté de consentement ou d’utiliser une mesure hybride à conditions de respecter les recommandations de la CNIL sur le sujet. Une belle façon de collecter davantage de données.
+Et voilà ! **Vous êtes maintenant prêt à utiliser Piwik Pro à son plein potentiel** avec cette implémentation client side sur Google Tag Manager. Sachez que Piwik Pro vous permet d’être exempté de consentement ou d’utiliser une mesure hybride à conditions de respecter les recommandations de la CNIL sur le sujet. Une belle façon de collecter davantage de données.
