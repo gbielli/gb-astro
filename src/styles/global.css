@@ -266,11 +266,11 @@ img {
   }
 
   .prose li {
-    @apply text-[18px] md:text-[21px] text-gray-700 mb-2;
+    @apply text-[18px] md:text-[20px] text-gray-700 mb-2;
   }
 
   .prose p {
-    @apply text-[18px] md:text-[21px] text-gray-700;
+    @apply text-[18px] md:text-[20px] text-gray-700;
   }
 
   .prose
@@ -297,5 +297,8 @@ img {
   .prose h2::before {
     @apply text-blue-600;
     content: "# ";
+  }
+  .prose img {
+    @apply rounded-lg border w-full shadow-sm;
   }
 }

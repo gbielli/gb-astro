@@ -1,0 +1,38 @@
+---
+// Trigger.astro
+import { Code2, Eye } from 'lucide-react';
+
+interface Props {
+  triggerName: string;
+  description?: string;
+  type?: 'custom' | 'pageview';
+}
+
+const { 
+  triggerName, 
+  description = "Événement personnalisé",
+  type = 'custom'
+} = Astro.props;
+---
+
+<section class="rounded-lg shadow-sm">
+  <p class="text-xl font-medium mx-2 my-2">Déclencheur</p>
+
+  <div>
+    <div class="border rounded-lg bg-white">
+      <div class="flex items-center justify-between p-4">
+        <div class="flex items-center gap-3">
+          <div class={`w-10 h-10 rounded-lg flex items-center justify-center text-white ${type === 'custom' ? 'bg-orange-500' : 'bg-blue-500'}`}>
+            {type === 'custom' ? <Code2 size={20} /> : <Eye size={20} />}
+          </div>
+          <div>
+            <div class="font-medium">{triggerName}</div>
+            <div class="text-gray-500 text-sm">
+              {type === 'custom' ? 'Événement personnalisé' : 'Page vue'}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
