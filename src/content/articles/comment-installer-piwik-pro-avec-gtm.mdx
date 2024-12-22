@@ -71,7 +71,7 @@ certaines informations avant chaque page vue. Par exemple, si vous avez un blog,
 vous aimeriez connaître la catégorie de la page, ou encore le statut de
 l'utilisateur (premium, free, etc.).
 
-Voici un exemple de code pour poussez ces informations dans le dataLayer :
+Voici un exemple de code pour poussez ces informations dans le dataLayer, **l'évènement doit être envoyé très tôt et avant la page vue sur Google Tag Manager** :
 
 ```javascript
 dataLayer.push({
