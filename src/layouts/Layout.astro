@@ -54,7 +54,13 @@ const {
       "@type": "Article",
       "headline": title,
       "description": description,
-      "image": image,
+      "image": {
+        "@type": "ImageObject",
+        "url": image.src,
+        "width": image.width,
+        "height": image.height,
+        "contentUrl": image.src
+      },
       "author": {
         "@type": "Person",
         "name": author
