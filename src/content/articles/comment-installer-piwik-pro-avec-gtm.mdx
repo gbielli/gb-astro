@@ -10,6 +10,7 @@ image: "@/assets/articles/piwik-pro/piwik-pro-gtm.jpg"
 categories: ["Piwik Pro", "Google Tag Manager"]
 ---
 
+import config from "@/assets/articles/piwik-pro/config.png";
 import dimension from "@/assets/articles/piwik-pro/custom-dimension-2.png";
 import debug from "@/assets/articles/piwik-pro/debug-3.png";
 import goal from "@/assets/articles/piwik-pro/goal-4.png";
@@ -36,19 +37,7 @@ Pour trouver le code de suivi de votre instance Piwik Pro :
 Accédez à l'onglet "Administration" > Onglet "Installation" > Copiez le code de
 suivi Piwik Pro
 
-```javascript
-// Exemple de code de suivi Piwik Pro (ne copiez pas ce code)
-<script type="text/javascript">
-(function(window, document, dataLayerName, id) {
-window[dataLayerName]=window[dataLayerName]||[],window[dataLayerName].push({start:(new Date).getTime(),event:"stg.start"});var scripts=document.getElementsByTagName('script')[0],tags=document.createElement('script');
-function stgCreateCookie(a,b,c){var d="";if(c){var e=new Date;e.setTime(e.getTime()+24*c*60*60*1e3),d="; expires="+e.toUTCString();f="; SameSite=Strict"}document.cookie=a+"="+b+d+f+"; path=/"}
-var isStgDebug=(window.location.href.match("stg_debug")||document.cookie.match("stg_debug"))&&!window.location.href.match("stg_disable_debug");stgCreateCookie("stg_debug",isStgDebug?1:"",isStgDebug?14:-1);
-var qP=[];dataLayerName!=="dataLayer"&&qP.push("data_layer_name="+dataLayerName),isStgDebug&&qP.push("stg_debug");var qPString=qP.length>0?("?"+qP.join("&")):"";
-tags.async=!0,tags.src="https://{{instance}}.containers.piwik.pro/"+id+".js"+qPString,scripts.parentNode.insertBefore(tags,scripts);
-!function(a,n,i){a[n]=a[n]||{};for(var c=0;c<i.length;c++)!function(i){a[n][i]=a[n][i]||{},a[n][i].api=a[n][i].api||function(){var a=[].slice.call(arguments,0);"string"==typeof a[0]&&window[dataLayerName].push({event:n+"."+i+":"+a[0],parameters:[].slice.call(arguments,1)})}}(i[c])}(window,"ppms",["tm","cm"]);
-})(window, document, 'dataLayer', '{{id}}');
-</script>
-```
+<Image src={config} alt="Copiez le code de suivi Piwik Pro" />
 
 Une fois le code copié, depuis Google Tag Manager, **créez un nouveau Tag "HTML personnalisé" puis collez le code de suivi Piwik Pro.**
 
@@ -74,9 +63,11 @@ l'utilisateur (premium, free, etc.).
 Voici un exemple de code pour poussez ces informations dans le dataLayer, **l'évènement doit être envoyé très tôt et avant la page vue sur Google Tag Manager** :
 
 ```javascript
+<script>
 dataLayer.push({
   event: "preload_data", page_category: "blog", user_status: "premium",
 });
+</script>
 ```
 
 **Commencons par créer les dimensions personnalisées sur Piwik Pro**. Rendez-vous dans Paramètres > Dimensions personnalisées.
@@ -95,11 +86,12 @@ Nous utiliserons la méthode `setCustomDimensionValue` de Piwik Pro. **En amont 
 
 Je déclenche la balise sur l'évènement "preload_data" que nous venons de pousser dans le dataLayer.
 
-```javascript
+```html
+<script>
   var _paq = _paq || [];
   _paq.push(["setCustomDimensionValue", 1, "{{dlv - page_category}}"]);
   _paq.push(["setCustomDimensionValue", 2, "{{dlv - user_status}}"]);
-
+</script>
 ```
 
 <Trigger triggerName="Custom - preload_data" />
@@ -122,11 +114,12 @@ D'abord, il faut comprendre la structure d'un évènement personnalisé Piwik Pr
 
 Nous allons donc ajouter une nouvelle balise HTML personnalisé que nous nommerons "Piwik Pro - trackEvent - Submit_Newsletter" pour **envoyer un évènement personnalisé à Piwik Pro**. Voici un exemple de code :
 
-```javascript
+```html
 // Évènement sans dimension personnalisée
+<script>
   var _paq = _paq || [];
   _paq.push(["trackEvent", "Form", "Submit Newsletter", "Les secrets du web", 20]);
-
+</script>
 ```
 
 Il est aussi possible d'ajouter des dimensions personnalisées à l'évènement.
@@ -135,8 +128,9 @@ Il faudra s'assurer que l'ensemble des dimensions soient préalablement définie
 
 - "dimensionX" où `X` est l'index de la dimension.
 
-```javascript
+```html
 // Évènement avec dimensions personnalisées
+<script>
   var _paq = _paq || [];
   _paq.push([ "trackEvent", "Form", "Subscribe Newsletter", "Les secrets du web", 20,
     {
@@ -144,7 +138,7 @@ Il faudra s'assurer que l'ensemble des dimensions soient préalablement définie
     dimension3: "Newlsetter" // non défini et donc non reçu par Piwik Pro
     },
   ]);
-
+</script>
 ```
 
 Partons du principe que nous recevons déjà un évènement submit_newsletter dans le dataLayer, nous déclencherons donc cette nouvelle balise sur ce trigger.
@@ -166,10 +160,11 @@ Il est aussi possible d'envoyer des objectifs à Piwik Pro. Vous avez deux possi
 
 Voici un exemple de code pour envoyer l'objectif avec la methode trackGoal depuis Google Tag Manager :
 
-```javascript
+```html
+<script>
   var _paq = _paq || [];
   _paq.push(["trackGoal", "ID-OBJECTIF", conversionValue]);
-
+</script>
 ```
 
 **Pour récupérer un ID d'objectif, vous devez d'abord créer un objectif sur Piwik Pro**. Rendez-vous dans la partie "Objectifs" puis "Ajouter un objectif". Saississez un nom à votre objectif et sélectionnez "Suivre l'évènement manuellement".
@@ -182,11 +177,12 @@ L'avantage principal de passer par cette méthode, c'est qu'elle vous permet de 
 
 À partir du moment où votre utilisateur est connecté, vous pouvez pousser le user_id à Piwik Pro. Voici un exemple de balise "HTML personnalisé" pour configurer le user_id :
 
-```javascript
-    var _paq = _paq || [];
+```html
+<script>
+  var _paq = _paq || [];
   _paq.push(["setUserId", {{dlv - user_id}}]);
   _paq.push(['ping']); // permet d'envoyer le user ID au tracker
-
+</script>
 ```
 
 Au niveau du trigger, je déclenche le script sur chaque page vue uniquement si la valeur du user_id existe (au moins un caractère) avec la regex suivante : `/.+/`
@@ -195,9 +191,11 @@ Au niveau du trigger, je déclenche le script sur chaque page vue uniquement si 
 
 Si l'utilisateur décide de se déconnecter, Piwik Pro conseille d'utiliser la méthode `resetUserId` pour clear le user_id.
 
-```javascript
+```html
+<script>
   var _paq = _paq || [];
   _paq.push(['resetUserId']);
+</script>
 ```
 
 <Callout type="info">
