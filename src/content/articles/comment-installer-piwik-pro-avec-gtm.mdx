@@ -95,12 +95,11 @@ Nous utiliserons la méthode `setCustomDimensionValue` de Piwik Pro. **En amont 
 
 Je déclenche la balise sur l'évènement "preload_data" que nous venons de pousser dans le dataLayer.
 
-```html
-<script>
+```javascript
   var _paq = _paq || [];
   _paq.push(["setCustomDimensionValue", 1, "{{dlv - page_category}}"]);
   _paq.push(["setCustomDimensionValue", 2, "{{dlv - user_status}}"]);
-</script>
+
 ```
 
 <Trigger triggerName="Custom - preload_data" />
@@ -123,12 +122,11 @@ D'abord, il faut comprendre la structure d'un évènement personnalisé Piwik Pr
 
 Nous allons donc ajouter une nouvelle balise HTML personnalisé que nous nommerons "Piwik Pro - trackEvent - Submit_Newsletter" pour **envoyer un évènement personnalisé à Piwik Pro**. Voici un exemple de code :
 
-```html
+```javascript
 // Évènement sans dimension personnalisée
-<script>
   var _paq = _paq || [];
   _paq.push(["trackEvent", "Form", "Submit Newsletter", "Les secrets du web", 20]);
-</script>
+
 ```
 
 Il est aussi possible d'ajouter des dimensions personnalisées à l'évènement.
@@ -137,9 +135,8 @@ Il faudra s'assurer que l'ensemble des dimensions soient préalablement définie
 
 - "dimensionX" où `X` est l'index de la dimension.
 
-```html
+```javascript
 // Évènement avec dimensions personnalisées
-<script>
   var _paq = _paq || [];
   _paq.push([ "trackEvent", "Form", "Subscribe Newsletter", "Les secrets du web", 20,
     {
@@ -147,7 +144,7 @@ Il faudra s'assurer que l'ensemble des dimensions soient préalablement définie
     dimension3: "Newlsetter" // non défini et donc non reçu par Piwik Pro
     },
   ]);
-</script>
+
 ```
 
 Partons du principe que nous recevons déjà un évènement submit_newsletter dans le dataLayer, nous déclencherons donc cette nouvelle balise sur ce trigger.
@@ -169,11 +166,10 @@ Il est aussi possible d'envoyer des objectifs à Piwik Pro. Vous avez deux possi
 
 Voici un exemple de code pour envoyer l'objectif avec la methode trackGoal depuis Google Tag Manager :
 
-```html
-<script>
+```javascript
   var _paq = _paq || [];
   _paq.push(["trackGoal", "ID-OBJECTIF", conversionValue]);
-</script>
+
 ```
 
 **Pour récupérer un ID d'objectif, vous devez d'abord créer un objectif sur Piwik Pro**. Rendez-vous dans la partie "Objectifs" puis "Ajouter un objectif". Saississez un nom à votre objectif et sélectionnez "Suivre l'évènement manuellement".
@@ -186,12 +182,11 @@ L'avantage principal de passer par cette méthode, c'est qu'elle vous permet de 
 
 À partir du moment où votre utilisateur est connecté, vous pouvez pousser le user_id à Piwik Pro. Voici un exemple de balise "HTML personnalisé" pour configurer le user_id :
 
-```html
-<script>
+```javascript
     var _paq = _paq || [];
   _paq.push(["setUserId", {{dlv - user_id}}]);
   _paq.push(['ping']); // permet d'envoyer le user ID au tracker
-</script>
+
 ```
 
 Au niveau du trigger, je déclenche le script sur chaque page vue uniquement si la valeur du user_id existe (au moins un caractère) avec la regex suivante : `/.+/`
@@ -200,11 +195,9 @@ Au niveau du trigger, je déclenche le script sur chaque page vue uniquement si 
 
 Si l'utilisateur décide de se déconnecter, Piwik Pro conseille d'utiliser la méthode `resetUserId` pour clear le user_id.
 
-```html
-<script>
+```javascript
   var _paq = _paq || [];
   _paq.push(['resetUserId']);
-</script>
 ```
 
 <Callout type="info">
