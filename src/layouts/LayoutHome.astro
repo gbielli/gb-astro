@@ -9,12 +9,14 @@ import Testimonials from '@/components/homepage/Testimonials';
 import VirtualPageView from '@/components/VirtualPageView.astro';
 import '@/styles/global.css';
 import ViewTransitions from "astro/components/ViewTransitions.astro";
+import ConsentBannerWrapper from '@/components/consentBannerWrapper.astro';
 
 ---
 
 <html lang="fr" class="">
   <head>
     <link rel="sitemap" href="/sitemap-index.xml" />
+    
   <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -27,8 +29,10 @@ import ViewTransitions from "astro/components/ViewTransitions.astro";
     <link rel="icon" type="image/ico" href="/image/favicon.ico" />
     <title>Guillaume Bielli | Digital Worker & Frontend Lover</title>
     <meta name="description" content="J'aide les entreprises à développer l'acquisition client et à construire une expérience utilisateur hors norme avec une logique data-driven.">
+  
   </head>
   <body class="min-h-screen w-full">
+    <ConsentBannerWrapper />
     <Header />
     <main class="">
     <Hero client:load />
