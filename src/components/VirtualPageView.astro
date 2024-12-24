@@ -1,16 +1,25 @@
 ---
-
 ---
 
 <script>
-  // Cette fonction sera appelée à chaque changement de page
-  function sendVirtualPageview() {
-    // Vérifie si dataLayer existe, sinon le crée
-    window.dataLayer = window.dataLayer || [];
+  // Fonction qui nettoie le dataLayer en le réinitialisant complètement
+  function clearDataLayer() {
+    // Réinitialise le dataLayer en le vidant complètement
+    window.dataLayer = [];
     
-    // Envoie l'événement de page vue virtuelle
+  }
+
+  // Fonction principale qui envoie la page vue virtuelle
+  function sendVirtualPageview() {
+    // Nettoie d'abord le dataLayer des anciennes données
+    clearDataLayer();
+
+    // Réinitialise ou crée le dataLayer si nécessaire
+    window.dataLayer = window.dataLayer || [];
+
+    // Envoie l'événement de page vue avec toutes les informations nécessaires
     window.dataLayer.push({
-      event: 'virtualPageview',
+      event: 'page_view',
       page: {
         path: window.location.pathname,
         title: document.title,
@@ -19,9 +28,8 @@
     });
   }
 
-  // Envoie une première page vue au chargement
-  document.addEventListener('DOMContentLoaded', sendVirtualPageview);
-
-  // Observe les changements de route si vous utilisez du routing côté client
-  document.addEventListener('astro:page-load', sendVirtualPageview);
+  // Écoute les changements de page dans Astro et déclenche le suivi
+  document.addEventListener('astro:page-load', () => {
+    sendVirtualPageview();
+  });
 </script>
