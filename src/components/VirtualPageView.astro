@@ -1,0 +1,27 @@
+---
+
+---
+
+<script>
+  // Cette fonction sera appelée à chaque changement de page
+  function sendVirtualPageview() {
+    // Vérifie si dataLayer existe, sinon le crée
+    window.dataLayer = window.dataLayer || [];
+    
+    // Envoie l'événement de page vue virtuelle
+    window.dataLayer.push({
+      event: 'virtualPageview',
+      page: {
+        path: window.location.pathname,
+        title: document.title,
+        location: window.location.href
+      }
+    });
+  }
+
+  // Envoie une première page vue au chargement
+  document.addEventListener('DOMContentLoaded', sendVirtualPageview);
+
+  // Observe les changements de route si vous utilisez du routing côté client
+  document.addEventListener('astro:page-load', sendVirtualPageview);
+</script>

@@ -6,6 +6,7 @@ import MaskText from '@/components/homepage/MaskText';
 import Skill from '@/components/homepage/Skill';
 import Slider from '@/components/homepage/Slider';
 import Testimonials from '@/components/homepage/Testimonials';
+import VirtualPageView from '@/components/VirtualPageView.astro';
 import '@/styles/global.css';
 import ViewTransitions from "astro/components/ViewTransitions.astro";
 
@@ -41,6 +42,7 @@ import ViewTransitions from "astro/components/ViewTransitions.astro";
         <slot />
     </main>
     <ViewTransitions />
+    <VirtualPageView />
   </body>
   <Footer />
 </html>
