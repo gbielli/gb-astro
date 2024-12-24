@@ -34,8 +34,6 @@ const ConsentBanner = () => {
   const updateGTMConsent = (value) => {
     // Initialise ou réinitialise le dataLayer
     window.dataLayer = window.dataLayer || [];
-    // Nettoie le dataLayer existant pour éviter les données résiduelles
-    window.dataLayer = [];
 
     // Pousse le nouvel événement de consentement
     window.dataLayer.push({
