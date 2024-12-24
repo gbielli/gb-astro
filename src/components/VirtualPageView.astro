@@ -2,17 +2,12 @@
 ---
 
 <script>
-  // Fonction qui nettoie le dataLayer en le réinitialisant complètement
-  function clearDataLayer() {
-    // Réinitialise le dataLayer en le vidant complètement
-    window.dataLayer = [];
-    
-  }
 
-  // Fonction principale qui envoie la page vue virtuelle
+
+
+
   function sendVirtualPageview() {
-    // Nettoie d'abord le dataLayer des anciennes données
-    clearDataLayer();
+
 
     // Réinitialise ou crée le dataLayer si nécessaire
     window.dataLayer = window.dataLayer || [];
