@@ -22,13 +22,13 @@ import Callout from "@/components/Callout.astro";
 import Trigger from "@/components/Trigger.astro";
 import { Image } from "astro:assets";
 
-Prenez un petit café, posez-vous confortablement et laissez moi vous expliquer **comment configurer Piwik Pro avec Google Tag Manager**. On va aborder le script de suivi Piwik Pro, les dimensions et les évènements personnalisés, lesobjectifs et la mise en place d'un user_id.
+Prenez un petit café, posez-vous confortablement et laissez-moi vous expliquer **comment configurer Piwik Pro avec Google Tag Manager**. On va aborder le script de suivi Piwik Pro, les dimensions et les évènements personnalisés, les objectifs et la mise en place d'un user_id.
 
 ## Prérequis
 
 - Créer un compte Piwik Pro (c'est gratuit jusqu'à 500 000 hits
   mensuels)
-- Savoir configurer des balises, triggers et variables dans Google Tag Manager
+- Savoir configurer des balises, déclencheurs et variables dans Google Tag Manager
 
 ## Intégration du code de suivi Piwik Pro sur GTM
 
@@ -41,7 +41,7 @@ suivi Piwik Pro
 
 Une fois le code copié, depuis Google Tag Manager, **créez un nouveau Tag "HTML personnalisé" puis collez le code de suivi Piwik Pro.**
 
-Au niveau du trigger, la documentation de Piwik Pro conseille d'utiliser le **"All pages".**
+Au niveau du déclencheur, la documentation de Piwik Pro conseille d'utiliser le **"All pages".**
 
 <Trigger triggerName="All pages" type="pageview" />
 
@@ -50,7 +50,7 @@ Au niveau du trigger, la documentation de Piwik Pro conseille d'utiliser le **"A
 <Callout type="info">
   Si votre site web est une SPA, vous pouvez cocher la case dédiée dans les
   paramètres de votre instance Piwik Pro pour que l'outil puisse automatiquement
-  detécter les changements de page.
+  détecter les changements de page.
 </Callout>
 
 ## Envoyer des dimensions personnalisées à Piwik Pro
@@ -70,7 +70,7 @@ dataLayer.push({
 </script>
 ```
 
-**Commencons par créer les dimensions personnalisées sur Piwik Pro**. Rendez-vous dans Paramètres > Dimensions personnalisées.
+**Commençons par créer les dimensions personnalisées sur Piwik Pro**. Rendez-vous dans Paramètres > Dimensions personnalisées.
 
 Vous aurez alors deux possibilités :
 
@@ -135,13 +135,13 @@ Il faudra s'assurer que l'ensemble des dimensions soient préalablement définie
   _paq.push([ "trackEvent", "Form", "Subscribe Newsletter", "Les secrets du web", 20,
     {
     dimension2: "Premium", // user_status défini plus haut par setCustomDimensionValue (index 2)
-    dimension3: "Newlsetter" // non défini et donc non reçu par Piwik Pro
+    dimension3: "Newsletter" // non défini et donc non reçu par Piwik Pro
     },
   ]);
 </script>
 ```
 
-Partons du principe que nous recevons déjà un évènement submit_newsletter dans le dataLayer, nous déclencherons donc cette nouvelle balise sur ce trigger.
+Partons du principe que nous recevons déjà un évènement submit_newsletter dans le dataLayer, nous déclencherons donc cette nouvelle balise sur ce déclencheur.
 
 <Trigger triggerName="CUST - Submit_Newsletter" />
 
@@ -153,7 +153,7 @@ Partons du principe que nous recevons déjà un évènement submit_newsletter da
 
 ## Envoyer des objectifs à Piwik Pro
 
-Il est aussi possible d'envoyer des objectifs à Piwik Pro. Vous avez deux possibilité pour définir des objectifs dans Piwik Pro :
+Il est aussi possible d'envoyer des objectifs à Piwik Pro. Vous avez deux possibilités pour définir des objectifs dans Piwik Pro :
 
 - **Configuration automatique** : vous pouvez définir un objectif sur la base d'une URL ou d'un évènement personnalisé par exemple
 - **Configuration manuelle** : Envoyer directement l'objectif avec la méthode `trackGoal`
@@ -167,7 +167,7 @@ Voici un exemple de code pour envoyer l'objectif avec la methode trackGoal depui
 </script>
 ```
 
-**Pour récupérer un ID d'objectif, vous devez d'abord créer un objectif sur Piwik Pro**. Rendez-vous dans la partie "Objectifs" puis "Ajouter un objectif". Saississez un nom à votre objectif et sélectionnez "Suivre l'évènement manuellement".
+**Pour récupérer un ID d'objectif, vous devez d'abord créer un objectif sur Piwik Pro**. Rendez-vous dans la partie "Objectifs" puis "Ajouter un objectif". Saisissez un nom à votre objectif et sélectionnez "Suivre l'évènement manuellement".
 
 <Image src={goal} alt="Création d'un objectif" />
 
@@ -185,7 +185,7 @@ L'avantage principal de passer par cette méthode, c'est qu'elle vous permet de 
 </script>
 ```
 
-Au niveau du trigger, je déclenche le script sur chaque page vue uniquement si la valeur du user_id existe (au moins un caractère) avec la regex suivante : `/.+/`
+Au niveau du déclencheur, je déclenche le script sur chaque page vue uniquement si la valeur du user_id existe (au moins un caractère) avec la regex suivante : `/.+/`
 
 <Image src={trigger} alt="Déclenchement du script sur chaque page vue" />
 
