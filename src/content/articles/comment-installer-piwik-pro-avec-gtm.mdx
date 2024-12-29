@@ -16,6 +16,7 @@ import debug from "@/assets/articles/piwik-pro/debug-3.png";
 import goal from "@/assets/articles/piwik-pro/goal-4.png";
 import debugmode from "@/assets/articles/piwik-pro/inspect-6.png";
 import installPiwik from "@/assets/articles/piwik-pro/install-piwik-1.png";
+import tagManagerPiwik from "@/assets/articles/piwik-pro/tag-manager-piwik.png";
 import trigger from "@/assets/articles/piwik-pro/trigger-user-id-5.png";
 
 import Callout from "@/components/Callout.astro";
@@ -32,7 +33,14 @@ Prenez un petit café, posez-vous confortablement et laissez-moi vous expliquer 
 
 ## Intégration du code de suivi Piwik Pro sur GTM
 
-Pour trouver le code de suivi de votre instance Piwik Pro :
+Il existe deux façons pour intégrer Piwik Pro :
+
+- **La méthode classique** qui consiste à initier le conteneur Tag manager de Piwik Pro, c'est ce code que propose Piwik par défaut pour l'intégration par GTM.
+- **La méthode personnalisée** qui intègre uniquement la partie analytics
+
+### Intégration classique
+
+Pour trouver le code de suivi classique de votre instance Piwik Pro :
 
 Accédez à l'onglet "Administration" > Onglet "Installation" > Copiez le code de
 suivi Piwik Pro
@@ -45,24 +53,54 @@ Au niveau du déclencheur, la documentation de Piwik Pro conseille d'utiliser le
 
 <Trigger triggerName="All pages" type="pageview" />
 
-**Cette configuration suffit pour envoyer de la donnée à Piwik Pro**, l'outil a la particularité de pousser nativement à travers le script de base une page vue (stg.PageView), donc nul besoin de faire quoi que ce soit à ce niveau là.
+**Cette configuration suffit pour envoyer de la donnée à Piwik Pro** puisqu'elle pousse nativement les pages vues. Sachez aussi que si votre site web est une SPA (Single Page Application), vous pouvez cocher la case dédiée dans les paramètres de votre instance Piwik Pro pour que l'outil puisse automatiquement
+détecter les changements de page.
+
+Si vous souhaitez modifier la configuration du script (pour envoyer une page vue manuellement par exemple), vous pouvez le faire dans la configuration de la balise "Piwik PRO" dans le Tag Manager.
+
+<Image src={tagManagerPiwik} alt="Configuration de la balise Piwik Pro" />
 
 <Callout type="info">
-  Si votre site web est une SPA, vous pouvez cocher la case dédiée dans les
-  paramètres de votre instance Piwik Pro pour que l'outil puisse automatiquement
-  détecter les changements de page.
+  La configuration classique vous permet d'utiliser le consent manager de Piwik ou **d'envoyer le statut de consentement par le biais de son API, ce qui est un vrai plus** dans le cas où vous souhaitez mettre en place une **mesure hybride** (gestion des hits consentis et non consentis) par le biais de votre CMP (Consent Management Platform).
 </Callout>
+
+### Intégration avec Analytics seulement
+
+Toutefois, si vous ne comptez pas utiliser le consent manager de Piwik Pro (ou son API), ni le tag manager, il est possible d'intégrer plus simplement le code de suivi. Cela vous permettra notamment d'éviter d'être pollué par les évènements Piwik Pro natifs depuis Google Tag Manager.
+
+Exemple de code suivi, où il faudra renseigner :
+
+- votre nom de conteneur (nom-conteneur.piwik.pro)
+- votre id de site (disponible dans "Administration" > "Sites et applications")
+
+```html
+ <script type="text/javascript">
+    var _paq = _paq || [];
+    _paq.push(["trackPageView"]);
+    _paq.push(["enableLinkTracking"]);
+    (function() {
+        var u = "https://votre-nom-de-conteneur.piwik.pro/"; // votre nom de conteneur
+        _paq.push(["setTrackerUrl", u + "ppms.php"]);
+        _paq.push(["setSiteId", "votre-id-de-site"]); // votre id de site
+        var d = document,
+            g = d.createElement("script"),
+            s = d.getElementsByTagName("script")[0];
+        g.type = "text/javascript";
+        g.async = true;
+        g.defer = true;
+        g.src = u + "ppms.js";
+        s.parentNode.insertBefore(g, s);
+    })();
+</script>
+```
 
 ## Envoyer des dimensions personnalisées à Piwik Pro
 
-Allons maintenant un peu plus loin. Imaginons que vous poussez dans le dataLayer
-certaines informations avant chaque page vue. Par exemple, si vous avez un blog,
-vous aimeriez connaître la catégorie de la page, ou encore le statut de
-l'utilisateur (premium, free, etc.).
+Maintenant que l'on sait comment intégrer le suivi de base Piwik Pro, allons maintenant un peu plus loin. Imaginons que vous poussez dans le dataLayer certaines informations avant chaque page vue. Par exemple, si vous avez un blog,vous aimeriez connaître la catégorie de la page, ou encore le statut de l'utilisateur (premium, free, etc.).
 
-Voici un exemple de code pour poussez ces informations dans le dataLayer, **l'évènement doit être envoyé très tôt et avant la page vue sur Google Tag Manager** :
+Voici un exemple de code pour pousser ces informations dans le dataLayer, **l'évènement doit être envoyé très tôt et avant la page vue sur Google Tag Manager** :
 
-```javascript
+```html
 <script>
 dataLayer.push({
   event: "preload_data", page_category: "blog", user_status: "premium",
@@ -148,7 +186,7 @@ Partons du principe que nous recevons déjà un évènement submit_newsletter da
 <Callout type="info">
   Attention, **si vous souhaitez ajouter des dimensions personnalisées sans
   ajouter de valeur pour l'évènement**, vous devez quand même garder l'argument
-  de la méthode vide.
+  de la méthode vide `, ,`.
 </Callout>
 
 ## Envoyer des objectifs à Piwik Pro
