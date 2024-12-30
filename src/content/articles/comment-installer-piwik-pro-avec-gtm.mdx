@@ -17,7 +17,7 @@ import goal from "@/assets/articles/piwik-pro/goal-4.png";
 import debugmode from "@/assets/articles/piwik-pro/inspect-6.png";
 import installPiwik from "@/assets/articles/piwik-pro/install-piwik-1.png";
 import tagManagerPiwik from "@/assets/articles/piwik-pro/tag-manager-piwik.png";
-import trigger from "@/assets/articles/piwik-pro/trigger-user-id-5.png";
+import trigger from "@/assets/articles/piwik-pro/trigger-is-logged.png";
 
 import Callout from "@/components/Callout.astro";
 import Trigger from "@/components/Trigger.astro";
@@ -56,7 +56,7 @@ Au niveau du déclencheur, la documentation de Piwik Pro conseille d'utiliser le
 **Cette configuration suffit pour envoyer de la donnée à Piwik Pro** puisqu'elle pousse nativement les pages vues. Sachez aussi que si votre site web est une SPA (Single Page Application), vous pouvez cocher la case dédiée dans les paramètres de votre instance Piwik Pro pour que l'outil puisse automatiquement
 détecter les changements de page.
 
-Si vous souhaitez modifier la configuration du script (pour envoyer une page vue manuellement par exemple), vous pouvez le faire dans la configuration de la balise "Piwik PRO" dans le Tag Manager.
+**N.B :** Si vous souhaitez modifier la configuration du script pour envoyer une page vue manuellement, vous pouvez le faire dans la configuration de la balise "Piwik PRO" dans le Tag Manager.
 
 <Image src={tagManagerPiwik} alt="Configuration de la balise Piwik Pro" />
 
@@ -96,14 +96,14 @@ Exemple de code suivi, où il faudra renseigner :
 
 ## Envoyer des dimensions personnalisées à Piwik Pro
 
-Maintenant que l'on sait comment intégrer le suivi de base Piwik Pro, allons maintenant un peu plus loin. Imaginons que vous poussez dans le dataLayer certaines informations avant chaque page vue. Par exemple, si vous avez un blog,vous aimeriez connaître la catégorie de la page, ou encore le statut de l'utilisateur (premium, free, etc.).
+Maintenant que l'on sait comment intégrer le suivi de base Piwik Pro, allons maintenant un peu plus loin. Imaginons que vous poussez dans le dataLayer certaines informations avant chaque page vue. Par exemple, si vous avez un blog, vous aimeriez connaître la catégorie de la page, ou encore le statut de l'utilisateur (premium, free, etc.).
 
-Voici un exemple de code pour pousser ces informations dans le dataLayer, **l'évènement doit être envoyé très tôt et avant la page vue sur Google Tag Manager** :
+Voici un exemple de code pour pousser ces informations dans le dataLayer, **l'événement doit être envoyé très tôt et avant la page vue sur Google Tag Manager** :
 
 ```html
 <script>
 dataLayer.push({
-  event: "preload_data", page_category: "blog", user_status: "premium",
+  event: "preload_data", page_category: "blog", user_status: "premium"
 });
 </script>
 ```
@@ -119,8 +119,7 @@ Dans notre exemple, `page_category` est relatif à une page vue (scope évèneme
 
 <Image src={dimension} alt="création des dimensions personnalisées" />
 
-Dans Google Tag Manager, nous allons créer une balise "HTML personnalisé" que nous appellerons "Piwik Pro - setCustomDimensionValue" pour configurer les dimensions personnalisées.
-Nous utiliserons la méthode `setCustomDimensionValue` de Piwik Pro. **En amont je m'assure de créer deux variables de couche de données sur GTM pour pouvoir alimenter les deux dimensions** (page_category et user_status).
+Dans Google Tag Manager, nous allons créer une balise "HTML personnalisé" pour configurer les dimensions personnalisées. Nous utiliserons la méthode `setCustomDimensionValue` de Piwik Pro. **En amont je m'assure de créer deux variables de couche de données sur GTM pour pouvoir alimenter les deux dimensions** (page_category et user_status).
 
 Je déclenche la balise sur l'évènement "preload_data" que nous venons de pousser dans le dataLayer.
 
@@ -196,7 +195,7 @@ Il est aussi possible d'envoyer des objectifs à Piwik Pro. Vous avez deux possi
 - **Configuration automatique** : vous pouvez définir un objectif sur la base d'une URL ou d'un évènement personnalisé par exemple
 - **Configuration manuelle** : Envoyer directement l'objectif avec la méthode `trackGoal`
 
-Voici un exemple de code pour envoyer l'objectif avec la methode trackGoal depuis Google Tag Manager :
+Voici un exemple de code pour envoyer l'objectif avec la méthode trackGoal depuis Google Tag Manager :
 
 ```html
 <script>
@@ -213,7 +212,22 @@ L'avantage principal de passer par cette méthode, c'est qu'elle vous permet de 
 
 ## Configurer le user ID pour Piwik Pro
 
-À partir du moment où votre utilisateur est connecté, vous pouvez pousser le user_id à Piwik Pro. Voici un exemple de balise "HTML personnalisé" pour configurer le user_id :
+À partir du moment où votre utilisateur est connecté, vous pouvez pousser le `user_id` à Piwik Pro. Dans notre exemple, notre équipe de développeur (toujours très réactive) complète notre preload_data avec les paramètres suivants :
+
+- user_id
+- is_logged
+
+Voici le résultat lorsqu'un utilisateur est connecté :
+
+```html
+<script>
+dataLayer.push({
+  event: "preload_data", page_category: "blog", user_status: "premium", user_id: "123456", is_logged: true
+});
+</script>
+```
+
+Maintenant, après avoir ajouté les variables de couche de données `user_id` et `is_logged`, nous pouvons créer une balise "HTML personnalisé" avec le code suivant :
 
 ```html
 <script>
@@ -223,7 +237,7 @@ L'avantage principal de passer par cette méthode, c'est qu'elle vous permet de 
 </script>
 ```
 
-Au niveau du déclencheur, je déclenche le script sur chaque page vue uniquement si la valeur du user_id existe (au moins un caractère) avec la regex suivante : `/.+/`
+Au niveau du déclencheur, je déclenche la balise sur la page vue uniquement si `is_logged` est vrai.
 
 <Image src={trigger} alt="Déclenchement du script sur chaque page vue" />
 
@@ -237,7 +251,7 @@ Si l'utilisateur décide de se déconnecter, Piwik Pro conseille d'utiliser la m
 ```
 
 <Callout type="info">
-L'utilisation de la méthode 'resetUserId' est uniquement nécessaire si il n'y pas de rechargement de page au moment de logout. Dans tous les cas, ça reste une bonne pratique de le faire.
+L'utilisation de la méthode 'resetUserId' est uniquement nécessaire s'il n'y pas de rechargement de page au moment de logout. Dans tous les cas, ça reste une bonne pratique de le faire.
 </Callout>
 
 ## Recetter les évènements et les dimensions personnalisées sur Piwik Pro
@@ -275,4 +289,4 @@ Pour cela, rendez-vous dans Paramètres > Débogueur de suivi.
 
 ## Conclusion
 
-Et voilà ! **Vous êtes maintenant prêt à utiliser Piwik Pro à son plein potentiel** avec cette implémentation client side sur Google Tag Manager. Sachez que Piwik Pro vous permet d’être exempté de consentement ou d’utiliser une mesure hybride à conditions de respecter les recommandations de la CNIL sur le sujet. Une belle façon de collecter davantage de données.
+Et voilà ! **Vous êtes maintenant prêt à utiliser Piwik Pro à son plein potentiel** avec cette implémentation client side sur Google Tag Manager. Sachez que Piwik Pro vous permet d’être exempté de consentement ou d’utiliser une mesure hybride à condition de respecter les recommandations de la CNIL sur le sujet. Une belle façon de collecter davantage de données.
