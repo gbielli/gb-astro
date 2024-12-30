@@ -277,7 +277,7 @@ img {
     :where(p code, li code, h1 code, h2 code, h3 code, h4 code):not(
       :where([class~="not-prose"] *)
     ) {
-    @apply bg-blue-100 text-blue-500 px-2 rounded inline-block font-archivo text-[16px] md:text-[18px];
+    @apply bg-blue-100 text-blue-500 px-2 rounded inline-block font-archivo font-medium text-[16px] md:text-[18px];
   }
 
   .prose
