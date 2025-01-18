@@ -1,0 +1,225 @@
+---
+title: "Configurer la mesure hybride avec une CMP Custom sur Piwik Pro"
+description: "Le suivi sans consentement est possible sur Piwik Pro mais reste très contraignant. La mesure hybride permet de collecter des données plus précises, tout en gardant un niveau de collecte raisonnable si l'utilisateur refuse le suivi."
+author: "Guillaume BIELLI"
+date: "2025-01-17"
+image: "@/assets/articles/mesure-hybride-piwikPro.jpg"
+categories: ["Piwik Pro"]
+---
+
+import ppms_privacy from "@/assets/articles/ppms_privacy.jpg";
+import recette from "@/assets/articles/recettage-cookie-network.jpg";
+import Callout from "@/components/Callout.astro";
+import { Image } from "astro:assets";
+
+## Prérequis
+
+- Vous avez [installé Piwik Pro](/blog/comment-installer-piwik-pro-avec-gtm) avec le conteneur ou le code snippet
+- Vous avez déjà une CMP en place sur votre site
+
+## Les avantages de la mesure hybride
+
+Le suivi sans consentement est possible sur Piwik Pro mais reste très contraignant. **La mesure hybride permet de collecter des données plus précises**, tout en gardant un niveau de collecte raisonnable si l'utilisateur refuse le suivi.
+
+Les deux méthodes principales de Piwik Pro pour identifier un utilisateur et une session sont les suivantes :
+
+- **Utilisation des cookies des visiteurs** : c'est la mesure la plus précise. Elle permet de déposer des cookies (par exemple `pk_id` et `pk_ses`) sur le navigateur de l'utilisateur.
+- **ID de session ou Fingerprint** : c'est l'empreinte du navigateur d'un utilisateur. Cette mesure moins précise mène parfois à des "faux positifs", c'est-à-dire qu'elle associe parfois à tort des sessions à un seul utilisateur alors qu'il y en a en réalité plusieurs.
+
+<Callout type="info">
+À savoir : si vous n'utilisez aucune de ces deux méthodes (cookie ou fingerprint) en mode anonyme, vous serez seulement capable d'identifier des événements. Au revoir les sessions et les utilisateurs !
+</Callout>
+
+Concrètement, si vous utilisez **la mesure hybride Piwik Pro**, vous bénéficierez de deux niveaux d'informations **en fonction du statut du consentement de l'utilisateur** :
+
+#### En cas de refus ou si l'utilisateur ignore la bannière :
+
+**Vous ne serez pas capable d'identifier un utilisateur** et vous passerez en mode de suivi anonyme, ce qui implique que :
+
+- Si vous utilisez les cookies first-party, ils doivent être déposés pour une durée de 30 minutes à partir du dernier événement (au même titre que la session)
+- L'adresse IP sera complètement masquée
+- Aucune donnée géographique en dessous du pays ne sera disponible
+- Il faudra aussi activer le réglage "Conformez-vous aux directives de la CNIL" au niveau de votre interface
+- Vous devrez également vous assurer qu'aucune donnée personnelle n'est collectée
+
+#### En cas d'acceptation du suivi
+
+Dans ce cas, vous collectez davantage de données et suivez plus précisément l'utilisateur :
+
+- Un cookie first-party est déposé pour une durée de 13 mois (par défaut), cette durée est modifiable
+- Vous pouvez envoyer un userId et transmettre certaines données personnelles
+- L'IP est visible bien qu'elle puisse être partiellement masquée selon les paramètres de votre site
+- Les données géographiques sont accessibles (Latitude, Longitude, Ville...)
+
+## Envoyer le consentement avec l'API du Consent Manager de Piwik Pro
+
+Maintenant que nous avons vu **les avantages de la mesure hybride Piwik Pro**, je vais vous expliquer étape par étape comment la configurer en fonction de votre situation.
+
+### Configuration sur l'interface Piwik Pro
+
+Dans le cas où vous avez installé le conteneur de Piwik Pro et que vous comptez utiliser son tag manager avec une CMP custom, la démarche est plutôt simple :
+
+- Accédez à l'administration et cliquez sur votre site web
+- Cliquez sur l'onglet "Confidentialité" et activez "Demander le consentement"
+- Cliquez sur "Afficher" les paramètres de consentement
+- Cochez "Collecter des données anonymes [...]"
+- Il vous suffit enfin de cocher "utiliser un formulaire de consentement personnalisé"
+
+Piwik Pro attend désormais un statut de consentement et comprend donc que vous n'utiliserez pas son Consent Manager.
+
+![Image.jpeg](https://res.craft.do/user/full/2728de17-7c2d-29e6-5635-5203f9cea622/doc/1DA05CDA-A491-4CB4-8903-70A5212E268B/17790228-7E92-4AA7-8D31-88A7F2FB20E3_2/2Genx7PUXqPL0Gv1HJcLWyy6Uift7NUkBoMhksDWxeQz/Image.jpeg)
+
+![Image.jpeg](https://res.craft.do/user/full/2728de17-7c2d-29e6-5635-5203f9cea622/doc/1DA05CDA-A491-4CB4-8903-70A5212E268B/A2C737D2-3F78-4A7A-9E2A-CC6D14BDDAA6_2/Uzh9D4snwCThLljsWP9zSF0DMDGDrgKe3pVn1QX2QiUz/Image.jpeg)
+
+### Configurer la mesure hybride avec l'API du Consent Manager de Piwik Pro
+
+Une fois le paramétrage effectué sur votre interface Piwik Pro, nous allons pouvoir utiliser l'API du Consent Manager de Piwik Pro pour configurer le consentement.
+
+#### Avant le consentement de l'utilisateur :
+
+Nous allons initialiser le consentement lorsque l'utilisateur n'a pas encore fait son choix. Cette étape permet de visualiser des statistiques de consentement sur Piwik Pro et d'afficher un potentiel rappel à l'utilisateur. Cette méthode est facultative si je me base sur [les propos de Piwik Pro sur le sujet](https://community.piwik.pro/t/what-does-setinitialcompliancesettings-do/1586), elle n'a aucun impact sur le statut du consentement.
+
+```html
+<script>
+  ppms.cm.api(
+  "setInitialComplianceSettings",
+  {
+    consents: ["analytics"],
+  },
+  function Success() {}, // callback en cas de succès
+  function Error() {} // callback en cas d'erreur
+  );
+</script>
+```
+
+#### En cas de refus de l'utilisateur
+
+Si l'utilisateur décide de refuser les cookies, nous allons devoir configurer le consentement avec la valeur -1.
+
+```html
+<script>
+  ppms.cm.api(
+    "setComplianceSettings",
+    {
+      consents: {
+        analytics: {
+          status: -1 //  l'utilisateur a refusé le suivi
+        },
+      },
+    },
+    function onSuccess() {}, // callback en cas de succès
+    function onError() {} // callback en cas d'erreur
+  );
+</script>
+```
+
+#### En cas de validation de l'utilisateur
+
+Si l'utilisateur accepte les cookies Piwik Pro, nous allons configurer le consentement avec la valeur 1.
+
+```html
+<script>
+  ppms.cm.api(
+    "setComplianceSettings",
+    {
+      consents: {
+        analytics: {
+          status: 1 //  l'utilisateur a accepté le suivi
+        },
+      },
+    },
+    function onSuccess() {},
+    function onError() {}
+  );
+</script>
+```
+
+<Callout type="info">
+À la place de l'objet 'analytics', vous pouvez également utiliser d'autres consent type comme 'user_feedback','marketing_automation','remarketing', 'conversion_tracking', 'ab_testing_and_personalization'.
+</Callout>
+
+## Gérer le consentement avec le JavaScript Tracking API de Piwik Pro
+
+Si vous avez installé le code snippet de Piwik Pro (et non le conteneur), ce qui est mon cas puisque j'utilise Google Tag Manager et préfère éviter d'être pollué par les événements natifs Piwik Pro, vous ne pourrez pas accéder aux API du Consent Manager de Piwik Pro. Il va donc falloir **configurer le consentement en utilisant des méthodes du JavaScript Tracking API de Piwik Pro.**
+
+#### Avant le consentement et en cas de refus :
+
+Si l'utilisateur n'a pas encore fait son choix ou s'il a décidé de refuser, nous allons utiliser deux méthodes :
+
+- `setUserIsAnonymous` : pour indiquer que le suivi de l'utilisateur est anonyme
+- `setVisitorCookieTimeout` : pour définir le délai du cookie déposé à 1800 secondes (30 minutes)
+
+```javascript
+var _paq = _paq || [];
+ _paq.push(['setUserIsAnonymous', true]);
+ _paq.push(["setVisitorCookieTimeout", 1800]) // équivalent à 30 minutes
+```
+
+#### En cas de validation :
+
+Si l'utilisateur a accepté le suivi, nous allons utiliser les deux méthodes suivantes :
+
+- `deanonymizeUser` : pour désactiver l'anonymisation
+- `setVisitorCookieTimeout` : pour définir le délai du cookie déposé à 33955200 secondes (13 mois)
+
+```javascript
+var _paq = _paq || [];
+_paq.push(['deanonymizeUser']);
+_paq.push(["setVisitorCookieTimeout", 33955200]); // équivalent à 13 mois
+```
+
+#### Exemple d'un code complet :
+
+```html
+// ne copiez pas ce code
+
+<script type="text/javascript">
+    var _paq = _paq || [];
+
+  if({{Piwik consent}} === "denied") {
+    _paq.push(['setUserIsAnonymous', true]);
+    _paq.push(["setVisitorCookieTimeout", 1800])
+  } else if ({{Piwik consent}} === "granted") {
+    _paq.push(['deanonymizeUser']);
+    _paq.push(["setVisitorCookieTimeout", 33955200]);
+  }
+
+  _paq.push(["enableLinkTracking"]);
+  _paq.push(["trackPageView"]);
+
+  (function() {
+    var u = "https://votre-conteneur.piwik.pro/";
+    _paq.push(["setTrackerUrl", u + "ppms.php"]);
+    _paq.push(["setSiteId", "{{votre-site-id}}"]);
+    /* le reste de votre tracking code */
+  })();
+</script>
+```
+
+<Callout type="info">
+Ici, `{{Piwik consent}}` correspond à une variable GTM qui lit le cookie Didomi. Elle vérifie si l'utilisateur a accepté ou refusé le vendor Didomi 'c:piwikpro-pBwbmhba' et retourne soit la valeur 'granted' soit la valeur 'denied'.
+</Callout>
+
+## Recetter le consentement
+
+Nous allons maintenant nous assurer que le consentement est bien envoyé au bon moment côté navigateur.
+
+### Recetter l'API du Consent Manager Piwik Pro
+
+Clique droit, inspecter, onglet Applications -> Cookies -> filtrez sur ppms
+
+Vous devriez voir un cookie first-party (déposé sur votre domaine). La valeur du statut doit inclure `0` si aucun consentement n'a été donné, `-1` si l'utilisateur a refusé le suivi. Et `1` si l'utilisateur a accepté le suivi.
+
+<Image src={ppms_privacy} alt="ppms_privacy" />
+
+### Vérifier le temps d'expiration du cookie pk_id
+
+Clique droit, inspecter, onglet Applications -> Cookies -> filtrer sur pk_id
+
+Peu importe la solution que vous utilisez, les deux setups doivent permettre de voir un cookie first-party (déposé sur votre domaine). Si l'utilisateur n'a pas encore donné son consentement ou a refusé, l'expiration doit avoir lieu dans 30 minutes. Si l'utilisateur a accepté le suivi, le temps d'expiration devrait être de 13 mois.
+
+<Image src={recette} alt="recette" />
+
+## Conclusion
+
+Vous êtes fin prêt à utiliser votre configuration hybride sur Piwik Pro, que ce soit avec les API du Consent Manager de Piwik Pro ou par le biais des méthodes disponibles dans les API du JavaScript Tracking Client. J'espère que cet article a pu vous apporter plus de clarté sur la configuration hybride.
