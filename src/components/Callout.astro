@@ -6,7 +6,7 @@ const { type = 'info' } = Astro.props;
 
 const styles = {
   info: {
-    containerClass: 'bg-blue-50 border-blue-300',
+    containerClass: 'bg-white border border-gray-200',
     textClass: 'text-blue-700',
     iconClass: 'text-blue-500',
     Icon: Info
@@ -33,7 +33,7 @@ const styles = {
 
 const { containerClass, textClass, iconClass, Icon } = styles[type];
 ---
-<div class={`p-6 my-6 shadow-sm rounded-lg bg-gray-200 text-black ${containerClass} ${textClass}`}>
+<div class={`p-6 my-6 shadow-md rounded-lg text-black ${containerClass} ${textClass}`}>
   <div class="flex gap-4">
     <div class={`icon-wrapper flex-shrink-0 ${iconClass}`}>
       <Icon size={21} strokeWidth={2} />
