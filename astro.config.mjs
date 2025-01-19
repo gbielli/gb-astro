@@ -12,6 +12,12 @@ export default defineConfig({
   site: "https://guillaumebielli.fr",
   base: "/",
   trailingSlash: "never",
+  redirects: {
+    "blog/configurer-la-mesure-hybride-piwik-pro-avec-une-cmp-custom": {
+      destination: "/blog/configurer-la-mesure-hybride-piwik-pro",
+      status: 301,
+    },
+  },
   markdown: {
     shikiConfig: {
       theme: "tokyo-night",
