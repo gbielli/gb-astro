@@ -8,16 +8,20 @@ const ConsentBanner = () => {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true);
-    const consentCookie = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("cookieConsent="));
+    const timer = setTimeout(() => {
+      setIsMounted(true);
+      const consentCookie = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("cookieConsent="));
 
-    if (!consentCookie) {
-      document.body.style.overflow = "hidden";
-    } else {
-      setIsVisible(false);
-    }
+      if (!consentCookie) {
+        document.body.style.overflow = "hidden";
+      } else {
+        setIsVisible(false);
+      }
+    }, 2000);
+
+    return () => clearTimeout(timer);
   }, []);
 
   const setCookie = (value) => {
@@ -59,7 +63,7 @@ const ConsentBanner = () => {
             <div className="space-y-4">
               <div className="flex items-start justify-between">
                 <h2 className="text-xl font-semibold">
-                  Nous respectons votre vie privée
+                  Je respecte votre vie privée
                 </h2>
                 <Button
                   variant="ghost"
@@ -71,12 +75,10 @@ const ConsentBanner = () => {
                 </Button>
               </div>
 
-              <p className="text-muted-foreground">
-                Nous utilisons des cookies pour améliorer votre expérience de
-                navigation, personnaliser le contenu et les publicités, fournir
-                des fonctionnalités de médias sociaux et analyser notre trafic.
-                Veuillez choisir si vous acceptez l'utilisation de ces cookies.
-              </p>
+              <div className="text-muted-foreground text-sm">
+                J'utilise des cookies pour améliorer votre expérience, suivre la
+                qualité et la performance de mon contenu.
+              </div>
 
               <div className="flex flex-wrap gap-4 pt-2">
                 <Button
