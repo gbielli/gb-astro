@@ -13,17 +13,6 @@ const skillItem = [
     description:
       "Je vous accompagne sur le plan créatif et technique pour développer une expérience utilisateur mémorable.",
   },
-  {
-    title: "Acquisition client",
-    description:
-      "Je développe votre stratégie SEO et SEA avec une logique data-driven.",
-  },
-
-  {
-    title: "Automation",
-    description:
-      "J'automatise des tâches et je connecte vos outils pour maximiser le ROI.",
-  },
 ];
 
 const animation = {
