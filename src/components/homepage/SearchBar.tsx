@@ -6,22 +6,27 @@ import {
   DialogContent,
   DialogTrigger,
 } from "@/components/ui/search-dialog";
-import { type CollectionEntry } from "astro:content";
 import { Search, X } from "lucide-react";
 import * as React from "react";
 
 // Nous adaptons l'interface pour correspondre à la structure de vos articles Astro
 interface SearchBarProps {
-  // Utilisons le type CollectionEntry d'Astro pour garantir la compatibilité
-  articles: CollectionEntry<"articles">[];
+  articles: Article[]; // Utilisons notre nouvelle interface
+}
+interface Article {
+  slug: string;
+  data: {
+    title: string;
+    description?: string;
+    categories: string[];
+    date: string;
+  };
 }
 
 export default function SearchBar({ articles }: SearchBarProps) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [query, setQuery] = React.useState("");
-  const [searchResults, setSearchResults] = React.useState<
-    CollectionEntry<"articles">[]
-  >([]);
+  const [searchResults, setSearchResults] = React.useState<Article[]>([]);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   // Le reste de la logique d'état et des effets reste identique

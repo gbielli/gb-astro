@@ -81,7 +81,7 @@ Une fois le paramétrage effectué sur votre interface Piwik Pro, nous allons po
 
 #### Avant le consentement de l'utilisateur :
 
-Nous allons initialiser le consentement lorsque l'utilisateur n'a pas encore fait son choix. Cette étape permet de visualiser des statistiques de consentement sur Piwik Pro et d'afficher un potentiel rappel à l'utilisateur. Cette méthode est facultative si je me base sur [les propos de Piwik Pro sur le sujet](https://community.piwik.pro/t/what-does-setinitialcompliancesettings-do/1586), elle n'a aucun impact sur le statut du consentement.
+Nous allons **initialiser le consentement lorsque l'utilisateur n'a pas encore fait son choix**. Cette étape permet de visualiser des statistiques de consentement sur Piwik Pro et d'afficher un potentiel rappel à l'utilisateur. Cette méthode est facultative si je me base sur [les propos de Piwik Pro sur le sujet](https://community.piwik.pro/t/what-does-setinitialcompliancesettings-do/1586), elle n'a aucun impact sur le statut du consentement.
 
 ```html
 <script>
@@ -206,11 +206,11 @@ Ici, `{{Piwik consent}}` correspond à une variable GTM qui lit le cookie Didomi
 
 ## Recetter le consentement
 
-Nous allons maintenant nous assurer que le consentement est bien envoyé au bon moment côté navigateur.
+Nous allons maintenant nous assurer que **le consentement est bien envoyé au bon moment côté navigateur**.
 
 ### Recetter l'API du Consent Manager Piwik Pro
 
-Clique droit, inspecter, onglet Applications -> Cookies -> filtrez sur ppms
+Clique droit, inspecter, onglet <u>Applications -> Cookies -> filtrez sur ppms</u>
 
 Vous devriez voir un cookie first-party (déposé sur votre domaine). La valeur du statut doit inclure `0` si aucun consentement n'a été donné, `-1` si l'utilisateur a refusé le suivi. Et `1` si l'utilisateur a accepté le suivi.
 
@@ -218,7 +218,7 @@ Vous devriez voir un cookie first-party (déposé sur votre domaine). La valeur 
 
 ### Vérifier le temps d'expiration du cookie pk_id
 
-Clique droit, inspecter, onglet Applications -> Cookies -> filtrer sur pk_id
+Clique droit, inspecter, onglet <u>Applications -> Cookies -> filtrer sur pk_id</u>
 
 Peu importe la solution que vous utilisez, les deux setups doivent permettre de voir un cookie first-party (déposé sur votre domaine). Si l'utilisateur n'a pas encore donné son consentement ou a refusé, l'expiration doit avoir lieu dans 30 minutes. Si l'utilisateur a accepté le suivi, le temps d'expiration devrait être de 13 mois.
 

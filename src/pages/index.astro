@@ -1,7 +1,18 @@
 ---
+import Hero from '@/components/homepage/Hero';
+import MaskText from '@/components/homepage/MaskText';
+import Skill from '@/components/homepage/Skill';
+import Slider from '@/components/homepage/Slider';
+import Testimonials from '@/components/homepage/Testimonials';
 import Layout from '../layouts/LayoutHome.astro';
 ---
 
 <Layout>
-
+  <Hero client:load />
+  <div>
+    <MaskText client:load />
+    <Slider client:load />
+    <Skill client:load />
+    <Testimonials client:load />
+  </div>
 </Layout>

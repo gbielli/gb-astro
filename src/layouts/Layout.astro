@@ -5,7 +5,7 @@ import Footer from '@/components/Footer.astro';
 import Header from '@/components/Header.astro';
 import VirtualPageView from '@/components/VirtualPageView.astro';
 import '@/styles/global.css';
-import ViewTransitions from "astro/components/ViewTransitions.astro";
+import { ClientRouter } from 'astro:transitions';
 
 
 
@@ -18,16 +18,17 @@ const {
   canonicalURL = Astro.url.href,
 } = Astro.props;
 
+
 ---
 
 <html lang="fr" class="scroll-smooth min-w-[320px]">
-  <head>
-    <ConsentBannerWrapper />
+  <head>    
     <meta charset="utf-8">
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="icon" type="image/ico" href="/image/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{title}</title>
+    <ConsentBannerWrapper />
 
     <!-- Google Tag Manager -->
 <script is:inline>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -87,10 +88,13 @@ const {
         <slot />
       </article>
     </main>
-    <ViewTransitions />
+    <ClientRouter />
     <VirtualPageView />
 
   </body>
   <Footer />
 </html>
+
+
+
 

@@ -8,7 +8,7 @@ import Slider from '@/components/homepage/Slider';
 import Testimonials from '@/components/homepage/Testimonials';
 import VirtualPageView from '@/components/VirtualPageView.astro';
 import '@/styles/global.css';
-import ViewTransitions from "astro/components/ViewTransitions.astro";
+import { ClientRouter } from 'astro:transitions';
 import ConsentBannerWrapper from '@/components/consentBannerWrapper.astro';
 
 ---
@@ -16,13 +16,12 @@ import ConsentBannerWrapper from '@/components/consentBannerWrapper.astro';
 <html lang="fr" class="">
   <head>
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <ConsentBannerWrapper />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/ico" href="/image/favicon.ico" />
     <title>Guillaume Bielli | Digital Worker & Frontend Lover</title>
     <meta name="description" content="J'aide les entreprises à développer l'acquisition client et à construire une expérience utilisateur hors norme avec une logique data-driven.">
-  
+    <ConsentBannerWrapper />
       <!-- Google Tag Manager -->
 <script is:inline>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -35,19 +34,10 @@ import ConsentBannerWrapper from '@/components/consentBannerWrapper.astro';
    
     <Header />
     <main class="">
-    <Hero client:load />
-    <div>
-
-      <MaskText client:load />
-      <Slider client:load />
-      <Skill client:load />
-      <Testimonials client:load />
-    </div>
         <slot />
     </main>
-    <ViewTransitions />
+    <ClientRouter />
     <VirtualPageView />
   </body>
   <Footer />
 </html>
-
