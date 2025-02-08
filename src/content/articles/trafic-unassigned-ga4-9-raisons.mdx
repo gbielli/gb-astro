@@ -1,0 +1,93 @@
+---
+title: "Trafic unassigned GA4 : 9 raisons et comment le résoudre"
+description: "Le trafic unassigned dans Google Analytics 4 est probablement l'une des problématiques les plus frustrantes. Je vous donne 9 raisons et je vous explique comment le résoudre."
+author: "Guillaume BIELLI"
+date: "2025-02-10"
+image: "@/assets/articles/unassigned-ga4/trafic-unassigned-ga4.jpg"
+categories: ["Google analytics 4"]
+---
+
+import observedUnassigned from "@/assets/articles/unassigned-ga4/trafic-acquisition-session-unassigned.jpeg";
+import identiteReportingGa4 from "@/assets/articles/unassigned-ga4/identite-reporting-ga4.jpeg";
+import audienceTriggerGa4 from "@/assets/articles/unassigned-ga4/audience-trigger-ga4.jpeg";
+import { Image } from "astro:assets";
+
+## Quels sont les différents niveaux d'attribution GA4 ?
+
+Voici les 3 niveaux d'attribution possibles sur GA4 :
+
+- **source / support de la session** : qui correspond à l'attribution pour chaque session identifiée avec l'événement (session_start).
+- **source / support du premier utilisateur** : qui correspond à la source/support de la première session de l'utilisateur identifié avec l'événement first_visit.
+- **source / support** : qui correspond à l'attribution d'un événement clé (key events). Ce modèle d'attribution peut être modifié depuis votre interface (last click ou data driven).
+
+Il est aussi important de comprendre que **GA4 base son attribution sur le dernier clic non direct**. Prenons un exemple : si un utilisateur au cours d'une session arrive sur le canal (direct), qu'il ferme son onglet, revient 10 minutes plus tard par le biais d'une campagne Google Ads, alors le paramètre source/support de la session sera attribué à Google Ads.
+
+## Qu'est-ce que le trafic unassigned sur GA4 et comment l'observer ?
+
+Le trafic unassigned **indique que Google Analytics 4 n'a pas réussi à attribuer un canal par défaut** pour l'utilisateur et/ou la session en cours.
+
+Concrètement, dans le rapport "acquisition de trafic", on ajoute la dimension "source/medium de la session", et on observe la ligne indiquant un canal undefined et la source/medium de la session (not set).
+
+Attention, dans la capture d'écran, on peut voir qu'il existe un trafic unassigned avec une source/medium identifiée (campaignA/email). **On peut considérer ce trafic comme du faux trafic Unassigned**, au sens où le problème provient du fait que vous ne respectez pas les conventions de nommage GA4 des sources ou des mediums pour que GA4 puisse attribuer la source de trafic à ces canaux par défaut.
+
+Vous aurez alors deux possibilités : soit créer des groupes de canaux personnalisés, soit vous plier aux [exigences de GA4 sur la façon de nommer vos UTM](https://support.google.com/analytics/answer/9756891?hl=en) (utm_source et utm_medium).
+
+<Image src={observedUnassigned} alt="observer le trafic unassigned (not set) au scope session" />
+
+## 9 raisons de trafic unassigned sur Google Analytics 4
+
+Maintenant que nous avons défini ce qu'est le trafic unassigned et comment l'observer, **voici 9 raisons principales qui peuvent expliquer cette non-attribution par GA4**.
+
+### Raison 1 : Le processing des données
+
+C'est peut-être la raison la plus basique mais parfois oubliée. GA4 prend un certain temps pour traiter la donnée, il peut le faire en quelques heures avec la version payante, mais pour **la version gratuite, GA4 prend en général un peu plus de 24h pour assigner les sources de trafic au bon canal.** Un peu de patience donc si vous êtes dans ce cas et si vous souhaitez analyser la donnée, regardez plutôt à partir de J-2.
+
+### Raison 2 : L'identité de reporting
+
+**L'identité de reporting**, c'est ce qui permet de choisir le type de données que l'on veut voir depuis GA4. Comme vous le savez certainement, Google propose un consent mode avancé, **qui permet de modéliser les données des utilisateurs qui refusent de donner leur consentement** en se basant sur des sessions "similaires".
+
+**Si vous utilisez l'identité "Blended"** notamment, et si vous respectez les volumes nécessaires (1000 événements denied chaque jour pendant 7 jours), des sessions artificielles seront générées et, outre le fait qu'on puisse remettre en question le niveau de fiabilité de cette modélisation, elle apporte bien souvent du trafic unassigned.
+
+Vous pouvez faire l'essai par vous-même et **vérifier si l'identité est à l'origine de votre trafic unassigned**. Ne vous inquiétez pas, les changements ne sont pas définitifs et vous pouvez changer l'identité autant de fois que vous le souhaitez, les rapports s'adapteront rétroactivement.
+
+<Image src={identiteReportingGa4} alt="modification de l'identité de reporting GA4" />
+
+### Raison 3 : La gestion de la bannière de consentement
+
+Il existe beaucoup de scénarios possibles, mais prenons un exemple concret : si vous laissez les utilisateurs naviguer sur votre site avant qu'ils n'aient fait leur choix au niveau de la bannière de consentement, vous risquez alors de perdre la source initiale de l'utilisateur une fois qu'il accepte les cookies une page plus tard.
+
+### Raison 4 : L'absence de session_start au cours d'une session
+
+Si au cours d'une session, l'événement session_start (qui est normalement déclenché automatiquement lorsqu'une session démarre) ne se déclenche pas, alors l'attribution sera unassigned. Voici quelques exemples que je remarque souvent :
+
+- **Un autre événement que la page_view part en premier**, ce n'est pas systématique mais c'est ce que je constate empiriquement et surtout en server side.
+- **Un événement part avant le gtag**. Le gtag est la pierre angulaire du tracking GA4, c'est lui qui porte les paramètres essentiels d'attribution. Si le gtag n'est pas initialisé, vous aurez du trafic unassigned. Raison pour laquelle il est conseillé de charger le gtag très tôt sur votre page, et de dissocier l'événement page_view de celui-ci.
+- **Si le premier événement qui porte le paramètre '\_ss' n'est pas dédié à GA4** mais à un autre outil, alors le session_start sera manquant et générera du trafic unassigned.
+
+### Raison 5 : Des requêtes parasites via le Measurement Protocol
+
+Pour qu'une requête via le Measurement Protocol (MP) puisse passer, il faut **pouvoir identifier un utilisateur, sa session ainsi que le timestamp**. Si vous n'envoyez pas ces données, les requêtes risquent tout simplement de ne pas pouvoir être attribuables par GA4. Rapprochez-vous de votre équipe technique pour le vérifier.
+
+### Raison 6 : Une intégration native avec un autre outil
+
+Ce point est lié à la raison n°5 : **de nombreux outils proposent des intégrations natives avec GA4** comme Wistia par exemple. Bien souvent, ces intégrations utilisent le measurement protocol (MP) comme moyen d'envoyer de la donnée. Problème : lorsque la requête n'apporte pas suffisamment de contexte pour identifier un utilisateur et sa session, alors GA4 attribuera ce trafic comme unassigned.
+
+### Raison 7 : Un problème au niveau des UTM
+
+Que ce soit pour les régies publicitaires ou pour les autres sources, l'absence d'UTM peut mener à du trafic unassigned.
+
+- Pour Google Ads notamment, pensez à activer **l'auto-tagging + les UTM manuels**.
+
+### Raison 8 : Utilisation des triggers d'audience
+
+Il semblerait que **la fonctionnalité de déclencheurs d'audience puisse générer du trafic unassigned**. J'utilise le conditionnel puisque je n'ai jamais eu l'occasion de le vérifier par moi-même. Vous pouvez accéder aux audiences de votre admin GA4 pour le vérifier.
+
+<Image src={audienceTriggerGa4} alt="audience trigger GA4" />
+
+### Raison 9 : Les bugs GA4
+
+Plus rarement, GA4 lui-même peut être source de problèmes. Par exemple, en novembre 2024, certaines propriétés ont connu des délais de traitement anormalement longs (plus de 4 jours au lieu des 24h habituelles).
+
+## Conclusion
+
+Vous l'aurez compris, le trafic unassigned GA4 peut provenir de sources très différentes, raison pour laquelle il faut être très méthodique et patient pour comprendre et résoudre ce problème.
