@@ -1,15 +1,12 @@
 ---
 import Footer from '@/components/Footer.astro';
 import Header from '@/components/Header.astro';
-import Hero from '@/components/homepage/Hero';
-import MaskText from '@/components/homepage/MaskText';
-import Skill from '@/components/homepage/Skill';
-import Slider from '@/components/homepage/Slider';
-import Testimonials from '@/components/homepage/Testimonials';
 import VirtualPageView from '@/components/VirtualPageView.astro';
 import '@/styles/global.css';
 import { ClientRouter } from 'astro:transitions';
 import ConsentBannerWrapper from '@/components/consentBannerWrapper.astro';
+import  SpeedInsights  from "@vercel/speed-insights/astro"
+
 
 ---
 
@@ -21,6 +18,7 @@ import ConsentBannerWrapper from '@/components/consentBannerWrapper.astro';
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <title>Guillaume Bielli | Digital Worker & Frontend Lover</title>
     <meta name="description" content="J'aide les entreprises à développer l'acquisition client et à construire une expérience utilisateur hors norme avec une logique data-driven.">
+    <SpeedInsights/>
     <ConsentBannerWrapper />
       <!-- Google Tag Manager -->
 <script is:inline>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
