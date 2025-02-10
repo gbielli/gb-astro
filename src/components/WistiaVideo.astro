@@ -1,0 +1,48 @@
+---
+// WistiaVideo.astor
+---
+
+<div>
+  <iframe
+    src="https://fast.wistia.net/embed/iframe/n6h1g5otgf?seo=true&videoFoam=false"
+    title="Skill Capped Video"
+    allow="autoplay; fullscreen"
+    allowtransparency="true"
+    frameborder="0"
+    scrolling="no"
+    class="wistia_embed"
+    name="wistia_embed"
+    width="640"
+    height="360"
+  />
+ </div>
+ 
+ <script>
+  window._wq = window._wq || [];
+  _wq.push({
+    id: "n6h1g5otgf",
+    onReady: function(video) {
+      console.log("I got a handle to the video!", video);
+      
+      video.bind("play", () => {
+        console.log("Video is playing!");
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: "wistia_play",
+          videoId: "n6h1g5otgf",
+        });
+      });
+ 
+      video.bind("pause", () => {
+        console.log("Video is paused!");
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: "wistia_pause", 
+          videoId: "n6h1g5otgf",
+        });
+      });
+    },
+  });
+ </script>
+ 
+ <script src="https://fast.wistia.net/assets/external/E-v1.js" async></script>

@@ -1,5 +1,5 @@
 ---
-title: "Trafic unassigned GA4 : 9 raisons et comment le résoudre"
+title: "Trafic unassigned GA4 : 9 raisons et comment le résoudre en 2025"
 description: "Le trafic unassigned dans Google Analytics 4 est probablement l'une des problématiques les plus frustrantes. Je vous donne 9 raisons et je vous explique comment le résoudre."
 author: "Guillaume BIELLI"
 date: "2025-02-10"
@@ -7,9 +7,9 @@ image: "@/assets/articles/unassigned-ga4/trafic-unassigned-ga4.jpg"
 categories: ["Google analytics 4"]
 ---
 
-import observedUnassigned from "@/assets/articles/unassigned-ga4/trafic-acquisition-session-unassigned.jpeg";
-import identiteReportingGa4 from "@/assets/articles/unassigned-ga4/identite-reporting-ga4.jpeg";
 import audienceTriggerGa4 from "@/assets/articles/unassigned-ga4/audience-trigger-ga4.jpeg";
+import identiteReportingGa4 from "@/assets/articles/unassigned-ga4/identite-reporting-ga4.jpeg";
+import observedUnassigned from "@/assets/articles/unassigned-ga4/trafic-acquisition-session-unassigned.jpeg";
 import { Image } from "astro:assets";
 
 ## Quels sont les différents niveaux d'attribution GA4 ?
@@ -62,11 +62,11 @@ Si au cours d'une session, l'événement session_start (qui est normalement déc
 
 - **Un autre événement que la page_view part en premier**, ce n'est pas systématique mais c'est ce que je constate empiriquement et surtout en server side.
 - **Un événement part avant le gtag**. Le gtag est la pierre angulaire du tracking GA4, c'est lui qui porte les paramètres essentiels d'attribution. Si le gtag n'est pas initialisé, vous aurez du trafic unassigned. Raison pour laquelle il est conseillé de charger le gtag très tôt sur votre page, et de dissocier l'événement page_view de celui-ci.
-- **Si le premier événement qui porte le paramètre '\_ss' n'est pas dédié à GA4** mais à un autre outil, alors le session_start sera manquant et générera du trafic unassigned.
+- **En server-side, si vous utilisez le transporteur GA4 et si le premier événement qui porte le paramètre '\_ss' n'est pas dédié à GA4** mais à un autre outil, alors le session_start sera manquant et générera du trafic unassigned.
 
 ### Raison 5 : Des requêtes parasites via le Measurement Protocol
 
-Pour qu'une requête via le Measurement Protocol (MP) puisse passer, il faut **pouvoir identifier un utilisateur, sa session ainsi que le timestamp**. Si vous n'envoyez pas ces données, les requêtes risquent tout simplement de ne pas pouvoir être attribuables par GA4. Rapprochez-vous de votre équipe technique pour le vérifier.
+Pour qu'une requête via le Measurement Protocol (MP) puisse être attribuée, il faut **pouvoir identifier un utilisateur, sa session ainsi que le timestamp**. Si vous n'envoyez pas ces données, les requêtes risquent tout simplement de ne pas pouvoir être attribuables par GA4. Rapprochez-vous de votre équipe technique pour le vérifier.
 
 ### Raison 6 : Une intégration native avec un autre outil
 
@@ -76,7 +76,7 @@ Ce point est lié à la raison n°5 : **de nombreux outils proposent des intégr
 
 Que ce soit pour les régies publicitaires ou pour les autres sources, l'absence d'UTM peut mener à du trafic unassigned.
 
-- Pour Google Ads notamment, pensez à activer **l'auto-tagging + les UTM manuels**.
+- Pour Google Ads notamment, pensez à activer **l'auto-tagging et les UTM manuels**.
 
 ### Raison 8 : Utilisation des triggers d'audience
 
@@ -86,7 +86,7 @@ Il semblerait que **la fonctionnalité de déclencheurs d'audience puisse géné
 
 ### Raison 9 : Les bugs GA4
 
-Plus rarement, GA4 lui-même peut être source de problèmes. Par exemple, en novembre 2024, certaines propriétés ont connu des délais de traitement anormalement longs (plus de 4 jours au lieu des 24h habituelles).
+Plus rarement, GA4 lui-même peut être source de problèmes. Par exemple, en novembre 2024, certaines propriétés ont connu des délais de traitement anormalement longs (plus de 4 jours au lieu des 24h habituelles). Vous pouvez consulter l'état des bugs et le suivi des résolutions sur [la page dédiée de google](https://ads.google.com/status/publisher/summary).
 
 ## Conclusion
 
