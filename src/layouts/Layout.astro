@@ -13,12 +13,14 @@ import SpeedInsights  from "@vercel/speed-insights/astro"
 const { 
   title,
   description = "Description par défaut de votre site",
+  serpDescription,
   image = "/default-og-image.jpg",
   articleDate,
   author = "Guillaume BIELLI",
   canonicalURL = Astro.url.href,
 } = Astro.props;
 
+const metaDescription = serpDescription || description;
 
 ---
 
@@ -40,21 +42,21 @@ const {
   <!-- End Google Tag Manager -->
     
     <!-- Meta SEO essentielles -->
-    <meta name="description" content={description}>
+    <meta name="description" content={metaDescription}>
     <meta name="robots" content="index, follow">
     <link rel="canonical" href={canonicalURL}>
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:title" content={title}>
-    <meta property="og:description" content={description}>
+    <meta property="og:description" content={metaDescription}>
     <meta property="og:image" content={image}>
     <meta property="og:url" content={canonicalURL}>
     
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content={title}>
-    <meta name="twitter:description" content={description}>
+    <meta name="twitter:description" content={metaDescription}>
     <meta name="twitter:image" content={image}>
 
     <!-- Schema.org pour Google -->
@@ -62,7 +64,7 @@ const {
       "@context": "https://schema.org",
       "@type": "Article",
       "headline": title,
-      "description": description,
+      "description": metaDescription,
       "image": {
         "@type": "ImageObject",
         "url": image.src,

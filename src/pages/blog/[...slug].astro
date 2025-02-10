@@ -38,7 +38,7 @@ const components = {
 };
 ---
 
-<Layout title={post.data.title} description={post.data.description} image={post.data.image}>
+<Layout title={post.data.title} description={post.data.description} serpDescription={post.data?.serpDescription}  image={post.data.image}>
   <main class="md:max-w-[800px] mx-auto">
     <div class="flex gap-4">
       <a 

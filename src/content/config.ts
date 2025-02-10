@@ -10,6 +10,7 @@ const articles = defineCollection({
       author: z.string(),
       image: image(),
       categories: z.array(z.string()),
+      serpDescription: z.string().optional(),
       // mediaUrl: z.string(),
     }),
 });
