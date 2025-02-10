@@ -11,6 +11,7 @@ categories: ["Google analytics 4"]
 import audienceTriggerGa4 from "@/assets/articles/unassigned-ga4/audience-trigger-ga4.jpeg";
 import identiteReportingGa4 from "@/assets/articles/unassigned-ga4/identite-reporting-ga4-.jpeg";
 import observedUnassigned from "@/assets/articles/unassigned-ga4/trafic-acquisition-session-unassigned.jpeg";
+import utmReferrerLost from "@/assets/articles/unassigned-ga4/utm-referrer-lost.jpg";
 import { Image } from "astro:assets";
 
 ## Quels sont les différents niveaux d'attribution GA4 ?
@@ -56,6 +57,8 @@ Vous pouvez faire l'essai par vous-même et **vérifier si l'identité est à l'
 ### Raison 3 : La gestion de la bannière de consentement
 
 Il existe beaucoup de scénarios possibles, mais prenons un exemple concret : si vous laissez les utilisateurs naviguer sur votre site avant qu'ils n'aient fait leur choix au niveau de la bannière de consentement, vous risquez alors de perdre la source initiale de l'utilisateur une fois qu'il accepte les cookies une page plus tard.
+
+<Image src={utmReferrerLost} alt="perte des UTM et du referrer de la landing page lorsque l'utilisateur navigue avant qu'il accepte les cookies" />
 
 ### Raison 4 : L'absence de session_start au cours d'une session
 
