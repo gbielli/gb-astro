@@ -8,8 +8,6 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
-    },
-    "jsxFactory": "astro",
-    "jsxFragmentFactory": "Fragment"
+    }
   }
 }
