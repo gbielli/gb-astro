@@ -4,7 +4,6 @@ import Header from '@/components/Header.astro';
 import VirtualPageView from '@/components/VirtualPageView.astro';
 import '@/styles/global.css';
 import { ClientRouter } from 'astro:transitions';
-import ConsentBannerWrapper from '@/components/consentBannerWrapper.astro';
 import  SpeedInsights  from "@vercel/speed-insights/astro"
 
 
@@ -19,7 +18,6 @@ import  SpeedInsights  from "@vercel/speed-insights/astro"
     <title>Guillaume Bielli | Digital Worker & Frontend Lover</title>
     <meta name="description" content="J'aide les entreprises à développer l'acquisition client et à construire une expérience utilisateur hors norme avec une logique data-driven.">
     <SpeedInsights/>
-    <ConsentBannerWrapper />
       <!-- Google Tag Manager -->
 <script is:inline>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -29,7 +27,7 @@ import  SpeedInsights  from "@vercel/speed-insights/astro"
   <!-- End Google Tag Manager -->
   </head>
   <body class="min-h-screen w-full">
-   
+ 
     <Header />
     <main class="">
         <slot />

@@ -9,10 +9,10 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/mdx": "^4.0.8",
-    "@astrojs/react": "^4.2.0",
-    "@astrojs/sitemap": "^3.2.1",
-    "@astrojs/tailwind": "^6.0.0",
+    "@astrojs/mdx": "^4.3.13",
+    "@astrojs/react": "^4.4.2",
+    "@astrojs/sitemap": "^3.7.0",
+    "@astrojs/tailwind": "^6.0.2",
     "@iconify-json/mdi": "^1.2.1",
     "@iconify-json/mdi-light": "^1.2.1",
     "@radix-ui/react-dialog": "^1.1.2",
@@ -27,7 +27,7 @@
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vercel/speed-insights": "^1.1.0",
-    "astro": "^5.2.5",
+    "astro": "^5.17.1",
     "astro-icon": "^1.1.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
