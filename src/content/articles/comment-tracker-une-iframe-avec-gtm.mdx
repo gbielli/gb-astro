@@ -39,7 +39,7 @@ Mais alors, si les deux domaines ne communiquent pas, comment faire ?
 
 Pour pouvoir répondre à cette question, nous allons devoir créer un conteneur GTM dédié à l'iframe, d'où la nécessité d'accéder à l'iframe pour y déposer un script.
 
-Pour commencer, Créons un conteneur GTM dédié à l'iframe (je ne te fais pas le déshonneur de te montrer comment faire). Plus sérieusement, je te recommande d'en créer un nouveau, et non d'appliquer le conteneur de ton site principal.
+Pour commencer, créons un conteneur GTM dédié à l'iframe (je ne te fais pas le déshonneur de te montrer comment faire). Plus sérieusement, je te recommande d'en créer un nouveau, et non d'appliquer le conteneur de ton site principal.
 
 Ensuite, depuis le domaine de l'iframe (exemple : typeform, livestorm, etc..), il faudra injecter le script GTM.
 
@@ -57,12 +57,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 ```
 
 <Callout type="info">
-Certains outils ne permettent pas malheureusement pas d'injecter du code depuis l'iframe. Pour autant il peut exister des intégrations natives proposées par l'outil pour y déposer un script GTM.
+Certains outils ne permettent malheureusement pas d'injecter du code depuis l'iframe. Pour autant il peut exister des intégrations natives proposées par l'outil pour y déposer un script GTM.
 </Callout>
 
 ## Étape 2 : Créer un event postMessage depuis l'iframe
 
-Maintenant que nous avons intégré un conteneur GTM dans l'iframe, il nous faut utiliser la méthode [postMessage](https://developer.mozilla.org/fr/docs/Web/API/Window/postMessage) pour envoyer un event à ton site principal (parent).
+Maintenant que nous avons intégré un conteneur GTM dans l'iframe, il nous faut utiliser la méthode [postMessage](https://developer.mozilla.org/fr/docs/Web/API/Window/postMessage) pour envoyer un event à ton site parent.
 
 <Callout type="info">
 La méthode [window.postMessage](https://developer.mozilla.org/fr/docs/Web/API/Window/postMessage) permet tout simplement de communiquer entre différents domaines, ce qui est exactement ce que l'on veut mettre en place dans le cas du tracking de notre iframe.
