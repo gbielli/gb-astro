@@ -4,6 +4,7 @@ import Header from '@/components/Header.astro';
 import VirtualPageView from '@/components/VirtualPageView.astro';
 import '@/styles/global.css';
 import SpeedInsights from "@vercel/speed-insights/astro";
+import Analytics from '@vercel/analytics/astro';
 
 
 ---
@@ -32,6 +33,7 @@ import SpeedInsights from "@vercel/speed-insights/astro";
         <slot />
     </main>
     <VirtualPageView />
+    <Analytics />
   </body>
   <Footer />
 </html>

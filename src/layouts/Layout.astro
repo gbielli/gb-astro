@@ -6,6 +6,7 @@ import Header from '@/components/Header.astro';
 import VirtualPageView from '@/components/VirtualPageView.astro';
 import '@/styles/global.css';
 import SpeedInsights from "@vercel/speed-insights";
+import Analytics from '@vercel/analytics/astro'
 
 const { 
   title,
@@ -86,9 +87,8 @@ const metaDescription = serpDescription || description;
         <slot />
       </article>
     </main>
-
     <VirtualPageView />
-
+    <Analytics />
   </body>
   <Footer />
 </html>
