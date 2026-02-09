@@ -1,0 +1,144 @@
+---
+title: "Comment tracker une iframe avec GTM ?"
+description: "Mettre en place un tracking sur une iframe avec GTM peut s'avérer délicat. À moins que l'on t'explique concrètement comment fonctionne une iframe et comment configurer un tracking sur celle-ci. Ça tombe bien, je suis là pour ça."
+author: "Guillaume BIELLI"
+date: "2025-06-22"
+image: "@/assets/articles/tracking-iframe.jpg"
+categories: ["Google Tag Manager"]
+---
+
+import Callout from "@/components/Callout.astro";
+import Trigger from "@/components/Trigger.astro";
+import { Image } from "astro:assets";
+
+## Les prérequis pour tracker une iframe sur GTM
+
+- Pouvoir injecter du code depuis le domaine de l'iframe.
+
+## Pourquoi tracker une iframe avec GTM en passant par ton domaine ?
+
+- **Enjeux Analytics :** Tu récupères des évènements que tu pourras pousser à tes outils analytics et **les associer facilement à un user et une session spécifique**
+- **Enjeux Publicitaires :** Si tu transmets des données aux régies publicitaires, passer par ton domaine tu permet d'envoyer plus de données, notamment les cookies (gclid, fbc, fbp, etc..).
+- **Enjeux de consentement :** Et parce qu'on est pas des bêtes, on respecte le consentement de l'utilisateur (exit le consent granted by default), passer par ton domaine te permet de respecter le consentement de l'utilisateur. Ton DPO sera refait !
+
+## Qu'est-ce qu'une iframe ?
+
+Commençons par les bases. La question peut paraître évidente, mais il est important de bien comprendre le concept de l'iframe pour saisir les spécificités de son tracking.
+
+Une iframe, c'est une "fenêtre" intégrée dans une page web, qui permet de charger du contenu tiers sur ton site.
+
+Le contexte d'une iframe, c'est un domaine parent (ton site) qui charge un domaine enfant (l'iframe).
+
+Par exemple, imaginons que je charge une iframe de webinaire grâce à l'outil livestorm sur guillaumebielli.fr, le domaine de l'iframe (livestorm.co) sera différent du domaine de mon site (guillaumebielli.fr). mon conteneur GTM installé sur guillaumebielli.fr n'aura pas donc tout simplement pas accès à l'iframe, et inversement.
+
+Autrement dit, aucun intéraction ou évènement ne pourront être suivis depuis l'iframe grâce à mon conteneur GTM installé sur guillaumebielli.fr.
+
+## Etape 1 : Créer un conteneur et intégrer le script GTM depuis l'iframe
+
+Mais alors, si les deux domaines ne communiquent pas, comment faire ?
+
+Pour pouvoir répondre à cette question, nous allons devoir créer un conteneur GTM dédié à l'iframe, d'où la nécessité d'accéder à l'iframe pour y déposer un script.
+
+Pour commencer, Créons un conteneur GTM dédié à l'iframe (je ne te fais pas le déshonneur de te montrer comment faire). Plus sérieusement, je te recommande d'en créer un nouveau, et non d'appliquer le conteneur de ton site principal.
+
+Ensuite, depuis le domaine de l'iframe (exemple : typeform, livestorm, etc..), il faudra injecter le script GTM.
+
+Voici un exemple de code pour injecter le script GTM depuis l'iframe :
+
+```html
+// ne copie pas le code
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-REMPLACE_PAR_TON_ID');</script>
+<!-- End Google Tag Manager -->
+```
+
+<Callout type="info">
+Certains outils ne permettent pas malheureusement pas d'injecter du code depuis l'iframe. Pour autant il peut exister des intégrations natives proposées par l'outil pour y déposer un script GTM.
+</Callout>
+
+## Étape 2 : Créer un event postMessage depuis l'iframe
+
+Maintenant que nous avons intégré un conteneur GTM dans l'iframe, il nous faut utiliser la méthode [postMessage](https://developer.mozilla.org/fr/docs/Web/API/Window/postMessage) pour envoyer un event à ton site principal (parent).
+
+<Callout type="info">
+La méthode [window.postMessage](https://developer.mozilla.org/fr/docs/Web/API/Window/postMessage) permet tout simplement de communiquer entre différents domaines, ce qui est exactement ce que l'on veut mettre en place dans le cas du tracking de notre iframe.
+</Callout>
+
+Créons un tag HTML personnalisé avec le code suivant :
+
+```html
+<script>
+(function() {
+  window.parent.postMessage({
+    type: 'TEST_MESSAGE',
+    data: 'Message de test depuis GTM',
+    timestamp: new Date().toISOString()
+  }, '*');
+  console.log('Message envoyé');
+})();
+</script>
+```
+
+<Callout type="info">
+Le deuxième argument de la méthode postMessage() est la targetOrigin, qui permet de spécifier le domaine de destination. En mettant `*`, on permet l'envoi du message à n'importe quel domaine. Pour plus de sécurité, tu peux remplacer la valeur par le domaine de ton site principal.
+</Callout>
+
+### Exemple de postMessage avec une iframe Livestorm
+
+Prenons un exemple concret avec Livestorm : tu souhaites transmettre la soumission d'un formulaire de Webinaire Livestorm sur ton site internet.
+
+Voici à quoi peut ressembler ton code :
+
+```html
+<script>
+livestorm.on('registration-success', function () {
+  window.parent.postMessage({
+    type: 'livestorm_webinar_registration',
+    user_email: {{DLV - user_email}},
+    timestamp: new Date().toISOString()
+  }, '*');
+});
+</script>
+```
+
+<Trigger type="pageview" triggerName="Initiliasation - All pages" />
+
+Globalement, je te recommande de déclencher le code très tôt, à l'initialisation, pour être sûr que le postMessage soit envoyé au moment de la soumission du formulaire grâce au listener natif de livestorm : 'registration-success'.
+
+## Étape 3 : Ajouter un listener Message à ton site parent
+
+Maintenant que nous avons mis en place le postMessage depuis l'iframe. Autrement dit, pour reprendre notre exemple avec Livestorm, nous avons communiqué un évènement de l'iframe Livestorm vers `guillaumebielli.fr`.
+
+Pour autant, sans autre action, le message ne sera pas reçu par le site parent (`guillaumebielli.fr`).
+
+Il nous faut donc réceptionner le message de l'iframe. Pour cela, rendez-vous sur le GTM de ton site parent.
+
+Ajoute une balise HTML, avec le code suivant :
+
+```html
+<script>
+(function() {
+  window.addEventListener('message', function(event) {
+    if (event.data && event.data.type === 'TEST_MESSAGE') { // Pour Livestorm remplace par 'livestorm_webinar_registration'
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        'event': 'iframeMessage',
+        'messageType': event.data.type,
+        'messageData': event.data.data,
+        'messageTimestamp': event.data.timestamp
+      });
+    }
+  });
+})();
+</script>
+```
+
+<Trigger type="pageview" triggerName="Initiliasation - All pages" />
+
+Même logique ici, déclenche le tag à l'initialisation, l'objectif est que le code soit chargé le plus tôt possible pour être à l'écoute de l'évènement, comme une soumission de formulaire par exemple.
+
+Et voilà, **c'est déjà terminé, tout devrait fonctionner correctement.**
