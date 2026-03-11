@@ -51,8 +51,10 @@ Chaque requête HTTP correspond à une communication entre votre navigateur et u
 
 Il existe donc deux façons de déposer un cookie :
 
-- La première façon est de déposer le cookie depuis le navigateur de l'utilisateur, on parle alors de cookie Javascript (document.cookie).
-- La deuxième façon est de déposer le cookie depuis un serveur (set cookie), comme celui qui héberge le site web, pour simplifier on parlera de cookie serveur.
+- La première façon est de déposer le cookie depuis le navigateur de l'utilisateur, souvent depuis une libraire chargé sur le site, on parle alors de cookie Javascript (document.cookie).
+- La deuxième façon est de déposer le cookie depuis un serveur, en réponse à une communication avec le navigateur (set cookie), comme celui qui héberge le site web, pour simplifier on parlera de cookie serveur.
+
+Cette distinction a son importance puisque Safari n'applique pas les mêmes restrictions pour ces deux types de cookies.
 
 <Image src={requeteHttp} alt="Communication HTTP" />
 
