@@ -19,11 +19,11 @@ import requeteHttp from "@/assets/articles/itp/requete-http.jpg";
 
 ## Un peu d'histoire : Juin 2017, le début d'une nouvelle ère
 
-En juin 2017, Apple annonce l'Intelligent Tracking Prevention (ITP) 1.0 à la WWDC. ITP, c'est une solution de machine-learning on-device (sur l'appareil de l'utilisateur) qui permet de limiter le suivi d'un utilisateur et de protéger sa vie privée.
+En juin 2017, Apple annonce **l'Intelligent Tracking Prevention (ITP)** 1.0 à la WWDC. ITP, c'est une solution de machine-learning on-device (sur l'appareil de l'utilisateur) qui permet de **limiter le suivi d'un utilisateur et de protéger sa vie privée.**
 
-Cette initiative a marqué le début d'une nouvelle ère : celle de la limitation de la traçabilité sur le web, en particulier pour les navigateurs basés sur Webkit (Safari, iOS, ipadOS).
+Cette initiative a marqué le début d'une nouvelle ère : celle de la **limitation de la traçabilité sur le web**, en particulier pour les navigateurs basés sur Webkit (Safari, iOS, ipadOS).
 
-Ces restrictions s'appliquent donc sur Safari depuis macOS mais également sur tous les navigateurs depuis iOS, ipadOS. Qu'ils utilisent Safari ou non, les navigateurs "tiers" disponibles sur ces appareils ont été développés dans un environnement encadré par Apple et sont donc soumis aux mêmes restrictions : WebKit.
+Ces restrictions s'appliquent donc sur Safari depuis macOS mais **également sur tous les navigateurs depuis iOS, ipadOS**. Qu'ils utilisent Safari ou non, les navigateurs "tiers" disponibles sur ces appareils ont été développés dans un environnement encadré par Apple et sont donc soumis aux mêmes restrictions : **WebKit**.
 
 La version de 2017 limite simplement la durée de vie des cookies tiers à 7 jours, elle visait principalement à limiter le tracking des outils publicitaires (Facebook, Google, etc.), qui grâce aux cookies tiers étaient en mesure de suivre et de connaître de façon extrêmement précise le profil des utilisateurs au départ de leurs publicités.
 
@@ -41,7 +41,7 @@ Nous allons donc voir chaque limitation de l'Intelligence Tracking Prevention en
 
 ## Comprendre la communication entre votre navigateur et les services tiers
 
-Avant d’entrer dans le vif du sujet, un mot sur la manière dont votre navigateur communique avec les services tiers tels que Google Ads, Google Analytics, Meta Ads ou Piwik Pro.
+Avant d’entrer dans le vif du sujet, un mot sur la manière dont **votre navigateur communique avec les services tiers** tels que Google Ads, Google Analytics, Meta Ads ou Piwik Pro.
 
 Lorsque vous visitez un site web, votre navigateur échange des informations avec différents services via le protocole HTTP (Hypertext Transfer Protocol).
 
@@ -68,7 +68,7 @@ Quelques exceptions "temporaires" selon Safari existent, notamment via l'accès 
 
 <Image src={cookieTiers} alt="Lecture des cookies tiers" />
 
-Prenons un cas concret : je navigue sur Google Chrome et je réalise une recherche depuis Google.com sur la marque à la virgule (Nike). Je clique sur le premier résultat de recherche.
+Prenons un cas concret : je navigue sur Google Chrome et je réalise une recherche depuis google.com sur la marque à la virgule (Nike). Je clique sur le premier résultat de recherche.
 
 Si l’on fait ensuite un détour par la console du navigateur (clic droit → Inspecter → Application → Cookies), sur le site nike.com, on peut voir qu’un certain nombre de cookies ont été déposés par Google.
 
@@ -111,11 +111,11 @@ En conséquence, les régies publicitaires perdent en efficacité sur le ciblage
 
 ## Limitation 3 : Suppressions des cookies après 24h pour les campagnes publicitaires
 
-Webkit profite d'un système qui détecte les décorations d'URL contenant des identifiants publicitaires (**clicks ID** comme le `gclid`, `fbclid`, etc.).
+**ITP profite d'un système qui détecte les décorations d'URL contenant des identifiants publicitaires** (clicks ID comme le `gclid`, `fbclid`, etc.).
 
 Imaginons le parcours d'un utilisateur :
 
-- Henry **navigue sur facebook.com et clique sur une publicité** qui met en avant un produit sur nike.com
+- Henry navigue sur facebook.com et clique sur une publicité qui met en avant un produit sur nike.com
 - Henry est redirigé vers `nike.com/?gclid=1234` (le `gclid` est le Click ID de Google Ads)
 - La librairie Javascript de Google présente sur nike.com permet à Google de déposer le cookie first-party \_gcl_au (et autres gcl\_\*) contenant la valeur 1234.
 
@@ -143,7 +143,7 @@ Si les 16 premiers bits de ces deux IP ne correspondent pas, le cookie est limit
 
 <Image src={cloakingIp} alt="ITP - Third-party IP address cloaking" />
 
-L'ITP va également détecter le CNAME cloaking, cette méthode consiste à masquer un serveur tiers derrière un sous-domaine first-party via une redirection DNS.
+**L'ITP va également détecter le CNAME cloaking**, cette méthode consiste à masquer un serveur tiers derrière un sous-domaine first-party via une redirection DNS.
 
 En ajoutant une entrée CNAME depuis mon fournisseur de domaine, je peux associer un sous domaine (tracking.guillaumebielli.fr) à un service externe, comme un serveur de tracking Stape par exemple, qui pointe alors vers `euk.stape.io`.
 
@@ -164,7 +164,7 @@ C'est pour cette raison que **Safari a mis en place des protections anti-fingerp
 
 ## Limitation 6 : les navigation privée et les sessions éphémères
 
-Bien que moins nombreuses, les navigations privées de Safari sont particulièrement restrictives. Elles fonctionnent avec des sessions éphémères, ce qui a deux implications majeures :
+Bien que moins nombreuses et non directement liées à ITP, **les navigations privées de Safari sont particulièrement restrictives**. Elles fonctionnent avec des sessions éphémères, ce qui a deux implications majeures :
 
 - Lorsqu'un utilisateur navigue sur un site et décide de quitter le navigateur, les cookies et autres données stockées sont supprimées
 - lorsqu'un utilisateur change d'onglet, les cookies et autres données stockées ne sont partagés entre les onglets
@@ -179,6 +179,6 @@ Face à autant de restrictions, on peut imaginer deux solutions :
 
 Pour autant, sachez que si vous avez mis en place un tracking server-side, rien ne garantit pour autant que votre configuration est suffisamment robuste pour **contourner l'ensemble des restrictions ITP**.
 
-D'une part parce que les règles ITP évoluent et le tracking aussi, et d'autre part parce que le server-side n'est pas une solution magique, et qu'elle nécessite des configurations adaptées (gestion des cookies par le serveur, restoration de cookie ou mise en place d'un reverse-proxy par le biais d'un CDN).
+D'une part parce que **les règles ITP évoluent et le tracking aussi**, et d'autre part parce que le server-side n'est pas une solution magique, et qu'elle nécessite des configurations adaptées (gestion des cookies par le serveur, restoration de cookie ou mise en place d'un reverse-proxy par le biais d'un CDN).
 
 C'est sur ces belles paroles que je termine cet article, en espérant que ce dernier ait pu vous éclairer davantage sur les restrictions qui s'appliquent sur Safari, et plus largement sur les navigateurs utilisant Webkit (iOS et iPadOS).
