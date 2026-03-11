@@ -32,7 +32,7 @@ const { category, posts } = Astro.props;
   <main>
     <div class="px-4 py-8 mx-auto max-w-5xl">
       <div class="flex items-center gap-4 mb-8 justify-center">
-        <h1 class="text-4xl font-bold">Tous mes articles sur {category}</h1>
+        <h1 class="text-4xl font-bold">Tous mes articles {category}</h1>
       </div>
       <div class="mb-20 flex justify-center">
         <SearchBar client:load articles={posts} />
@@ -48,7 +48,7 @@ const { category, posts } = Astro.props;
             description={post.data.description}
             slug={post.slug}
             chapter1={post.data.categories}
-            mediaUrl={post.data.image.src}
+            mediaUrl={post.data.image}
           />
         ))}
       </div>

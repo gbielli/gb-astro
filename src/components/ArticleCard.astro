@@ -1,4 +1,5 @@
 ---
+import type { ImageMetadata } from 'astro';
 import { Image } from 'astro:assets';
 import { Badge } from './ui/badge';
 
@@ -8,7 +9,7 @@ interface Props {
   description: string;
   slug: string; 
   chapter1: string[];
-  mediaUrl?: string | null;
+  mediaUrl?: ImageMetadata;
 }
 
 const { title, date, description, slug, mediaUrl, chapter1 } = Astro.props;
