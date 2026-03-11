@@ -11,9 +11,9 @@ import Callout from "@/components/Callout.astro";
 import Trigger from "@/components/Trigger.astro";
 import { Image } from "astro:assets";
 
-import cloackingIp from "@/assets/articles/itp/cloacking-ip.jpg";
-import cnameCloacking from "@/assets/articles/itp/cname-cloacking.jpg";
-import googleAdsGclid from "@/assets/articles/itp/google-ads-gclid.jpg";
+import cloakingIp from "@/assets/articles/itp/cloaking-ip.jpg";
+import cnamecloaking from "@/assets/articles/itp/cname-cloaking.jpg";
+import GoogleAdsGclid from "@/assets/articles/itp/Google-ads-gclid.jpg";
 import cookieTiers from "@/assets/articles/itp/lecture-cookie-tiers.jpg";
 import requeteHttp from "@/assets/articles/itp/requete-http.jpg";
 
@@ -25,7 +25,7 @@ Cette initiative a marqué le début d'une nouvelle ère : celle de la limitatio
 
 Ces restrictions s'appliquent donc sur Safari depuis macOS mais également sur tous les navigateurs depuis iOS, ipadOS. Qu'ils utilisent Safari ou non, les navigateurs "tiers" disponibles sur ces appareils ont été développés dans un environnement encadré par Apple et sont donc soumis aux mêmes restrictions : WebKit.
 
-La version de 2017 limite simplement la durée de vie des cookies tiers à 7 jours, elle visait principalement à limiter le tracking des outils publicitaires (Facebook, Google, etc.), qui grâce aux cookies tiers étaient en mesure de suivre et de connaître de façon extrêment précise le profil des utilisateurs au départ de leurs publicités.
+La version de 2017 limite simplement la durée de vie des cookies tiers à 7 jours, elle visait principalement à limiter le tracking des outils publicitaires (Facebook, Google, etc.), qui grâce aux cookies tiers étaient en mesure de suivre et de connaître de façon extrêmement précise le profil des utilisateurs au départ de leurs publicités.
 
 Qui dit meilleures identifications par les régies publicitaires dit implicitement meilleures résultats obtenus sur les publicités pour les annonceurs.
 
@@ -51,7 +51,7 @@ Chaque requête HTTP correspond à une communication entre votre navigateur et u
 
 Il existe donc deux façons de déposer un cookie :
 
-- La première façon est de déposer le cookie depuis le navigateur de l'utilisateur, on parle alors de cookie javascript (document.cookie).
+- La première façon est de déposer le cookie depuis le navigateur de l'utilisateur, on parle alors de cookie Javascript (document.cookie).
 - La deuxième façon est de déposer le cookie depuis un serveur (set cookie), comme celui qui héberge le site web, pour simplifier on parlera de cookie serveur.
 
 <Image src={requeteHttp} alt="Communication HTTP" />
@@ -68,7 +68,7 @@ Quelques exceptions "temporaires" selon Safari existent, notamment via l'accès 
 
 <Image src={cookieTiers} alt="Lecture des cookies tiers" />
 
-Prenons un cas concret : je navigue sur Google Chrome et je réalise une recherche depuis google.com sur la marque à la virgule (Nike). Je clique sur le premier résultat de recherche.
+Prenons un cas concret : je navigue sur Google Chrome et je réalise une recherche depuis Google.com sur la marque à la virgule (Nike). Je clique sur le premier résultat de recherche.
 
 Si l’on fait ensuite un détour par la console du navigateur (clic droit → Inspecter → Application → Cookies), sur le site nike.com, on peut voir qu’un certain nombre de cookies ont été déposés par Google.
 
@@ -91,9 +91,9 @@ Ce n'est pas tout, **ITP va également limiter la durée de vie de tous les cook
 
 Prenons un cas concret :
 
-- Un utilisateur visite votre site web depuis le barre de recherche Safari. **tous les cookies javascript créés lors de cette visite seront supprimés après 7 jours sans interaction de l'utilisateur sur ce site**.
+- Un utilisateur visite votre site web depuis la barre de recherche Safari. **tous les cookies Javascript créés lors de cette visite seront supprimés après 7 jours sans interaction de l'utilisateur sur ce site**.
 
-En d'autres termes, tous les cookies déposé sur votre domaine (en first-party) permettant à un service tiers d'identifier un utilisateur en déposant des cookies sont voués à disparaître après 7 jours sur Safari. Cette suppression impactera par exemple :
+En d'autres termes, tous les cookies déposés sur votre domaine (en first-party) permettant à un service tiers d'identifier un utilisateur en déposant des cookies sont voués à disparaître après 7 jours sur Safari. Cette suppression impactera par exemple :
 
 - votre suivi publicitaire & analytique à plus de 7 jours
 - votre bannière de consentement, qui aura perdu le choix de l'utilisateur sur cette même durée
@@ -107,7 +107,7 @@ Et s'il vous venait à l'esprit d'utiliser les autres moyens de stockage pour co
 - SessionStorage
 - Service Worker registrations et cache
 
-En conséquence, les régies publicitaires perdent en efficacité sur le ciblage, l'attribution et la connaissance des audiences. L'outil analytique perd sa capacité à suivre un utilisateur dans le temps en sur-estimant les utilisateurs, et ayant une attribution au scope utilisateur tronquée.
+En conséquence, les régies publicitaires perdent en efficacité sur le ciblage, l'attribution et la connaissance des audiences. L'outil analytique perd sa capacité à suivre un utilisateur dans le temps en surestimant les utilisateurs, et ayant une attribution au scope utilisateur tronquée.
 
 ## Limitation 3 : Suppressions des cookies après 24h pour les campagnes publicitaires
 
@@ -117,14 +117,14 @@ Imaginons le parcours d'un utilisateur :
 
 - Henry **navigue sur facebook.com et clique sur une publicité** qui met en avant un produit sur nike.com
 - Henry est redirigé vers `nike.com/?gclid=1234` (le `gclid` est le Click ID de Google Ads)
-- La librairie javascript de google présente sur nike.com permet à google de déposer le cookie first-party \_gcl_au (et autres gcl\_\*) contenant la valeur 1234.
+- La librairie Javascript de Google présente sur nike.com permet à Google de déposer le cookie first-party \_gcl_au (et autres gcl\_\*) contenant la valeur 1234.
 
-<Image src={googleAdsGclid} alt="Google Ads gclid" />
+<Image src={GoogleAdsGclid} alt="Google Ads gclid" />
 
-Dans ce cas de figure, ITP détecte alors que le script google, qui est responsable du dépôt du gclid est un cross-domain tracker et qu'il dépose un identifiant publicitaire à cette fin. Par conséquence, **le cookie \_gcl_au et tous les autres cookies déposés par le navigateur sur cette page d'atterissage seront limités à 24h.** —— c'est la **double peine** : pour votre régie, mais aussi pour tous les autres cookies déposés par vos outils en javascript.
+Dans ce cas de figure, ITP détecte alors que le script Google, qui est responsable du dépôt du gclid est un cross-domain tracker et qu'il dépose un identifiant publicitaire à cette fin. Par conséquent, **le cookie \_gcl_au et tous les autres cookies déposés par le navigateur sur cette page d'atterrissage seront limités à 24h.** — c'est la **double peine** : pour votre régie, mais aussi pour tous les autres cookies déposés par vos outils en Javascript.
 
 <Callout type="info">
-  Pour déterminer un domaine lié au cross-domain tracking, Safari utilise un algorithme on-device (sur le navigateur de l'utilisateur) qui analyse la récurrence des requêtes vers les mêmes domaines sur différents sites web. Par exemple, la librairie google se trouve sur la plupart des sites visités par l'utilisateur, il y aura donc une forte probabilité que ce domaine soit catégorisé comme cross-domain tracker.
+  Pour déterminer un domaine lié au cross-domain tracking, Safari utilise un algorithme on-device (sur le navigateur de l'utilisateur) qui analyse la récurrence des requêtes vers les mêmes domaines sur différents sites web. Par exemple, la librairie Google se trouve sur la plupart des sites visités par l'utilisateur, il y aura donc une forte probabilité que ce domaine soit catégorisé comme cross-domain tracker.
 </Callout>
 
 Vos identifiants publicitaires peuvent donc disparaître un seul jour après la navigation de l'utilisateur sur votre site web, ce qui, vous le concevrez assez facilement, risque d'impacter fortement l'attribution des régies publicitaires.
@@ -135,27 +135,27 @@ Mais alors, si des restrictions s'appliquent aux cookies déposés par le naviga
 
 C'est évidemment un cas d'usage que Safari a parfaitement anticipé.
 
-Pour comprendre comment cette restriction s'applique, il faut s'intéresser à deux concepts un poil techniques : le **third-party IP address cloaking** et le **CNAME cloacking**.
+Pour comprendre comment cette restriction s'applique, il faut s'intéresser à deux concepts un poil techniques : le **third-party IP address cloaking** et le **CNAME cloaking**.
 
-Pour le third-party IP address cloacking, L'ITP vérifie si la première moitié de l'IP de mon domaine (par exemple guillaumebielli.fr) correspond à l'IP du serveur qui a déposé le cookie (imaginons tracking.guillaumebielli.fr).
+Pour le third-party IP address cloaking, L'ITP vérifie si la première moitié de l'IP de mon domaine (par exemple guillaumebielli.fr) correspond à l'IP du serveur qui a déposé le cookie (imaginons tracking.guillaumebielli.fr).
 
 Si les 16 premiers bits de ces deux IP ne correspondent pas, le cookie est limité à 7 jours.
 
-<Image src={cloackingIp} alt="ITP - Third-party IP address cloacking" />
+<Image src={cloakingIp} alt="ITP - Third-party IP address cloaking" />
 
-L'ITP va également détecter le CNAME Cloacking, cette méthode consiste à masquer un serveur tiers derrière un sous-domaine first-party via une redirection DNS.
+L'ITP va également détecter le CNAME cloaking, cette méthode consiste à masquer un serveur tiers derrière un sous-domaine first-party via une redirection DNS.
 
 En ajoutant une entrée CNAME depuis mon fournisseur de domaine, je peux associer un sous domaine (tracking.guillaumebielli.fr) à un service externe, comme un serveur de tracking Stape par exemple, qui pointe alors vers `euk.stape.io`.
 
 Si le domaine de l'entrée CNAME (stape.io) est différent du domaine principal (guillaumebielli.fr), alors le cookie sera limité à 7 jours.
 
-<Image src={cnameCloacking} alt="ITP - CNAME Cloacking" />
+<Image src={cnamecloaking} alt="ITP - CNAME cloaking" />
 
 ## Limitation 5 : les protections anti-fingerprinting
 
 Depuis quelques années, le fingerprinting, bien que moins précis que le dépôt de cookie, s'érige en alternative intéressante pour certains outils analytiques ou publicitaires.
 
-Le fingerprinting consiste à collecter diverses informations — telles que les caractéristiques techniques d'un appareil ou encore les caractéristiques et paramètres du navigateur utilisé afin d'établir une emprunte unique permettant in fine d'identifier un utilisateur.
+Le fingerprinting consiste à collecter diverses informations — telles que les caractéristiques techniques d'un appareil ou encore les caractéristiques et paramètres du navigateur utilisé afin d'établir une empreinte unique permettant in fine d'identifier un utilisateur.
 
 C'est pour cette raison que **Safari a mis en place des protections anti-fingerprinting** qui rendent l'identification des utilisateurs plus difficile que sur d'autres navigateurs, je pense notamment à :
 
@@ -179,6 +179,6 @@ Face à autant de restrictions, on peut imaginer deux solutions :
 
 Pour autant, sachez que si vous avez mis en place un tracking server-side, rien ne garantit pour autant que votre configuration est suffisamment robuste pour **contourner l'ensemble des restrictions ITP**.
 
-D'une part parce que les règles ITP évoluent et le tracking aussi, et d'autres part parce que le server-side n'est pas une solution magique, et qu'elle nécessite des configurations adaptés (gestion des cookies par le serveur, restoration de cookie ou mise en place d'un reverse-proxy par le biais d'un CDN).
+D'une part parce que les règles ITP évoluent et le tracking aussi, et d'autre part parce que le server-side n'est pas une solution magique, et qu'elle nécessite des configurations adaptées (gestion des cookies par le serveur, restoration de cookie ou mise en place d'un reverse-proxy par le biais d'un CDN).
 
 C'est sur ces belles paroles que je termine cet article, en espérant que ce dernier ait pu vous éclairer davantage sur les restrictions qui s'appliquent sur Safari, et plus largement sur les navigateurs utilisant Webkit (iOS et iPadOS).
