@@ -6,12 +6,14 @@ import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import tailwind from "@astrojs/tailwind";
 import icon from "astro-icon";
+import vercel from "@astrojs/vercel";
 
 // https://astro.build/config
 export default defineConfig({
   site: "https://guillaumebielli.fr",
   base: "/",
   trailingSlash: "never",
+  adapter: vercel(),
   redirects: {
     "blog/configurer-la-mesure-hybride-piwik-pro-avec-une-cmp-custom": {
       destination: "/blog/configurer-la-mesure-hybride-piwik-pro",

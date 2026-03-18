@@ -1,10 +1,10 @@
 ---
-
+const { title = "default title", question = "default question", message = "default message", underline = "default underline" } = Astro.props;
 ---
 
 <div
   id="tracking-cta"
-  class="relative max-w-xl mx-auto bg-white border border-blue-100 rounded-xl p-8 overflow-hidden transition-shadow shadow-[0_0_0_4px_#eff6ff,0_4px_24px_0_rgba(59,130,246,0.06)] hover:shadow-[0_0_0_4px_#dbeafe,0_8px_32px_0_rgba(59,130,246,0.12)]"
+  class="w-full mx-auto bg-white border border-blue-100 rounded-xl p-8 overflow-hidden transition-shadow shadow-[0_0_0_4px_#eff6ff,0_4px_24px_0_rgba(59,130,246,0.06)]"
 >
   <!-- Top blue bar -->
   <div class="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-blue-500 via-blue-400 to-blue-300 rounded-t-xl" />
@@ -20,21 +20,15 @@
     <div class="inline-flex items-center gap-2 bg-blue-50 border border-blue-200 rounded px-2.5 py-1 mb-4">
       <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
       <span class="font-mono text-[10px] font-semibold tracking-widest uppercase text-blue-500">
-        Consulting Tracking
+        {title}
       </span>
     </div>
 
-    <!-- Title -->
-    <p class="text-slate-900 font-semibold text-[17px] leading-snug mb-1.5">
-      Une question sur votre tracking ?
-    </p>
-
     <!-- Subtitle -->
-    <p class="font-mono text-sm text-slate-500 leading-relaxed mb-6">
+    <p class="text-sm mt-0 text-slate-500 leading-relaxed mb-6">
       <span class="text-blue-300">$ </span>
-      <span class="text-blue-500 font-medium">ITP</span>, server-side, consentement, GA4…
+      <span class="text-blue-500 font-medium">ITP</span>
       <br />
-      Laissez votre email, je vous réponds personnellement.
     </p>
 
     <!-- Form -->
@@ -44,7 +38,7 @@
           id="cta-email"
           type="email"
           placeholder="votre@email.com"
-          class="flex-1 px-3.5 py-2.5 border border-blue-100 rounded-lg bg-slate-50 text-sm font-mono text-slate-900 placeholder-slate-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 focus:bg-white"
+          class="flex-1 px-3.5 py-2.5 border border-blue-100 rounded-lg bg-slate-50 text-sm text-slate-900 placeholder-slate-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 focus:bg-white"
         />
         <button
           id="cta-btn"
@@ -58,12 +52,12 @@
         </button>
       </div>
 
-      <p class="flex items-center gap-1.5 mt-3 text-[11px] text-slate-400 font-mono">
+      <p class="flex items-center gap-1.5 mt-3 text-xs text-slate-400">
         <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
           <circle cx="6" cy="6" r="5" stroke="#94a3b8" stroke-width="1.2" />
           <path d="M6 5.5v3M6 4h.01" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round" />
         </svg>
-        Réponse sous 24h · Pas de spam
+        {underline}
       </p>
     </div>
 
@@ -72,7 +66,7 @@
       <span class="w-6 h-6 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center text-[11px]">
         ✓
       </span>
-      Message reçu — je reviens vers vous bientôt.
+      C'est bien reçu !
     </div>
   </div>
 </div>
@@ -87,14 +81,32 @@
     btn.disabled = !input.value.trim();
   });
 
-  btn.addEventListener("click", () => {
-    if (!input.value.trim()) return;
-    form.classList.add("hidden");
-    success.classList.remove("hidden");
-    success.classList.add("flex");
-  });
+  async function submit() {
+    const email = input.value.trim();
+    if (!email) return;
+
+    btn.disabled = true;
+    btn.textContent = "...";
+
+    const res = await fetch("/api/subscribe", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+
+    if (res.ok) {
+      form.classList.add("hidden");
+      success.classList.remove("hidden");
+      success.classList.add("flex");
+    } else {
+      btn.disabled = false;
+      btn.textContent = "Envoyer";
+    }
+  }
+
+  btn.addEventListener("click", submit);
 
   input.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" && input.value.trim()) btn.click();
+    if (e.key === "Enter" && input.value.trim()) submit();
   });
 </script>
