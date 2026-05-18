@@ -1,0 +1,50 @@
+---
+import Layout from '@/layouts/Layout.astro';
+
+const templates = [
+  {
+    name: "Rewrite Items ID for Google Ads",
+    description: "Rewrites item_id with Google Merchant Center, resolving cart data mismatches in Google Ads caused by item ID format inconsistencies between the data layer and MC.",
+    file: "/downloads/rewrite-items-id-for-google-ads.tpl",
+    filename: "rewrite-items-id-for-google-ads.tpl",
+    type: "Variable",
+  },
+];
+---
+
+<Layout
+  title="Templates GTM"
+  description="Templates de variables GTM prêts à l'emploi."
+  noindex={true}
+>
+  <div class="max-w-3xl mx-auto px-4 py-12">
+    <h1 class="text-3xl font-semibold mb-2">Templates GTM</h1>
+    <p class="text-gray-500 mb-10">Liste de templates de variables et de Tag Google Tag Manager server-side</p>
+
+    <ul class="flex flex-col gap-4">
+      {templates.map((tpl) => (
+        <li class="border border-gray-200 rounded-xl p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <div class="flex items-baseline gap-2 mb-1">
+              <h2 class="font-medium text-base">{tpl.name}</h2>
+              <span class="text-xs px-2 py-0.5 rounded-full bg-black text-white">{tpl.type}</span>
+            </div>
+            <p class="text-sm text-gray-500 mt-1 max-w-xl">{tpl.description}</p>
+          </div>
+          <a
+            href={tpl.file}
+            download={tpl.filename}
+            class="shrink-0 inline-flex items-center gap-2 px-4 py-2 bg-black text-white text-sm rounded-lg hover:text-white"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Télécharger
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</Layout>
