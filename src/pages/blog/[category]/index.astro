@@ -35,7 +35,7 @@ const { category, posts } = Astro.props;
         <h1 class="text-4xl font-bold">Tous mes articles {category}</h1>
       </div>
       <div class="mb-20 flex justify-center">
-        <SearchBar client:load articles={posts} />
+        <SearchBar client:load articles={posts.map(p => ({ slug: p.id, data: { title: p.data.title, description: p.data.description, categories: p.data.categories, date: p.data.date } }))} />
       </div>
       <div class="mb-8">
         <Navigation pathname={Astro.url.pathname} />
@@ -46,7 +46,7 @@ const { category, posts } = Astro.props;
             title={post.data.title}
             date={post.data.date}
             description={post.data.description}
-            slug={post.slug}
+            slug={post.id}
             chapter1={post.data.categories}
             mediaUrl={post.data.image}
           />

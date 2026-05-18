@@ -4,7 +4,7 @@ import Layout from '@/layouts/Layout.astro';
 import { slugify } from '@/lib/utils';
 import { Icon } from 'astro-icon/components';
 import { Image } from 'astro:assets';
-import { getCollection, type CollectionEntry } from 'astro:content';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
 
 
 interface Props {
@@ -16,16 +16,15 @@ export async function getStaticPaths() {
   
  
   return posts.map((post: CollectionEntry<'articles'>) => ({
-    params: { 
-      slug: post.slug
+    params: {
+      slug: post.id
     },
     props: { post }
   }));
 }
 
 const { post } = Astro.props;
-const { Content } = await post.render();
-const headings = await post.render().then(({ headings }) => headings);
+const { Content, headings } = await render(post);
 
 // Gardons une référence à la catégorie principale pour la navigation
 const mainCategory = post.data.categories[0];
@@ -145,7 +144,7 @@ const components = {
         <Content components={components} />
         <SimilarPosts 
         categories={post.data.categories}
-        currentSlug={post.slug}
+        currentSlug={post.id}
       />
       </div>
     </div>
