@@ -1,0 +1,160 @@
+---
+title: "Google Tag Gateway (GTG) : fonctionnement, intérêt et limites"
+description: "Google Tag Gateway permet de servir vos tags GA4 et Google Ads depuis votre propre domaine via un CDN comme Cloudflare. Je vous explique comment il fonctionne, à quoi il sert vraiment, ses limites face à ITP et aux adblockers, et pourquoi le tracking server-side reste la solution la plus optimisée."
+serpDescription: "Google Tag Gateway sert vos tags GA4 et Google Ads depuis votre domaine via un CDN. Fonctionnement, intérêt, limites face à ITP et comparatif server-side."
+author: "Guillaume BIELLI"
+date: "2026-05-21"
+image: "@/assets/articles/gtg/Google-Tag-Gateway.jpg"
+categories: ["Tracking", "Google Tag Manager"]
+---
+
+import Callout from "@/components/Callout.astro";
+import { Image } from "astro:assets";
+
+Entre l'Intelligence Tracking Prevention (ITP) de Safari, la montée en puissance des adblockers et la disparition progressive des cookies tiers, la contrainte sur la collecte de données n'a de cesse de s'intensifier.
+
+Une réponse à ces problèmes existe : le tracking server-side.
+
+Malheureusement, la mise en place d'un tracking server-side demande des ressources humaines, financières et des compétences techniques. Alors, on est en droit de se poser la question : **existerait-il un raccourci, un hack ?**
+
+En mai 2025, Google sort timidement le **Google Tag Gateway (GTG)**. L'idée : permettre à n'importe quel site web de servir ses tags GA4 et Google Ads depuis son propre domaine, en first-party.
+
+Depuis peu, Google a intensifié sa communication sur le sujet. Alors que vaut vraiment cette solution ?
+
+Sur le papier, c'est séduisant. Dans les faits, c'est beaucoup plus nuancé.
+
+Je vous propose de regarder ensemble **ce qu'est vraiment le Google Tag Gateway**, et surtout s'il a un intérêt à être mis en place.
+
+## Qu'est-ce que le Google Tag Gateway et comment fonctionne-t-il ?
+
+Le Google Tag Gateway, c'est un **relais** (un proxy first-party) qui permet de charger et d'envoyer des données à Google par le biais de votre propre domaine, plutôt que depuis les domaines de Google.
+
+Prenons un exemple : sur un tracking client-side classique, le navigateur de votre visiteur réalise deux actions :
+
+- il charge le script GTM depuis `www.googletagmanager.com/gtm.js`
+- il envoie des données à Google Analytics via `www.google-analytics.com/g/collect`.
+
+**Avec le Google Tag Gateway, tout passe d'abord par un intermédiaire grâce à un CDN (Content Delivery Network), qui permet de passer par un chemin que vous définissez sur votre propre domaine**, par exemple `votresite.com/metrics`. Ce chemin sert alors de relais entre le navigateur de l'utilisateur et les serveurs de Google.
+
+Le point central de ce dispositif, **c'est le CDN**.
+
+À l'heure où je vous parle, Google propose une intégration rapide depuis Google Tag Manager avec :
+
+- Cloudflare
+- Akamai
+- Amazon CloudFront
+- Fastly
+- Webflow (via leur CDN)
+
+L'activation peut se faire en quelques clics depuis l'admin de votre conteneur GTM (Admin > Google tag gateway) en fonction du CDN que vous choissisez.
+
+Attention tout de même, si vous êtes amenés à réaliser une délégation à votre CDN depuis votre gestionnaire de domaine, cette manipulation n'est pas anodine : qui dit délégation, dit que vous devez vous assurer d'avoir transféré l'ensemble de vos entrées DNS sur le CDN choisi.
+
+## À quoi sert vraiment le Google Tag Gateway ?
+
+La vraie question : **qu'est-ce que le Google Tag Gateway vous apporte concrètement ?**
+
+L'unique vrai bénéfice tient en un mot : **first-party**.
+
+Pourquoi le first-party ?
+
+- Le first-party permet de limiter les restrictions imposées par les navigateurs comme Safari, Firefox, Brave, etc. Envoyer de la donnée par votre domaine vous permet de récupérer davantage de contexte, et notamment les cookies déposés sur ce dernier.
+- Le first-party peut permettre de limiter les restrictions d'adblockers et/ou de navigateurs qui bloquent les requêtes vers des domaines tiers.
+
+**Vous l'aurez compris, le Google Tag Gateway est avant tout une mécanique de relais (proxy).** Il ne traite pas la donnée, il ne l'enrichit pas, il ne décide pas où l'envoyer. Il sert de passe-plat entre la communication d'un site web et des serveurs Google.
+
+## Ce que le Google Tag Gateway ne permet pas de faire
+
+C'est là que les choses se compliquent, et où il va m'être difficile de rester tendre avec le Google Tag Gateway.
+
+**Le GTG est très loin d'être une solution miracle**, et ne peut pas sérieusement se prévaloir d'être une alternative au tracking server-side.
+
+Soyons honnêtes, **le seul enjeu first-party est un enjeu largement dépassé aujourd'hui**, au sens où il ne suffit plus pour garantir un **tracking robuste**.
+
+### Il ne contourne pas les restrictions ITP liées aux cookies sur Safari
+
+On l'a vu, le first-party permet de récupérer du contexte, mais **ne répond pas à la problématique la plus importante sur Safari : la durée de vie des cookies.**
+
+Je vous renvoie à mon article complet sur le sujet : [Intelligence Tracking Prevention (ITP) de Safari : tout ce que vous devez savoir](/blog/intelligence-tracking-prevention-itp-tout-ce-que-vous-devez-savoir). En résumé, ITP applique deux mécanismes différents selon la façon dont les cookies sont déposés :
+
+- **Tous les cookies déposés en JavaScript (`document.cookie`) sont limités à 7 jours sans interaction** de l'utilisateur sur votre site. C'est le cas du Google Tag Gateway, la librairie GA4 chargée depuis votre domaine grâce au Google Tag Gateway déposera des cookies JavaScript.
+- Si l'utilisateur provient d'un clic sur une annonce publicitaire, tous les cookies déposés en JavaScript à ce moment-là seront limités à 24 heures. Adieu les identifiants publicitaires (`gclid`, `fbclid`, etc.) qui permettaient normalement de suivre la conversion sur 90 jours.
+
+**Le Google Tag Gateway ne fait que déterminer le chemin de communication entre deux points : le navigateur et Google.** Il n'a donc pas la capacité de se comporter comme un serveur de tracking, et ne pourra pas déposer de cookies serveur (Set Cookie) sur votre site web.
+
+Autrement dit, sur Safari, **la durée de vie de vos cookies GA4 et Google Ads restera capée à 7 jours (ou 24h après clic publicitaire)** malgré l'activation du Google Tag Gateway.
+
+### Il ne contourne pas les principaux adblockers
+
+Le first-party GTG est loin d'être suffisant face à la plupart des adblockers sérieux sur le marché. Comprenons pourquoi.
+
+La plupart des adblockers (uBlock Origin, Ghostery, Brave Shields) ne se contentent pas de filtrer sur les noms de domaine. Ils maintiennent des **listes de patterns** qui repèrent les chemins de collecte typiques.
+
+Et le Google Tag Gateway, tout du moins en Europe, même s'il utilise votre domaine, utilise un pattern de chemin (`/g/collect`, etc.) qui peut être identifié.
+
+Si on peut considérer, de manière très générale et peu précise, que 10 % des utilisateurs sont équipés d'adblockers (le chiffre est discutable), le GTG reste un sérieux manque à gagner.
+
+### Il n'offre pas les fonctionnalités avancées du server-side
+
+Un tracking server-side bien configuré vous donne accès à un arsenal de fonctionnalités que le Google Tag Gateway ne reproduit pas, dont deux points essentiels :
+
+- **La restauration de cookies** via un cookie restore ou un reverse-proxy, qui permet de passer outre les limitations de 7 jours d'ITP sur Safari (cookies déposés en HTTP `Set-Cookie` par votre propre serveur, avec une IP qui correspond à celle du domaine principal).
+- **La proxyfication complète des requêtes et librairies** : les adblockers ne sont plus en capacité de bloquer les requêtes.
+
+### Il est limité à GA4 et Google Ads
+
+Si vous travaillez avec d'autres régies que Google\*\* (et c'est le cas de la quasi-totalité des annonceurs e-commerce), le Google Tag Gateway couvre uniquement Google Ads et GA4.
+
+Vous continuerez donc à transmettre des requêtes tiers directement à Meta, TikTok, Pinterest, LinkedIn, etc. sans passer par votre domaine.
+
+## Google Tag Gateway vs tracking server-side : le comparatif
+
+Ce tableau résume les différences fondamentales entre les deux approches. Gardez en tête que **certaines limitations du GTG sont structurelles** (c'est un proxy, pas un processeur de données), et qu'aucune mise à jour de Google ne viendra les corriger.
+
+| Critère                                | Google Tag Gateway  | Tracking server-side    |
+| -------------------------------------- | ------------------- | ----------------------- |
+| Exécution des tags                     | Côté navigateur     | Côté serveur            |
+| Contrôle de la donnée                  | Aucun ❌            | Total ✅                |
+| Contexte first-party                   | ✅                  | ✅                      |
+| Prolongement durée des cookies (ITP)   | limités à 7j/24h ❌ | Optimisé ✅             |
+| Contournement adblockers               | Basique ⚠️          | Avancé ✅               |
+| Multi-régies (Meta, TikTok, LinkedIn…) | GA4 / Google Ads ❌ | Oui ✅                  |
+| Coût                                   | Gratuit             | à partir de 50/90€/mois |
+| Complexité de mise en place            | Faible              | Modérée à élevée        |
+
+**Nota bene :** Un point souvent ignoré, l'utilisation d'un CDN n'est pas réservée au Google Tag Gateway. Vous pouvez tout à fait interfacer un CDN avec votre serveur de tracking, et bénéficier du contournement le plus robuste et avancé du marché pour Safari : le reverse-proxy.
+
+## À qui s'adresse vraiment le Google Tag Gateway ?
+
+Maintenant que vous avez tous le contexte, on peut répondre à la vraie question : **est-ce que vous avez intérêt à activer le Google Tag Gateway ?**
+
+Selon moi, Google Tag Gateway peut être intéressant si :
+
+- Vous utilisez principalement Google Analytics et GA4
+- Votre trafic Safari/IOS représente une part très faible de votre audience
+- Vous n'avez pas de gros enjeux publicitaires
+- Vous n'avez pas encore mis en place un tracking server-side
+- Vous voulez une solution rapide et gratuite
+
+Google Tag Gateway n'est pas une option intéressante si :
+
+- Vous avez déjà un tracking server-side bien optimisé (réstauration de cookies, reverse-proxy, proxyfication des requêtes et des librairies)
+- Vous avez des enjeux publicitaires importants et multi-régies
+- Vous avez besoin de contrôler pleinement vos données
+- Vous avez besoin de fonctionnalités avancées (conversions offlines, store pour enrichir les données..)
+
+### Peut-on cumuler Google Tag Gateway et server-side ?
+
+Techniquement, oui. Google mentionne la possibilité de faire tourner les deux en parallèle. Dans les faits, **je n'en vois pas l'intérêt à ce jour**.
+
+Vous l'aurez compris, Google Tag Gateway ne propose rien de plus que le tracking server-side, bien au contraire, il est même limité par rapport à ce que vous pouvez faire avec un tracking server-side bien configuré — first-party domain, masquage d'IP via CDN, cookies first-party, résilience aux adblockers.
+
+C'est une configuration que je n'ai personnellement jamais mise en place.
+
+## Conclusion
+
+Le Google Tag Gateway, c'est un outil qui a le mérite d'exister : gratuit, rapide à mettre en place, et qui apporte toujours plus qu'un simple tracking client-side.
+
+Mais que l'on s'entende bien, en l'état, **Google Tag Gateway ne représente pas une alternative sérieuse au tracking server-side. C'est une solution limitée adaptée pour ceux qui ne peuvent pas, ou ne veulent pas investir dans la mise en place d'une configuration server-side.**
+
+Cela reste néanmoins une nouveauté intéressante, qui nécessite d'être suivie de près dans les années à venir, pour voir comment elle amenée à évoluer.
