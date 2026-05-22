@@ -1,4 +1,4 @@
-import { t as typeHandlers, a as types, A as AstroError, N as NoImageMetadata, i as isRemoteAllowed, F as FailedToFetchRemoteImageDimensions, R as RemoteImageNotAllowed, I as InvalidComponentArgs, j as joinPaths, E as ExpectedImage, b as isRemotePath, L as LocalImageUsedWrongly, M as MissingImageDimension, U as UnsupportedImageFormat, c as IncompatibleDescriptorOptions, d as UnsupportedImageConversion, e as InvalidImageService, f as ExpectedImageOptions, g as ExpectedNotESMImage, h as ImageMissingAlt, m as maybeRenderHead, k as addAttribute, s as spreadAttributes, r as renderTemplate, l as FontFamilyNotFound, u as unescapeHTML, n as MissingGetFontFileRequestUrl } from './entrypoint_ChKJ4kX6.mjs';
+import { t as typeHandlers, a as types, A as AstroError, N as NoImageMetadata, i as isRemoteAllowed, F as FailedToFetchRemoteImageDimensions, R as RemoteImageNotAllowed, I as InvalidComponentArgs, j as joinPaths, E as ExpectedImage, b as isRemotePath, L as LocalImageUsedWrongly, M as MissingImageDimension, U as UnsupportedImageFormat, c as IncompatibleDescriptorOptions, d as UnsupportedImageConversion, e as InvalidImageService, f as ExpectedImageOptions, g as ExpectedNotESMImage, h as ImageMissingAlt, m as maybeRenderHead, k as addAttribute, s as spreadAttributes, r as renderTemplate, l as FontFamilyNotFound, u as unescapeHTML, n as MissingGetFontFileRequestUrl } from './entrypoint_BKsX0T0h.mjs';
 import 'clsx';
 
 function isESMImportedImage(src) {
@@ -622,7 +622,7 @@ async function getConfiguredImageService() {
   if (!globalThis?.astroAsset?.imageService) {
     const { default: service } = await import(
       // @ts-expect-error
-      './sharp_PqmgWY7r.mjs'
+      './sharp_C6vby5EM.mjs'
     ).catch((e) => {
       const error = new AstroError(InvalidImageService);
       error.cause = e;
