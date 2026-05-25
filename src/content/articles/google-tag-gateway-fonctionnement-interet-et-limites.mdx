@@ -96,7 +96,7 @@ Dans le cas de Google Analyics, un cookie `FPID`est déposé par le serveur :
 
 <Image src={responseCookie} alt="réponse d'une requête serveur qui dépose un coookie" />
 
-Si ce cookie correspond aux premiers octets de l'IP du domaine principal ou si Safari reconnaît un domaine tier à travers un CNAME (plus de détail dans mon article sur Safari ITP), alors aucune restriction ne sera appliquée par Safari. Et si ce n'est pas le cas, un mécanisme de restauration de cookie (cookie restore) permettra quand même de restaurer ce dernier.
+Si ce cookie correspond aux premiers octets de l'IP du domaine principal ou si Safari reconnaît un domaine tier à travers un CNAME (plus de détail dans mon article sur [Safari ITP](https://guillaumebielli.fr/blog/intelligence-tracking-prevention-itp-tout-ce-que-vous-devez-savoir)), alors aucune restriction ne sera appliquée par Safari. Et si ce n'est pas le cas, un mécanisme de restauration de cookie (cookie restore) permettra quand même de restaurer ce dernier.
 
 À date, dans le cas du Google Tag Gateway, aucun cookie n'est déposé par le serveur, ni pour Google Ads, ni pour Google Analytics. Ce qui ne permet pas à Google Tag Gateway de profiter du prolongement de la durée de vie des cookies sur Safari.
 
