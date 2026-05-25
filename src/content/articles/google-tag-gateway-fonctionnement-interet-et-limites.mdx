@@ -1,10 +1,10 @@
 ---
-title: "Google Tag Gateway (GTG) : fonctionnement, intérêt et limites"
+title: "Google Tag Gateway (Google Tag Gateway) : fonctionnement, intérêt et limites"
 description: "Google Tag Gateway permet de charger et d'envoyer vos données GA4 et Google Ads depuis votre propre domaine via un CDN. Je vous explique comment il fonctionne, à quoi il sert vraiment, ses limites face à ITP et aux adblockers, et pourquoi le tracking server-side reste la solution la plus optimisée."
 serpDescription: "Google Tag Gateway charge et envoie vos données GA4 et Google Ads depuis votre domaine via un CDN. Fonctionnement, intérêt, limites face à ITP et au tracking server-side."
 author: "Guillaume BIELLI"
 date: "2026-05-21"
-image: "@/assets/articles/gtg/Google-Tag-Gateway.jpg"
+image: "@/assets/articles/Google Tag Gateway/Google-Tag-Gateway.jpg"
 categories: ["Tracking", "Google Tag Manager"]
 ---
 
@@ -17,7 +17,7 @@ Une réponse à ces problèmes existe : le tracking server-side.
 
 Malheureusement, la mise en place d'un tracking server-side demande des ressources humaines, financières et des compétences techniques. Alors, on est en droit de se poser la question : **existerait-il un raccourci, un hack ?**
 
-En mai 2025, Google sort timidement le **Google Tag Gateway (GTG)**. L'idée : permettre à n'importe quel site web de servir ses tags GA4 et Google Ads depuis son propre domaine, en first-party.
+En mai 2025, Google sort timidement le **Google Tag Gateway (Google Tag Gateway)**. L'idée : permettre à n'importe quel site web de servir ses tags GA4 et Google Ads depuis son propre domaine, en first-party.
 
 Depuis peu, Google a intensifié sa communication sur le sujet. Alors que vaut vraiment cette solution ?
 
@@ -66,7 +66,7 @@ Pourquoi le first-party, quels sont les avantages ?
 
 C'est là que les choses se compliquent, et où il va m'être difficile de rester tendre avec le Google Tag Gateway.
 
-**Le GTG est très loin d'être une solution miracle**, et ne peut pas sérieusement se prévaloir d'être une alternative au tracking server-side.
+**Le Google Tag Gateway est très loin d'être une solution miracle**, et ne peut pas sérieusement se prévaloir d'être une alternative au tracking server-side.
 
 Soyons honnêtes, **le seul enjeu first-party est un enjeu largement dépassé aujourd'hui**, au sens où il ne suffit plus pour garantir un **tracking robuste**.
 
@@ -91,7 +91,7 @@ Set-Cookie: FPGCLAW=2.1.k1234$i1779457386; Max-Age=7776000; Domain=mondomaine.fr
 
 Si ce cookie correspond aux premiers octets de l'IP du domaine principal, alors aucune restriction ne sera appliquée par Safari. Et si ce n'est pas le cas, un mécanisme de restauration de cookie (cookie restore) permettra quand même de restaurer ce dernier.
 
-À date, dans le cas du Google Tag Gateway, aucun cookie n'est déposé par le serveur, ni pour Google Ads, ni pour Google Analytics. Ce qui ne permet pas à GTG de profiter du prolongement de la durée de vie des cookies sur Safari.
+À date, dans le cas du Google Tag Gateway, aucun cookie n'est déposé par le serveur, ni pour Google Ads, ni pour Google Analytics. Ce qui ne permet pas à Google Tag Gateway de profiter du prolongement de la durée de vie des cookies sur Safari.
 
 Avoir un contexte first-party sans profiter de la possibilité de déposer des cookies par le biais d'un serveur perd donc une grande partie de son intérêt.
 
@@ -111,7 +111,7 @@ La plupart des adblockers (uBlock Origin, Ghostery, Brave Shields) ne se content
 
 Et le Google Tag Gateway, tout du moins en Europe, même s'il utilise votre domaine, utilise des patterns de chemin de collecte identifiés et bloqués (`/g/collect`, etc.).
 
-Si on peut considérer, de manière très générale et peu précise, que 10 % des utilisateurs sont équipés d'adblockers (le chiffre est discutable), GTG reste un sérieux manque à gagner.
+Si on peut considérer, de manière très générale et peu précise, que 10 % des utilisateurs sont équipés d'adblockers (le chiffre est discutable), Google Tag Gateway reste un sérieux manque à gagner.
 
 ### Il n'offre pas les fonctionnalités avancées du server-side
 
