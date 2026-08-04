@@ -1,6 +1,48 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import "tw-animate-css";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --breakpoint-sm: 600px;
+  --breakpoint-md: 900px;
+  --breakpoint-lg: 1200px;
+  --breakpoint-xl: 1800px;
+  --breakpoint-2xl: initial;
+
+  --font-archivo: "Archivo", sans-serif;
+  --font-clash: "Clash", sans-serif;
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-chart-1: hsl(var(--chart-1));
+  --color-chart-2: hsl(var(--chart-2));
+  --color-chart-3: hsl(var(--chart-3));
+  --color-chart-4: hsl(var(--chart-4));
+  --color-chart-5: hsl(var(--chart-5));
+}
 
 @layer base {
   :root {
@@ -107,80 +149,84 @@
   font-display: swap;
 }
 
-body {
-  font-family: "Archivo", sans-serif;
-  font-weight: 400; /* Ajoutez une fallback */
-
-  background-color: #f8f8f8;
-  color: black;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: "Clash", sans-serif;
-  font-weight: 600;
-  margin: 0 0 0.5rem 0;
-  line-height: 1.2;
-}
-h1 {
-  font-size: 2.441em;
-}
-h2 {
-  font-size: 1.953em;
-}
-h3 {
-  font-size: 1.563em;
-}
-h4 {
-  font-size: 1.25em;
-}
-strong,
-b {
-  font-weight: 700;
-}
-a {
-  color: var(--accent);
-}
-a:hover {
-  color: var(--accent);
-}
-p {
-  margin-bottom: 1em;
-}
-
-input {
-  font-size: 16px;
-}
-table {
-  width: 100%;
-}
-img {
-  max-width: 100%;
-  height: auto;
-}
-
-@media (max-width: 720px) {
+@layer base {
   body {
-    font-size: 18px;
+    font-family: "Archivo", sans-serif;
+    font-weight: 400; /* Ajoutez une fallback */
+
+    background-color: #f8f8f8;
+    color: black;
   }
-  main {
-    padding: 0.5em;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Clash", sans-serif;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.2;
+  }
+  h1 {
+    font-size: 2.441em;
+  }
+  h2 {
+    font-size: 1.953em;
+  }
+  h3 {
+    font-size: 1.563em;
+  }
+  h4 {
+    font-size: 1.25em;
+  }
+  strong,
+  b {
+    font-weight: 700;
+  }
+  a {
+    color: var(--accent);
+  }
+  a:hover {
+    color: var(--accent);
+  }
+  p {
+    margin-bottom: 1em;
+  }
+
+  input {
+    font-size: 16px;
+  }
+  table {
+    width: 100%;
+  }
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  @media (max-width: 720px) {
+    body {
+      font-size: 18px;
+    }
+    main {
+      padding: 0.5em;
+    }
   }
 }
 
-.sr-only {
-  border: 0;
-  padding: 0;
-  margin: 0;
-  position: absolute !important;
-  height: 1px;
-  width: 1px;
-  overflow: hidden;
-  white-space: nowrap;
+@layer utilities {
+  .sr-only {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    position: absolute !important;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+    white-space: nowrap;
+  }
 }
 
 @layer base {
@@ -239,36 +285,35 @@ img {
   }
 }
 
-.prose a {
-  @apply relative font-medium text-blue-500 no-underline;
-}
+@layer utilities {
+  .prose a {
+    @apply relative font-medium text-blue-500 no-underline;
+  }
 
-.prose a:hover {
-  @apply text-blue-600;
-}
+  .prose a:hover {
+    @apply text-blue-600;
+  }
 
-/* Styles pour les liens externes */
-.prose a[href^="http"] {
-  @apply items-center;
-}
+  /* Styles pour les liens externes */
+  .prose a[href^="http"] {
+    @apply items-center;
+  }
 
-.prose a[href^="http"]::after {
-  content: "";
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25'/%3E%3C/svg%3E")
-    no-repeat 50% 50%;
-  mask-size: cover;
-  @apply inline-block w-4 h-4 ml-1 bg-current;
+  .prose a[href^="http"]::after {
+    content: "";
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25'/%3E%3C/svg%3E")
+      no-repeat 50% 50%;
+    mask-size: cover;
+    @apply inline-block w-4 h-4 ml-1 bg-current;
+  }
 }
 
 @layer base {
   * {
     @apply border-border;
   }
-  body {
-    @apply bg-background text-foreground;
-  }
 }
-@layer components {
+@layer utilities {
   .prose h2 {
     @apply text-[26px] md:text-[30px] relative hover:no-underline;
   }

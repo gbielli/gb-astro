@@ -4,9 +4,9 @@ import { defineConfig } from "astro/config";
 import mdx from "@astrojs/mdx";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
-import tailwind from "@astrojs/tailwind";
 import icon from "astro-icon";
 import vercel from "@astrojs/vercel";
+import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
@@ -14,6 +14,9 @@ export default defineConfig({
   base: "/",
   trailingSlash: "never",
   adapter: vercel(),
+  vite: {
+    plugins: [tailwindcss()],
+  },
   redirects: {
     "blog/configurer-la-mesure-hybride-piwik-pro-avec-une-cmp-custom": {
       destination: "/blog/configurer-la-mesure-hybride-piwik-pro",
@@ -29,9 +32,6 @@ export default defineConfig({
     mdx({
       extendMarkdownConfig: true,
       gfm: true,
-    }),
-    tailwind({
-      applyBaseStyles: false,
     }),
     react(),
     sitemap({

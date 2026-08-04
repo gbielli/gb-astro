@@ -2,7 +2,11 @@
 // Callout.astro
 import { AlertCircle, AlertTriangle, Info, Lightbulb } from 'lucide-react';
 
-const { type = 'info' } = Astro.props;
+interface Props {
+  type?: 'info' | 'warning' | 'error' | 'tip';
+}
+
+const { type = 'info' }: Props = Astro.props;
 
 const styles = {
   info: {
@@ -45,6 +49,8 @@ const { containerClass, textClass, iconClass, Icon } = styles[type];
 </div>
 
 <style>
+  @reference "../styles/global.css";
+
   .callout-content :global(p) {
     @apply m-0 text-lg;
   }
