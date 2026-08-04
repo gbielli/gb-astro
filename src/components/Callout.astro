@@ -2,7 +2,11 @@
 // Callout.astro
 import { AlertCircle, AlertTriangle, Info, Lightbulb } from 'lucide-react';
 
-const { type = 'info' } = Astro.props;
+interface Props {
+  type?: 'info' | 'warning' | 'error' | 'tip';
+}
+
+const { type = 'info' }: Props = Astro.props;
 
 const styles = {
   info: {
