@@ -21,6 +21,11 @@ const {
 
 const metaDescription = serpDescription || description;
 
+const imageSrc = typeof image === "string" ? image : image.src;
+const imageWidth = typeof image === "string" ? undefined : image.width;
+const imageHeight = typeof image === "string" ? undefined : image.height;
+const imageURL = new URL(imageSrc, Astro.site ?? Astro.url).href;
+
 ---
 
 <html lang="fr" class="scroll-smooth min-w-[320px]">
@@ -46,14 +51,14 @@ const metaDescription = serpDescription || description;
     <meta property="og:type" content="article">
     <meta property="og:title" content={title}>
     <meta property="og:description" content={metaDescription}>
-    <meta property="og:image" content={image}>
+    <meta property="og:image" content={imageURL}>
     <meta property="og:url" content={canonicalURL}>
-    
+
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content={title}>
     <meta name="twitter:description" content={metaDescription}>
-    <meta name="twitter:image" content={image}>
+    <meta name="twitter:image" content={imageURL}>
 
     <!-- Schema.org pour Google -->
     <script type="application/ld+json" set:html={JSON.stringify({
@@ -63,10 +68,10 @@ const metaDescription = serpDescription || description;
       "description": metaDescription,
       "image": {
         "@type": "ImageObject",
-        "url": image.src,
-        "width": image.width,
-        "height": image.height,
-        "contentUrl": image.src
+        "url": imageURL,
+        "width": imageWidth,
+        "height": imageHeight,
+        "contentUrl": imageURL
       },
       "author": {
         "@type": "Person",
