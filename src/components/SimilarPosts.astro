@@ -13,7 +13,7 @@ const allPosts = await getCollection('articles');
 const similarPosts = allPosts
   .filter(post => 
     post.id !== currentSlug &&
-    post.data.categories.some(cat => categories.includes(cat))
+    post.data.categories.some((cat: string) => categories.includes(cat))
   )
   .slice(0, 3);
 ---
