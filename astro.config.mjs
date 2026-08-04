@@ -29,8 +29,6 @@ export default defineConfig({
     mdx({
       extendMarkdownConfig: true,
       gfm: true,
-      remarkPlugins: [],
-      rehypePlugins: [],
     }),
     tailwind({
       applyBaseStyles: false,
