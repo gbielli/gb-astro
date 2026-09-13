@@ -58,4 +58,17 @@ const { borderClass, iconClass, markerClass, Icon } = styles[type];
   .callout-content :global(p + p) {
     @apply mt-3;
   }
+
+  .callout-content :global(h2),
+  .callout-content :global(h3),
+  .callout-content :global(h4) {
+    font-size: 1.05rem !important;
+    font-weight: 600 !important;
+    color: #18181b;
+    margin: 0 0 6px !important;
+  }
+
+  .callout-content :global(h2::before) {
+    content: none !important;
+  }
 </style>
