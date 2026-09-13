@@ -4,47 +4,47 @@ import { AlertCircle, AlertTriangle, Info, Lightbulb } from 'lucide-react';
 
 interface Props {
   type?: 'info' | 'warning' | 'error' | 'tip';
+  title?: string;
 }
 
-const { type = 'info' }: Props = Astro.props;
+const { type = 'info', title }: Props = Astro.props;
 
 const styles = {
   info: {
-    containerClass: 'bg-white border border-gray-200',
-    textClass: 'text-blue-700',
+    borderClass: 'border-blue-200',
     iconClass: 'text-blue-500',
+    markerClass: 'marker:text-blue-500',
     Icon: Info
   },
   warning: {
-    containerClass: 'bg-yellow-50 border-yellow-300',
-    textClass: 'text-yellow-700',
-    iconClass: 'text-yellow-500',
+    borderClass: 'border-amber-200',
+    iconClass: 'text-amber-500',
+    markerClass: 'marker:text-amber-500',
     Icon: AlertTriangle
   },
   error: {
-    containerClass: 'bg-red-50 border-red-300',
-    textClass: 'text-red-700',
-    iconClass: 'text-red-500',
+    borderClass: 'border-rose-200',
+    iconClass: 'text-rose-500',
+    markerClass: 'marker:text-rose-500',
     Icon: AlertCircle
   },
   tip: {
-    containerClass: 'bg-green-50 border-green-300',
-    textClass: 'text-green-700',
-    iconClass: 'text-green-500',
+    borderClass: 'border-emerald-200',
+    iconClass: 'text-emerald-500',
+    markerClass: 'marker:text-emerald-500',
     Icon: Lightbulb
   }
 };
 
-const { containerClass, textClass, iconClass, Icon } = styles[type];
+const { borderClass, iconClass, markerClass, Icon } = styles[type];
 ---
-<div class={`p-6 my-6 shadow-md rounded-lg text-black ${containerClass} ${textClass}`}>
-  <div class="flex gap-4">
-    <div class={`icon-wrapper flex-shrink-0 ${iconClass}`}>
-      <Icon size={21} strokeWidth={2} />
-    </div>
-    <div class="callout-content">
-      <slot />
-    </div>
+<div class={`callout-box relative bg-[#f8f8f8] border-2 border-dashed rounded-2xl pt-8 pb-6 px-6 mt-10 mb-6 ${borderClass}`}>
+  <div class={`icon-float absolute -top-7 left-5 w-14 h-14 rounded-full bg-[#f8f8f8] flex items-center justify-center ${iconClass}`}>
+    <Icon size={30} strokeWidth={1.6} />
+  </div>
+  {title && <p class="callout-title font-archivo font-semibold text-[17px] text-zinc-900 mb-2">{title}</p>}
+  <div class={`callout-content text-zinc-600 ${markerClass}`}>
+    <slot />
   </div>
 </div>
 
@@ -54,14 +54,8 @@ const { containerClass, textClass, iconClass, Icon } = styles[type];
   .callout-content :global(p) {
     @apply m-0 text-lg;
   }
-  
-  .icon-wrapper {
-    position: relative;
-  }
-  
-  .icon-wrapper::before {
-    content: '';
-    display: block;
-    height: 4px; /* Ajustez cette valeur pour l'alignement parfait */
+
+  .callout-content :global(p + p) {
+    @apply mt-3;
   }
 </style>
