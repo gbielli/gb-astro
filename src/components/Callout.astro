@@ -42,9 +42,6 @@ const { borderClass, iconClass, markerClass, Icon } = styles[type];
   <div class={`icon-float absolute -top-7 left-5 w-14 h-14 rounded-full bg-[#f8f8f8] flex items-center justify-center ${iconClass}`}>
     <Icon size={30} strokeWidth={1.6} />
   </div>
-  <svg class={`spark absolute -top-9 left-[70px] w-4 h-4 opacity-70 ${iconClass}`} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-    <path d="M12 0c0 6 2 9 6 12-4 3-6 6-6 12 0-6-2-9-6-12 4-3 6-6 6-12Z" />
-  </svg>
   {title && <p class="callout-title font-archivo font-semibold text-[17px] text-zinc-900 mb-2">{title}</p>}
   <div class={`callout-content text-zinc-600 ${markerClass}`}>
     <slot />

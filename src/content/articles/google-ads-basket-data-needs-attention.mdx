@@ -1,0 +1,217 @@
+---
+title: "Google Ads basket data needs attention : comment corriger l'erreur ?"
+description: "Vous avez certainement déjà été confronté à ce problème : votre conversion Google Ads indique 'Basket data needs attention'. Je vous explique comment diagnostiquer et corriger le problème."
+serpDescription: "Basket data Google Ads Needs Attention : je vous explique comment diagnostiquer et corriger le problème de correspondance des ID produits depuis GTM client-side et server-side"
+author: "Guillaume BIELLI"
+date: "2026-09-08"
+image: "@/assets/articles/basket-data-gads/google-ads-basket-data-needs-attention.jpg"
+categories: ["Google Tag Manager", "Tracking"]
+---
+
+import arrayFieldTemplate from "@/assets/articles/basket-data-gads/array-field-template.jpg";
+import basketDataNeedsAttention from "@/assets/articles/basket-data-gads/basket-data-needs-attention.jpg";
+import gtmVariable from "@/assets/articles/basket-data-gads/Google-ads-tag-gtm.jpg";
+import campaignProducts from "@/assets/articles/basket-data-gads/products-missmatch-google-ads.jpg";
+import basketDataApresCorrection from "@/assets/articles/basket-data-gads/review-basket-data-google-ads.jpg";
+import transformationGtmSs from "@/assets/articles/basket-data-gads/transformation-gtm-server-side.jpg";
+
+import Callout from "@/components/Callout.astro";
+import Figure from "@/components/Figure.astro";
+import { Image } from "astro:assets";
+
+Le problème lié aux données du panier sur les conversions Google Ads est courant, et parfois mal compris.
+
+D'abord, repartons sur les bases, qu'est-ce que sont les données paniers et à quoi elles servent ?
+
+## À quoi servent les données paniers sur Google Ads ?
+
+Google Ads met à disposition, comme toutes les régies publicitaires, la possibilité de synchroniser son catalogue produit au sein du Google Merchant Center (GMC pour les intimes).
+
+Ces données servent de base pour créer des types de campagnes spécifiques sur Google Ads, notamment les campagnes Shopping et les campagnes Performance Max avec des données produits (image, prix, titre, catégorie, etc.).
+
+Google Ads nous permet également, lorsqu'un utilisateur réalise une conversion, d'indiquer dans la conversion quels sont les produits concernés.
+
+Cette information permet à Google Ads d'améliorer la granularité du reporting.
+
+Voici 3 rapports natifs intéressants avec les données panier disponibles dans vos conversions :
+
+- Rapport - Articles issus de la vente croisée
+- Rapport Articles du panier vendus
+- Rapport Panier - Articles ayant fait l'objet d'une annonce
+
+<Callout type="info">
+Vous pouvez consulter la [documentation de Google sur les rapports et métriques avec les données du panier](https://support.google.com/google-ads/answer/16564103?sjid=8422715394414618676-EU)
+</Callout>
+
+Et pour peu que vous ajoutiez votre marge produit dans le flux produit Merchant Center, des analyses encore plus pertinentes peuvent être réalisées avec des métriques comme le coût des marchandises vendues (CMV) ou la marge brute.
+
+## Les erreurs courantes sur les données panier Google Ads
+
+D'abord, vérifions si vous avez effectivement un problème sur votre compte Google Ads :
+
+Rendez-vous sur **Conversions > Summary**
+
+<Figure src={basketDataNeedsAttention} alt="Basket data needs attention" caption={`L'erreur "Basket data needs attention" visible dans Conversions > Summary avec la mention "Many recent conversions have sold item IDs that can't be matched to Merchant Center"`} />
+
+Si c'est bien le cas, cela signifie que **Google Ads ne parvient pas à faire le lien entre les produits vendus et les produits de votre catalogue Merchant Center**.
+
+La raison est simple : les données de votre dataLayer ne correspondent pas aux données produits que vous envoyez au Merchant Center.
+
+ <Callout type="info">
+  **Le cas de figure le plus courant :**
+  - Vous utilisez des intégrations natives avec un format d'ID particulier (ex : Google & Youtube app sur Shopify pousse un id au format `Shopify_{countryCode}_{item_id}_{variant_id}`)
+ </Callout>
+
+## Comment identifier le problème Basket data needs attention ?
+
+Avant de corriger les données envoyées à Google Ads, il faut comprendre quel format est utilisé par Google Ads et vos tags de conversions.
+
+Pour visualiser facilement les ID de votre Merchant Center sur Google Ads, c'est assez simple :
+
+Direction campaign > products
+
+<Figure src={campaignProducts} alt="Campaign products" caption={`Ici on peut voir que les ID des produits du Merchant Center contiennent shopify_fr_{item_id}_{variant_id}`} />
+
+Ensuite, cliquez sur le produit pour être redirigé sur l'url de votre produit sur le site.
+
+Clic droit > Inspecter > Network
+
+Réalisez une conversion Google Ads, comme un ajout panier par exemple, puis filtrez les requêtes sur `/pagead/conversion/`, vous devriez retrouver un paramètre nommé `item`.
+
+Ici on identifie le prix (54.99€), la quantité et l'item_id poussé à Google Ads
+
+```html
+item (54.99*1*540497XXXXXX***)
+```
+
+## Comment résoudre le problème Basket data needs attention ?
+
+Maintenant que l'on a **confirmé la non correspondance des id**, il est temps de passer à la résolution.
+
+Dans tous les cas, je préconise de ne pas modifier la valeur dans le dataLayer, sauf si ça fait sens pour vous, au risque de créer des problèmes de matching sur vos autres outils analytics ou publicitaires.
+
+### Corriger les données panier sur GTM client-side
+
+Si vous ne disposez pas de tracking server-side (personne n'est parfait), je vous explique **comment corriger l'erreur sur votre tag de conversion Google Ads en client-side.**
+
+Partons du principe que notre dataLayer pousse l'évènement suivant :
+
+```html
+<script>
+dataLayer.push({
+  event: 'purchase',
+  ecommerce: {
+    items: [
+      {
+        item_id: '123456789',
+        price: 54.99,
+        item_variant_id:'567891234',
+        quantity: 1
+      },
+      {
+        item_id: '987654321',
+        price: 29.99,
+        item_variant_id:'967891234',
+        quantity: 2
+      }
+    ]
+  }
+})
+</script>
+```
+
+Il nous suffit alors de créer une variable javascript depuis GTM :
+
+```js
+// ici on utilise la variable {{countryCode}} qui reprend le code pays du site
+function() {
+  var items = {{items}};
+  if (!items) return;
+  return items.map(function(item) {
+    return {
+      id: 'shopify_' + {{countryCode}} + '_' + item.item_id + '_' + item.item_variant_id,
+      price: item.price,
+      quantity: item.quantity
+    };
+  });
+}
+```
+
+Enfin ajoutons la variable dans le tag de conversion Google Ads sur GTM :
+
+<Figure src={gtmVariable} alt="GTM variable" caption={`Ajoutez la variable depuis le tag de conversion Google Ads sur GTM`} />
+
+### Corriger les données panier sur GTM server-side
+
+Maintenant, si vous avez mis en place les conversions Google Ads depuis votre conteneur GTM server-side, je vous propose une solution simple et rapide pour **résoudre le problème des données panier en server-side.**
+
+J'ai créé un [template de variable](https://github.com/gbielli/gtm-templates) pour GTM Server-Side qui permet de :
+
+1. Lire l'array `items` depuis l'event data reçu par le conteneur serveur
+2. Identifier le paramètre à modifier, dans notre cas `item_id`
+3. Appliquer une transformation sur la valeur, dans notre cas `shopify_fr_{item_id}_{variant_id}`
+4. Retourner l'array `items` modifié, prêt à être utilisé dans le tag Google Ads Conversion
+
+<Callout type="info">
+  Les avantages : 
+  - Vous ne faites aucune modification côté client-side
+  - Vous limitez le périmètre avec une transformation sur les tags de votre choix
+  - La configuration est simple et rapide
+</Callout>
+
+### Installer et configurer le template
+
+Téléchargez le template ici : [rewrite-items-id-for-google-ads.tpl](https://github.com/gbielli/gtm-templates).
+
+Dans votre conteneur GTM Server-Side :
+
+1. Allez dans **Templates > Variables** > "Nouveau"
+2. Cliquez sur le menu d'import (les trois points en haut à droite) et chargez le fichier `.tpl` téléchargé
+3. Sauvegardez le template
+
+Créez ensuite une **variable** en sélectionnant le template importé. Trois champs sont à renseigner :
+
+<Figure src={arrayFieldTemplate} alt="configuration template variable server-side gtm" />
+
+- **Chemin de l'objet items** : le chemin dans l'event data où se trouve le tableau d'items. En général `items`.
+- **Chemin de l'item_id** : le champ qui porte l'identifiant produit dans chaque objet item. La plupart du temps `item_id`.
+- **Transformation à appliquer** : c'est ici que vous définissez la logique. Pour le format Shopify, on part sur le pattern `shopify_fr_{item_id}_{item_variant_id}`.
+- Enfin, si vous le souhaitez, il est possible de retourner une valeur par défaut si jamais des données sont manquantes.
+
+Une fois la variable créée, créons une transformation que l'on appliquera uniquement au tag Google Ads :
+
+<Figure src={transformationGtmSs} alt="transformation gtm server side" />
+
+Et... c'est tout ! Vérifions maintenant si tout fonctionne correctement.
+
+### Vérifier les données panier en preview
+
+Après avoir réalisé les modifications, que ce soit en client side ou server-side, il vous suffit de réaliser une preview.
+
+Vous connaissez la chanson :
+
+Clic droit > Inspecter > Network
+
+Réalisez une conversion Google Ads, comme un ajout panier par exemple, puis filtrez les requêtes sur `/pagead/conversion/`, vous devriez retrouver un paramètre nommé `item`.
+
+On retrouve le prix (54.99€), la quantité et l'item_id Google Ads avec le nouveau format !
+
+```html
+item (54.99*1*shopify_fr_123456789_123456789***)
+```
+
+Vous pouvez désormais publier les modifications. Après quelques jours, rendez-vous sur votre interface Google Ads pour vérifier le taux de correspondance :
+
+<Image src={basketDataApresCorrection} alt="données panier Google Ads après correction item_id" />
+
+<Callout type="info">
+L'interface Google Ads indiquera toujours que les données du panier peuvent être améliorées avec la marge produit (Cost of goods sold - COGS) dans le flux Merchant Center. Libre à vous de les ajouter.
+</Callout>
+
+## Conclusion
+
+Vous comprenez désormais d'où vient l'erreur de données de panier sur Google Ads, comment l'identifier et surtout comment résoudre ces erreurs.
+
+J'ai donc une bonne et une mauvaise nouvelle. La bonne c'est que vous avez enfin toutes les clefs en main pour résoudre le problème des données panier Google Ads.
+
+La mauvaise ? c'est que vous n'avez plus aucune excuse pour ne pas corriger cette erreur.
