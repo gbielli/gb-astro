@@ -1,0 +1,320 @@
+---
+title: "UTM tracking GA4 : le guide ultime en 2026"
+description: "Vous voulez tout comprendre sur le tracking UTM avec GA4 ? Ce guide vous explique ce que sont vraiment les UTM, comment ils fonctionnent et comment les configurer une bonne fois pour toutes sur toutes vos régies."
+serpDescription: "Comment bien paramétrer vos UTM pour que GA4 attribue correctement vos campagnes, évite le trafic Unassigned, avec les variables par régie."
+author: "Guillaume BIELLI"
+date: "2026-09-17"
+image: "@/assets/articles/utm-tracking-ga4-guide-ultime-2026/tracking-utm-ga4-guide-ultime.jpg"
+categories: ["Google analytics 4", "Tracking"]
+---
+
+import ga4GroupesCanaux from "@/assets/articles/utm-tracking-ga4-guide-ultime-2026/ga4-groupes-canaux-personnalises.jpg";
+import ga4RapportAcquisition from "@/assets/articles/utm-tracking-ga4-guide-ultime-2026/ga4-rapport-acquisition-utm.jpg";
+import googleAdsModeleSuivi from "@/assets/articles/utm-tracking-ga4-guide-ultime-2026/google-ads-modele-suivi.jpg";
+import metaAdsUrlParameters from "@/assets/articles/utm-tracking-ga4-guide-ultime-2026/meta-ads-url-parameters.jpg";
+import snapchatAdsTrackingUrl from "@/assets/articles/utm-tracking-ga4-guide-ultime-2026/snapchat-ads-tracking-url.jpg";
+import tiktokAdsTrackingUrl from "@/assets/articles/utm-tracking-ga4-guide-ultime-2026/tiktok-ads-tracking-url.jpg";
+
+import Callout from "@/components/Callout.astro";
+import Figure from "@/components/Figure.astro";
+import { Image } from "astro:assets";
+
+Vous avez lancé votre campagne Google Ads et Meta Ads, et pourtant dans GA4 une bonne partie de votre trafic remonte en "direct" ou, pire, en "Unassigned". **Les paramètres UTM sont probablement à l'origine de ce problème.**
+
+Dans ce guide, je vous explique comment fonctionne l'attribution UTM dans GA4, comment vos paramètres déterminent le canal d'acquisition, et comment construire des UTM fiables pour chacune de vos régies publicitaires.
+
+## Qu'est-ce qu'un paramètre UTM ?
+
+Un paramètre UTM ("Urchin Tracking Module") est un paramètre ajouté à une URL pour **transmettre des informations d'attribution de trafic à votre outil analytics**.
+
+GA4 n'est pas le seul outil à les lire — Matomo, Piwik Pro et bien d'autres les supportent nativement — mais c'est la façon dont GA4 les interprète pour construire son attribution qui va nous intéresser ici.
+
+Il existe sept standards UTM :
+
+| Paramètre                        | Rôle                                 | Exemple                  |
+| -------------------------------- | ------------------------------------ | ------------------------ |
+| `utm_source` (required)          | Identifie l'origine du trafic        | google, meta, newsletter |
+| `utm_medium` (required)          | Identifie le canal marketing         | cpc, paid-social, email  |
+| `utm_campaign` (required)        | Identifie la campagne                | ete_2026                 |
+| `utm_content` (optional)         | Différencie les annonces ou contenus | creative_1234            |
+| `utm_term` (optional)            | Identifie le mot-clé (Search)        | Boryl                    |
+| `utm_id` (optional)              | Identifiant numérique de la campagne | campaignid               |
+| `utm_source_platform` (optional) | Identifie la plateforme source       | DV360                    |
+
+<Callout type="info">
+Le paramètre `utm_id` est particulièrement utile comme clé de réconciliation avec les importations de coût publicitaire par campagne sur GA4
+</Callout>
+
+## Comment GA4 lit et attribue vos paramètres UTM
+
+Il y a deux notions essentielles à avoir en tête pour comprendre comment les UTM impactent l'attribution sur GA4 :
+
+- D'abord, les différents scopes sur GA4
+- Ensuite, l'ordre de priorité des UTM en fonction des dimensions utilisées.
+
+### Comprendre les 3 scopes GA4
+
+Pour bien **comprendre comment fonctionnent les UTM**, il est important de revenir sur les différents scopes GA4.
+
+Il existe trois scopes :
+
+- Utilisateurs
+- Sessions
+- Événements
+
+On retrouvera donc dans GA4 3 dimensions différentes, par exemple :
+
+- **Source / support de la session** : c'est l'attribution pour chaque nouvelle session identifiée via l'événement `session_start`.
+- **Source / support du premier utilisateur** : c'est l'attribution pour la toute première session de l'utilisateur, identifiée via `first_visit`.
+- **Source / support** : c'est l'attribution appliquée aux événements clés (pas applicable à tous les événements)
+
+Au scope utilisateur et au scope session, GA4 utilisera le **modèle d'attribution du dernier clic non direct**.
+
+Pour les événements clés, GA4 définit le modèle **"basé sur la donnée" (data-driven)** par défaut, qui permet d'attribuer en fonction de leur poids chacun des touchpoints qui a mené à la conversion.
+
+Avec une bonne gestion des UTM, vous pourrez donc profiter de ces 3 scopes, pour répondre à des questions comme :
+
+- Quel canal marketing a conduit à la première visite des utilisateurs ? (scope user)
+- Quel est le dernier canal marketing qui a contribué à la conversion ? (scope session)
+- Quels canaux marketing ont contribué à la conversion ? (scope évènement clé)
+
+Mais il y a une autre subtilité à avoir en tête.
+
+### Comprendre la priorité des UTM sur l'attribution GA4
+
+GA4 met à disposition différents types de dimensions, par exemple :
+
+- session source / medium
+- Session **manual** source / medium
+
+La différence entre ces deux types de dimensions est principalement liée aux régies Google (Google Ads, Floodlight..). Je vous explique.
+
+En fonction de la dimension sélectionnée, GA4 va appliquer un ordre de priorité sur les critères d'attribution :
+
+Pour les rapports de trafic par défaut (dimension `default channel group`) et les dimensions "classiques" (Session source/medium | First user source/medium | source/medium, etc..), GA4 applique la priorité suivante :
+
+- Si votre propriété Google Ads est connecté et que l'auto-tagging est activée, les données seront **récupérées depuis les campagnes Google Ads** grâce à la présence du clic publicitaire (GCLID) dans l'URL sans prendre en compte les UTM.
+- Si l'auto-tagging n'est pas activé ou absent, c'est **l'ensemble des UTM qui définiront l'attribution**.
+- Si l'auto tagging et les UTM sont absents, GA4 se basera sur le referrer de la page et/ou l'attribution des sessions précédentes.
+- En dernier lieu et à défaut, la source de trafic sera définie en (direct).
+
+À contrario, toutes **les dimensions comprenant "manuel" vont prioriser les UTM à la logique de l'auto-tagging**.
+
+GA4 ne reconnaît que les ID publicitaires des outils Google (Google Ads, Floodlight...), donc les UTM restent le seul moyen de suivre les autres régies publicitaires comme Meta ou TikTok par exemple.
+
+<Callout type="info">
+  Si vous souhaitez aller plus loin sur l'attribution GA4, je vous conseille [l'excellent article de Matteo Zambon](https://www.linkedin.com/pulse/ga4-attribution-technical-paper-matteo-zambon-amqxf/?trackingId=ZlpAheLHSJmFJ9012f0SXg%3D%3D).
+</Callout>
+
+## UTM : Canaux par défaut et personnalisés GA4
+
+En dehors de la spécificité Google Ads avec l'auto-tagging, GA4 regroupe donc automatiquement vos sessions dans des **groupes de canaux par défaut** (Paid Search, Paid Social, Organic Search, Email..) en fonction de `utm_source`, `utm_medium`, et parfois `utm_campaign`.
+
+Une mauvaise gestion des UTM peut donc vous mener à son lot de **trafic unassigned**, même si le paramètre est techniquement présent. J'ai détaillé ce sujet dans un article sur le [trafic unassigned GA4](/blog/trafic-unassigned-ga4-9-raisons-et-comment-le-resoudre).
+
+Voici l'ensemble des règles UTM pour faire correspondre votre trafic aux bons canaux marketing GA4 :
+
+| Canal                     | Règle de correspondance                                                                                                                                                                                                                       |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Direct                    | Source = `(direct)` <br /> ET Medium = `(not set)` ou `(none)`                                                                                                                                                                                |
+| Cross-network             | Nom de campagne contenant `cross-network` <br /> _(Demand Gen, Performance Max, Smart Shopping)_                                                                                                                                              |
+| Paid Shopping             | Source correspond à une liste de sites shopping <br /> **OU** <br /> Nom de campagne matchant `^(.*shop\|shopping.*)$` <br /> **ET** <br /> Medium matchant `^(.*cp.*\|ppc\|retargeting\|paid.*)$` <br /> _(ex : cpc, cpm, ppc, retargeting)_ |
+| Paid Search               | Source correspond à une liste de moteurs de recherche <br /> **ET** <br /> Medium matchant `^(.*cp.*\|ppc\|retargeting\|paid.*)$` <br /> _(ex : cpc, ppc)_                                                                                    |
+| Paid Social               | Source correspond à une liste de plateformes sociales <br /> **ET** <br /> Medium matchant `^(.*cp.*\|ppc\|retargeting\|paid.*)$` <br /> _(ex : paid-social, cpc)_                                                                            |
+| Paid Video                | Source correspond à une liste de plateformes vidéo <br /> **ET** <br /> Medium matchant `^(.*cp.*\|ppc\|retargeting\|paid.*)$` <br /> _(ex : paid-video, cpv)_                                                                                |
+| Display                   | Medium = `display`, `banner`, `expandable`, `interstitial` ou `cpm`                                                                                                                                                                           |
+| Paid Other                | Medium matchant `^(.*cp.*\|ppc\|retargeting\|paid.*)$`                                                                                                                                                                                        |
+| Organic Shopping          | Source matchant une liste de sites de shopping <br /> **OU** <br /> Campagne matchant `^(.*shop\|shopping.*)$` <br /> _(ex : utm_campaign=shopping-catalogue, sans medium payant)_                                                            |
+| Organic Social            | Source plateforme sociale <br /> **OU** <br /> Medium = `social`, `social-network`, `social-media` ou `sm`                                                                                                                                    |
+| Organic Video             | Source plateforme vidéo <br /> **OU** <br /> Medium contient la regex ^(._video._)$ <br /> _(ex : video, video-ads) _                                                                                                                         |
+| Organic Search            | Source moteur de recherche (liste SOURCE_CATEGORY_SEARCH) <br /> **OU** <br /> Medium = `organic`                                                                                                                                             |
+| AI Assistant              | Medium = `ai-assistant` <br /> \_                                                                                                                                                                                                             |
+| Referral                  | Medium = `referral`, `app` ou `link`                                                                                                                                                                                                          |
+| Email                     | Source **OU** Medium = `email`, `e-mail` ou `e_mail`                                                                                                                                                                                          |
+| Affiliates                | Medium = `affiliate`                                                                                                                                                                                                                          |
+| Audio                     | Medium = `audio`                                                                                                                                                                                                                              |
+| SMS                       | Source **OU** Medium = `sms`                                                                                                                                                                                                                  |
+| Mobile Push Notifications | Medium se termine par `push`, contient `mobile` ou `notification` <br /> **OU** Source = `firebase`                                                                                                                                           |
+
+Si pour une raison d'harmonisation ou toute autre raison obscure, vous ne souhaitez pas modifier vos UTM pour les faire correspondre à ce que GA4 attend, il existe une solution.
+
+GA4 permet de créer **groupes de canaux personnalisés**, accessibles depuis **Admin > Affichage des données > Groupes de canaux**.
+
+Vous pourrez y définir vos propres règles de correspondance en fonction de la nomenclature de vos UTM.
+
+<Figure src={ga4GroupesCanaux} alt="création d'un groupe de canaux personnalisé dans ga4" caption={`Ici vous pouvez redéfinir pour chaque canal de nouvelles règles`}  />
+
+Assez parlé de GA4, il est temps de vous expliquer **comment paramètrer vos UTM à la perfection sur chacune des régies publicitaires.**
+
+## Paramétrer les UTM sur Google Ads
+
+Google Ads propose une liste de paramètres dynamiques appelés **ValueTrack parameters** :
+
+| Variable       | Ce qu'elle retourne                                                 | Niveau   |
+| -------------- | ------------------------------------------------------------------- | -------- |
+| `{lpurl}`      | URL de la page de destination (obligatoire dans le modèle de suivi) | —        |
+| `{campaignid}` | ID numérique de la campagne                                         | Campagne |
+| `{adgroupid}`  | ID numérique du groupe d'annonces                                   | Groupe   |
+| `{creative}`   | ID numérique de l'annonce                                           | Annonce  |
+| `{keyword}`    | Mot-clé ayant déclenché l'annonce                                   | Mot-clé  |
+| `{matchtype}`  | Type de correspondance : `e` (exact), `p` (expression), `b` (large) | Mot-clé  |
+| `{device}`     | Appareil : `m` (mobile), `t` (tablette), `c` (ordinateur)           | Session  |
+| `{network}`    | Réseau : `g` (Recherche Google), `s` (Partenaires), `d` (Display)   | Session  |
+
+Pour gérer vos UTM, contrairement à beaucoup d'autres régies, Google Ads vous permet de créer une règle globale au niveau de votre compte.
+
+Rendez-vous sur : **Paramètres du compte → Suivi → Modèle de suivi**
+
+<Figure src={googleAdsModeleSuivi} alt="interface modèle de suivi google ads" caption={`Admin → Account settings → Tracking`} />
+
+Comme nous l'avons vu plus haut, si vous avez connecté Google Ads à GA4 avec l'auto-tagging, les UTM auront un rôle limité, mais restent largement recommandés pour assurer un backup.
+
+Voici ma recommandation pour que GA4 attribue proprement le canal "Paid Search" :
+
+```
+{lpurl}?utm_source=google&utm_medium=cpc&utm_campaign={campaignid}&utm_content={creative}&utm_term={keyword}_{matchtype}&utm_source_platform={network}
+```
+
+- **`utm_source=google`** : statique, toujours en minuscules.
+- **`utm_medium=cpc`** : la seule valeur que GA4 reconnaît pour "Paid Search".
+- **`utm_campaign={campaignid}`** : l'ID numérique de la campagne, à défaut d'avoir le nom de la campagne
+- **`utm_content={creative}`** : identifie précisément quel visuel ou texte performe.
+- **`utm_term={keyword}_{matchtype}`** : précieux pour analyser vos requêtes Search dans GA4.
+- **`utm_source_platform={network}`** : intéressant pour connaître le réseau de diffusion
+
+<Callout type="info">
+ Je ne traite pas le sujet ici, mais il existe des scripts Google Ads qui peuvent permettre de récupérer le nom d'une campagne, plutôt que son ID pour utm_campaign
+</Callout>
+
+## Paramétrer les UTM sur Meta Ads
+
+Meta utilise les variables dynamiques avec des **double accolades** :
+
+| Variable               | Ce qu'elle retourne                           |
+| ---------------------- | --------------------------------------------- |
+| `{{campaign.name}}`    | Nom de la campagne                            |
+| `{{campaign.id}}`      | ID de la campagne                             |
+| `{{adset.name}}`       | Nom de l'ensemble d'annonces                  |
+| `{{ad.name}}`          | Nom de l'annonce                              |
+| `{{ad.id}}`            | ID de l'annonce                               |
+| `{{site_source_name}}` | Source du placement : `fb`, `ig`, `msg`, `an` |
+
+Pour configurer ses UTM, rendez-vous dans la section **Suivi → Paramètres d'URL**, tout en en bas de la configuration de l'annonce.
+
+<Figure src={metaAdsUrlParameters} alt="paramètres url dans meta ads manager" caption={`Pour gagner du temps, on peut sélectionner plusieurs annonces en même temps et modifier les UTM`} />
+
+Pour que GA4 attribue correctement vos campagnes dans "Paid Social", voici ma recommandation :
+
+- **`utm_source=meta`** : statique.
+- **`utm_medium=paid-social`** : permet de matcher avec Paid Social
+- **`utm_campaign={{campaign.name}}`** : Le nom de votre campagne Meta
+- **`utm_content={{ad.name}}`** : identifie l'annonce précise qui performe.
+- **`utm_id={{campaign.id}}`** : utile pour avoir une clé de réconciliation pour l'import de coût sur GA4
+- **`utm_source_platform={{site_source_name}}`** : intéressant pour connaître le réseau de diffusion (Instagram, Messenger, Facebook..)
+
+Voici à quoi ressemble l'URL finale :
+
+```
+?utm_source=meta&utm_medium=paid-social&utm_campaign={{campaign.name}}&utm_content={{ad.name}}&utm_id={{campaign.id}}&utm_source_platform={{site_source_name}}
+```
+
+<Callout type='info'>
+Si vous souhaitez avoir le détail des types de placements facilement, vous pouvez toujours opter pour utm_medium=`paid-{{placement}}`. Les rapports source/support seront plus détaillés. Vous gagnez en granularité, mais vous perdez lisibilité sur la vue d'ensemble.
+</Callout>
+
+## Paramétrer les UTM sur TikTok Ads
+
+Voici les variables dynamiques disponibles pour TikTok :
+
+| Variable            | Ce qu'elle retourne                              |
+| ------------------- | ------------------------------------------------ |
+| `__CAMPAIGN_NAME__` | Nom de la campagne                               |
+| `__CAMPAIGN_ID__`   | ID de la campagne                                |
+| `__AID_NAME__`      | Nom du groupe d'annonces                         |
+| `__AID__`           | ID du groupe d'annonces                          |
+| `__ADID_V2_NAME__`  | Nom de l'annonce _(campagnes Smart+ uniquement)_ |
+| `__ADID_V2__`       | ID de l'annonce _(campagnes Smart+ uniquement)_  |
+| `__CID_NAME__`      | Nom de la création                               |
+| `__CID__`           | ID de la création                                |
+| `__PLACEMENT__`     | Type de placement (TikTok, TikTok Pangle)        |
+
+Les paramètres se configurent au niveau **de l'annonce**, dans la partie **Website URL**.
+
+<Image src={tiktokAdsTrackingUrl} alt="champ tracking url tiktok ads" />
+
+Voici mes recommandations pour une attribution GA4 propre :
+
+- **`utm_source=tiktok`**
+- **`utm_medium=paid-social`**
+- **`utm_campaign=__CAMPAIGN_NAME__`**
+- **`utm_content=__CID_NAME__`** : identifie la création qui performe. Sur les campagnes Smart+, préférez `__ADID_V2_NAME__` pour descendre au niveau de l'annonce.
+- **`utm_id=__CAMPAIGN_ID__`** : utile pour avoir une clé de réconciliation pour l'import de coût sur GA4
+- **`utm_source_platform=__PLACEMENT__`** : distingue le trafic diffusé sur TikTok de celui diffusé sur le réseau Pangle
+
+Et voilà ce que ça donne dans une URL :
+
+```
+?utm_source=tiktok&utm_medium=paid-social&utm_campaign=__CAMPAIGN_NAME__&utm_content=__CID_NAME__&utm_id=__CAMPAIGN_ID__&utm_source_platform=__PLACEMENT__
+```
+
+## Paramétrer les UTM sur Snapchat Ads
+
+Pour ces variables dynamiques, Snapchat reprend la syntaxe des **double accolades** de Meta :
+
+| Variable                | Ce qu'elle retourne             |
+| ----------------------- | ------------------------------- |
+| `{{campaign.name}}`     | Nom de la campagne              |
+| `{{campaign.id}}`       | ID de la campagne               |
+| `{{adSet.name}}`        | Nom de l'ensemble de publicités |
+| `{{adSet.id}}`          | ID de l'ensemble de publicités  |
+| `{{ad.id}}`             | ID de la publicité              |
+| `{{creative.name}}`     | Nom de la création              |
+| `{{creative.headline}}` | Titre de la création            |
+| `{{site_source_name}}`  | Source du placement             |
+
+Les paramètres se configurent au niveau de l'annonce, section **Destination**.
+
+<Image src={snapchatAdsTrackingUrl} alt="interface tracking urls snapchat ads" />
+
+- **`utm_source=snapchat`**
+- **`utm_medium=paid-social`**
+- **`utm_campaign={{campaign.name}}`**
+- **`utm_content={{creative.name}}`**
+- **`utm_id={{campaign.id}}`** : utile pour avoir une clé de réconciliation pour l'import de coût sur GA4
+- **`utm_source_platform={{site_source_name}}`** : intéressant pour connaître le placement de diffusion
+
+```
+?utm_source=snapchat&utm_medium=paid-social&utm_campaign={{campaign.name}}&utm_content={{creative.name}}&utm_id={{campaign.id}}&utm_source_platform={{site_source_name}}
+```
+
+## Nomenclature UTM : quelques bonnes pratiques
+
+Vous l'aurez compris : bien nommer ses UTM, c'est le socle pour obtenir une bonne attribution sur GA4.
+
+Voici quelques bonnes pratiques, quelle que soit la régie :
+
+- **Tout en minuscules** : `cpc` et non `CPC`, `google` et non `Google`. GA4 est sensible à la casse pour l'attribution des canaux.
+- **Pas d'espaces** : remplacez-les par des tirets (`-`) ou des underscores (`_`). Un espace s'encode en `%20` et peut créer des entrées parasites dans vos rapports.
+- **Pas d'accents** : `ete-2026` et non `été-2026`.
+- **Cohérence entre régies** : si vous utilisez `paid-social` pour Meta, gardez `paid-social` pour TikTok et Snapchat — pas `social-paid` ou `paid_social`.
+- Évitez autant que possible d'intégrer des UTM dans les liens de votre site web, cela pourrait par exemple fausser l'attribution d'un achat avec le modèle "basé sur la donnée" de GA4.
+
+Dernière recommandation, et peut-être la plus importante sur le long terme : **documentez votre nomenclature dans un fichier partagé**.
+
+Google Sheets, Notion, peu importe le support.
+
+Ce qui compte, c'est que toutes les équipes susceptibles de travailler sur vos campagnes pub, emailing ou sur votre site web s'y réfèrent.
+
+<Callout type='info'>
+Prenez le temps d'échanger sur le sujet avec vos développeurs. Il arrive parfois que des logiques UTM soient historiquement implémentées avec le mauvais format ou au mauvais endroit (comme les emails transactionnels, emails de création de compte, etc..)
+</Callout>
+
+## Conclusion
+
+Vous l'aurez compris, des **UTM bien paramétrés**, c'est la base d'une attribution GA4 propre et pérenne dans le temps.
+
+C'est aussi et avant tout une **stratégie collective** qui a besoin d'être partagée avec toutes les parties prenantes, sur laquelle in fine, **tout le monde peut avoir confiance.**
+
+**C'est un investissement dans le temps**. De mon expérience, il est beaucoup moins coûteux (dans tous les sens du terme) de définir sa structure UTM par outil et de faire toutes les vérifications nécessaires, plutôt que de se rendre compte 2 ans plus tard, que vos analyses étaient faussées ou incomplètes.
+
+Sachez enfin que certains CRM (ex: Hubspot) et autres outils connectés à vos régies peuvent centraliser le paramètrage des UTM. Un gain de temps intéressant en fonction votre stack technique.
