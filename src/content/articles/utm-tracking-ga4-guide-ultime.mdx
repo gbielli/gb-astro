@@ -98,6 +98,10 @@ Pour les rapports de trafic par défaut (dimension `default channel group`) et l
 - Si l'auto tagging et les UTM sont absents, GA4 se basera sur le referrer de la page et/ou l'attribution des sessions précédentes.
 - En dernier lieu et à défaut, la source de trafic sera définie en (direct).
 
+ <Callout type="info">
+ Une mauvaise gestion des UTM peut donc vous mener à son lot de **trafic direct** mais également de **trafic unassigned**, même si le paramètre est techniquement présent. J'ai détaillé ce sujet dans un article dédié au [trafic unassigned GA4](/blog/trafic-unassigned-ga4-9-raisons-et-comment-le-resoudre).
+</Callout>
+
 À contrario, toutes **les dimensions comprenant "manuel" vont prioriser les UTM à la logique de l'auto-tagging**.
 
 GA4 ne reconnaît que les ID publicitaires des outils Google (Google Ads, Floodlight...), donc les UTM restent le seul moyen de suivre les autres régies publicitaires comme Meta ou TikTok par exemple.
@@ -109,8 +113,6 @@ GA4 ne reconnaît que les ID publicitaires des outils Google (Google Ads, Floodl
 ## UTM : Canaux par défaut et personnalisés GA4
 
 En dehors de la spécificité Google Ads avec l'auto-tagging, GA4 regroupe donc automatiquement vos sessions dans des **groupes de canaux par défaut** (Paid Search, Paid Social, Organic Search, Email..) en fonction de `utm_source`, `utm_medium`, et parfois `utm_campaign`.
-
-Une mauvaise gestion des UTM peut donc vous mener à son lot de **trafic unassigned**, même si le paramètre est techniquement présent. J'ai détaillé ce sujet dans un article sur le [trafic unassigned GA4](/blog/trafic-unassigned-ga4-9-raisons-et-comment-le-resoudre).
 
 Voici l'ensemble des règles UTM pour faire correspondre votre trafic aux bons canaux marketing GA4 :
 
@@ -297,7 +299,7 @@ Voici quelques bonnes pratiques, quelle que soit la régie :
 - **Pas d'espaces** : remplacez-les par des tirets (`-`) ou des underscores (`_`). Un espace s'encode en `%20` et peut créer des entrées parasites dans vos rapports.
 - **Pas d'accents** : `ete-2026` et non `été-2026`.
 - **Cohérence entre régies** : si vous utilisez `paid-social` pour Meta, gardez `paid-social` pour TikTok et Snapchat — pas `social-paid` ou `paid_social`.
-- Évitez autant que possible d'intégrer des UTM dans les liens de votre site web, cela pourrait par exemple fausser l'attribution d'un achat avec le modèle "basé sur la donnée" de GA4.
+- **Évitez autant que possible d'intégrer des UTM dans les liens de votre site web**, cela pourrait par exemple fausser l'attribution d'un achat avec le modèle "basé sur la donnée" de GA4.
 
 Dernière recommandation, et peut-être la plus importante sur le long terme : **documentez votre nomenclature dans un fichier partagé**.
 
