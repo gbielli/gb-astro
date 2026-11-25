@@ -1,0 +1,104 @@
+---
+title: "Correction du template sGTM Affilae Server-Side sur Shopify"
+description: "Vous êtes sur Shopify et utilisez le template sGTM Affilae Server-Side ? Vous pourriez avoir un problème de tracking à cause de l'identifiant de clic. Je vous explique pourquoi et comment le corriger."
+serpDescription: "Vous êtes sur Shopify et utilisez le template sGTM Affilae Server-Side ? Vous pourriez avoir un problème de tracking à cause de l'identifiant de clic. Je vous explique pourquoi et comment le corriger."
+author: "Guillaume BIELLI"
+date: "2026-11-25"
+image: "@/assets/articles/affilae-server-side-shopify/affilae-server-side-shopify.jpg"
+categories: ["Tracking", "Google Tag Manager"]
+---
+
+import cookieCheckoutShopify from "@/assets/articles/affilae-server-side-shopify/cookie-checkout-shopify-affilae.jpg";
+import Callout from "@/components/Callout.astro";
+import { Image } from "astro:assets";
+
+Vous utilisez **Affilae** et son template **Server-Side** sGTM sur Shopify ? Alors ce que je vais vous dire mérite votre attention.
+
+Sur un site classique, le template Affilae Server-Side fait très bien son travail.
+
+Sur Shopify, en revanche, **le checkout change complètement la donne** : au moment de l'achat, le tag ne retrouve plus l'identifiant de clic Affilae.
+
+Résultat, des conversions remontent sans le click ID `aecid`.
+
+la correction tient en deux lignes. Je vous explique comment le mettre en place.
+
+## Comment fonctionne le template Affilae Server-Side
+
+Le template de base, disponible dans la galerie sGTM server-side, repose sur un principe simple en deux temps :
+
+- **Sur le `page_view` :** le tag lit le paramètre `aecid` dans l'URL d'atterrissage (ajouté par Affilae lors de la redirection) et **dépose un cookie `_ae_cid` côté serveur**, valable 30 jours.
+- **Sur l'événement de conversion (`purchase` par défaut) :** le tag relit ce cookie `_ae_cid` et l'envoie à Affilae avec le montant, l'ID de commande, la devise, etc.
+
+Autrement dit, **tout repose sur la capacité du serveur à relire le cookie au moment de l'achat**. Et c'est précisément là que Shopify pose problème.
+
+## Pourquoi le tracking Affilae Server-Side sur Shopify pose problème
+
+Ce problème est bien connu sur Shopify :
+
+le checkout est isolé du reste du site. Le tracking de la conversion passe par le **customer pixel**, qui s'exécute dans un environnement sandboxé.
+
+Concrètement, **la requête d'achat envoyée vers votre conteneur sGTM depuis ce sandbox n'embarque pas les cookies first-party du navigateur**.
+
+Le serveur reçoit donc bien l'événement `purchase`… mais sans le cookie `_ae_cid`. Le tag Affilae envoie alors la conversion sans click ID.
+
+<Image src={cookieCheckoutShopify} alt="cookie _ae_cid non lu au checkout shopify" />
+
+Pour résoudre le problème depuis GTM, il faut :
+
+- lire le cookie `_ae_cid` côté navigateur
+- Pousser un paramètre comme `_ae_cid` dans l'évènement d'achat
+- Modifier la configuration du tag pour utiliser ce paramètre plutôt que le cookie
+- Modifier la logique de dépôt de cookie du template
+
+## Modification 1 : passer le cookie \_ae_cid en httpOnly false
+
+Dans le template d'origine, le cookie `_ae_cid` est déposé avec l'option `httpOnly: true`.
+
+Un cookie `httpOnly` **ne peut être lu que par le serveur** : impossible d'y accéder en JavaScript, et donc impossible de le récupérer avec une variable GTM côté client.
+
+Première modification donc : passer cette option à `false` dans le `setCookie` du `page_view`.
+
+```javascript
+const options = {
+    'domain': 'auto',
+    'path': '/',
+    'secure': true,
+    'httpOnly': false, // true dans le template d'origine
+    'max-age': 2592000, // 30 days in seconds
+};
+setCookie('_ae_cid', clickIds, options, false);
+```
+
+**Le cookie reste déposé par le serveur, en first-party, mais devient lisible côté navigateur.** C'est ce qui va nous permettre de le récupérer au moment de l'achat.
+
+## Modification 2 : ajouter eventData.aecid à l'événement de conversion
+
+Maintenant que le cookie est lisible, il faut que le template sache le récupérer ailleurs que dans les cookies de la requête. Deuxième modification : dans la branche `conversionEventName`, on ajoute **`eventData.aecid` en fallback** du cookie.
+
+```javascript
+} else if (eventName === conversionEventName) {
+    // le cookie en priorité, puis le paramètre d'événement aecid
+    const aecid = getCookieValues('_ae_cid')[0] || eventData.aecid || '';
+```
+
+Le comportement d'origine est conservé : **si le cookie est présent dans la requête, il reste prioritaire**. Sinon, le tag va chercher le paramètre `aecid` de l'événement.
+
+Il suffit donc que votre événement d'achat arrive au serveur avec un paramètre `aecid`. Côté conteneur web, une simple **variable de type Cookie first party** qui lit `_ae_cid` fait l'affaire : vous l'ajoutez en paramètre `aecid` de votre balise d'achat.
+
+Pour valider, ouvrez le mode preview de votre conteneur serveur, passez une commande après un clic affilié et vérifiez la requête sortante vers `lb.affilae.com` : **le paramètre `cids` doit être complété**.
+
+## Téléchargez le template Affilae Server-Side modifié
+
+Pour vous éviter de modifier le code vous-même, j'ai exporté ma version du template avec les deux corrections :
+
+**[Télécharger le template Affilae Server-Side pour Shopify (.tpl)](/downloads/affilae-server-side-shopify.tpl)**
+
+Pour l'installer :
+
+- **Dans votre conteneur serveur**, allez dans _Modèles_ puis _Nouveau_ dans la section des modèles de balises.
+- **Cliquez sur les trois points en haut à droite**, puis _Importer_, et sélectionnez le fichier `.tpl`.
+- **Enregistrez**, puis remplacez le modèle utilisé par votre balise Affilae existante (ou recréez la balise avec les mêmes paramètres : Tracking Key, Conversion ID, montant HT, devise…).
+
+Prenez le temps de réaliser une preview server-side pour vous assurer que le cookie est bien lu et que le paramètre `aecid` est bien passé à la requête vers Affilae.
+
+Et voilà ! Vos conversions Affilae Server-Side sur Shopify récupèrent à nouveau leur identifiant.
